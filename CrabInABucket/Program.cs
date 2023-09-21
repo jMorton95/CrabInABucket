@@ -1,9 +1,14 @@
-using Microsoft.AspNetCore.OpenApi;
+using CrabInABucket.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? "";
+
+builder.Services.AddDbContext<CrabDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
