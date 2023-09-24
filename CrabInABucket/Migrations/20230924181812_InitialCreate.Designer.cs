@@ -3,6 +3,7 @@ using System;
 using CrabInABucket.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CrabInABucket.Migrations
 {
     [DbContext(typeof(CrabDbContext))]
-    partial class CrabDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230924181812_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,12 @@ namespace CrabInABucket.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Role");
                 });
@@ -132,38 +140,6 @@ namespace CrabInABucket.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.UserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RowVersion")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRole");
-                });
-
             modelBuilder.Entity("CrabInABucket.DataContext.Models.Account", b =>
                 {
                     b.HasOne("CrabInABucket.DataContext.Models.User", null)
@@ -178,23 +154,11 @@ namespace CrabInABucket.Migrations
                         .HasForeignKey("AccountId");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.UserRole", b =>
+            modelBuilder.Entity("CrabInABucket.DataContext.Models.Role", b =>
                 {
-                    b.HasOne("CrabInABucket.DataContext.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CrabInABucket.DataContext.Models.User", "User")
+                    b.HasOne("CrabInABucket.DataContext.Models.User", null)
                         .WithMany("Roles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("CrabInABucket.DataContext.Models.Account", b =>

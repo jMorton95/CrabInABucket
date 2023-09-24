@@ -7,4 +7,8 @@ public class User : BaseModel
     [Required] public string? Username { get; set; }
 
     [Required] public string? Password { get; set; }
+    
+    public IEnumerable<Account>? Accounts { get; set; }
+    
+    public IEnumerable<UserRole>? Roles { get; set; }
 }
