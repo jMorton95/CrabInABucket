@@ -1,4 +1,4 @@
-using CrabInABucket.Models;
+using CrabInABucket.DataContext;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
