@@ -1,4 +1,4 @@
-namespace CrabInABucket.DataContext.Models;
+namespace CrabInABucket.Models;
 
 public class UserRole : BaseModel
 {

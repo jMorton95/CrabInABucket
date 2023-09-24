@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CrabInABucket.DataContext.Models;
+namespace CrabInABucket.Models;
 
 public class Account : BaseModel
 {

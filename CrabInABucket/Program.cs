@@ -1,4 +1,6 @@
-using CrabInABucket.DataContext;
+using CrabInABucket.Api;
+using CrabInABucket.Api.Endpoints;
+using CrabInABucket.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapUserEndpoints();
 
 app.MapGet("/", () => "Hello World!");
 app.MapGet("/hello", () => 123);

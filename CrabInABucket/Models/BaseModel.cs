@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CrabInABucket.DataContext.Models;
+namespace CrabInABucket.Models;
 
 public class BaseModel
 {
     [Required, Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     [Required]
     public DateTime CreatedDate { get; set; } = DateTime.Now;
