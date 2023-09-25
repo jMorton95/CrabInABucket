@@ -1,6 +1,9 @@
 using CrabInABucket.Api;
 using CrabInABucket.Api.Endpoints;
+using CrabInABucket.Api.Requests;
+using CrabInABucket.Api.Validation;
 using CrabInABucket.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +17,8 @@ builder.Services.AddDbContext<CrabDbContext>(options => options.UseNpgsql(connec
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IValidator<CreateUserRequest>, CreateUserValidator>();
 
 
 var app = builder.Build();
@@ -30,8 +35,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapUserEndpoints();
-
-app.MapGet("/", () => "Hello World!");
-app.MapGet("/hello", () => 123);
 
 app.Run();

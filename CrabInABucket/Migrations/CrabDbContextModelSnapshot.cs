@@ -22,13 +22,11 @@ namespace CrabInABucket.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.Account", b =>
+            modelBuilder.Entity("CrabInABucket.Models.Account", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -43,8 +41,8 @@ namespace CrabInABucket.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -53,16 +51,14 @@ namespace CrabInABucket.Migrations
                     b.ToTable("Account");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.BudgetTransaction", b =>
+            modelBuilder.Entity("CrabInABucket.Models.BudgetTransaction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("AccountId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -80,13 +76,11 @@ namespace CrabInABucket.Migrations
                     b.ToTable("BudgetTransaction");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.Role", b =>
+            modelBuilder.Entity("CrabInABucket.Models.Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -102,13 +96,11 @@ namespace CrabInABucket.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.User", b =>
+            modelBuilder.Entity("CrabInABucket.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -125,26 +117,27 @@ namespace CrabInABucket.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username");
 
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.UserRole", b =>
+            modelBuilder.Entity("CrabInABucket.Models.UserRole", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("RowVersion")
                         .HasColumnType("integer");
@@ -152,8 +145,8 @@ namespace CrabInABucket.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -164,29 +157,29 @@ namespace CrabInABucket.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.Account", b =>
+            modelBuilder.Entity("CrabInABucket.Models.Account", b =>
                 {
-                    b.HasOne("CrabInABucket.DataContext.Models.User", null)
+                    b.HasOne("CrabInABucket.Models.User", null)
                         .WithMany("Accounts")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.BudgetTransaction", b =>
+            modelBuilder.Entity("CrabInABucket.Models.BudgetTransaction", b =>
                 {
-                    b.HasOne("CrabInABucket.DataContext.Models.Account", null)
+                    b.HasOne("CrabInABucket.Models.Account", null)
                         .WithMany("BudgetTransactions")
                         .HasForeignKey("AccountId");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.UserRole", b =>
+            modelBuilder.Entity("CrabInABucket.Models.UserRole", b =>
                 {
-                    b.HasOne("CrabInABucket.DataContext.Models.Role", "Role")
+                    b.HasOne("CrabInABucket.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CrabInABucket.DataContext.Models.User", "User")
+                    b.HasOne("CrabInABucket.Models.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -197,12 +190,12 @@ namespace CrabInABucket.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.Account", b =>
+            modelBuilder.Entity("CrabInABucket.Models.Account", b =>
                 {
                     b.Navigation("BudgetTransactions");
                 });
 
-            modelBuilder.Entity("CrabInABucket.DataContext.Models.User", b =>
+            modelBuilder.Entity("CrabInABucket.Models.User", b =>
                 {
                     b.Navigation("Accounts");
 

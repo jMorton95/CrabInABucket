@@ -17,19 +17,9 @@ public class CrabDbContext : DbContext
         modelBuilder.Entity<User>().HasIndex(u => u.Username);
     }
 
-    public override int SaveChanges()
-    {
-        var addedEntities = ChangeTracker.Entries()
-            .Where(x => x.State == EntityState.Added)
-            .Select(x => x.Entity as BaseModel);
 
-        foreach (var entity in addedEntities)
-        {
-            if (entity == null) continue;
-            entity.CreatedDate = DateTime.UtcNow; 
-            entity.UpdatedDate = DateTime.UtcNow; 
-        }
-    
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
         var modifiedEntities = ChangeTracker.Entries()
             .Where(x => x.State == EntityState.Modified)
             .Select(x => x.Entity as BaseModel);
@@ -41,8 +31,9 @@ public class CrabDbContext : DbContext
                 entity.UpdatedDate = DateTime.UtcNow;
             }
         }
-
-        return base.SaveChanges();
+        
+        return base.SaveChangesAsync(cancellationToken);
     }
+
 
 }
