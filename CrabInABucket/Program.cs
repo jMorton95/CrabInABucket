@@ -19,6 +19,8 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IValidator<CreateUserRequest>, CreateUserValidator>();
+builder.Services.AddScoped<IValidator<GetUserRequest>, GetUserValidator>();
+
 
 
 var app = builder.Build();
