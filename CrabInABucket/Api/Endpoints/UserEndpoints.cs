@@ -24,16 +24,16 @@ public static class UserEndpoints
         });
         
         app.MapGet("/api/user/get", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>>
-            ([FromQuery] GetUserRequest req, [FromServices] CrabDbContext db, IValidator<GetUserRequest> validator) =>
+            (string username, [FromServices] CrabDbContext db, IValidator<GetUserRequest> validator) =>
         {
-            var validationResult = await validator.ValidateAsync(req);
+            var validationResult = await validator.ValidateAsync(new GetUserRequest(username));
             
             if (!validationResult.IsValid)
             {
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
             
-            var user = await db.User.Include(x => x.Roles).Include(x => x.Accounts).FirstOrDefaultAsync(x => x.Username == req.Username);
+            var user = await db.User.Include(x => x.Roles).Include(x => x.Accounts).FirstOrDefaultAsync(x => x.Username == username);
             
             if (user == null)
             {
