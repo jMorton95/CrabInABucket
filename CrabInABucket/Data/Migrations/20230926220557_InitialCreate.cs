@@ -16,6 +16,7 @@ namespace CrabInABucket.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RowVersion = table.Column<int>(type: "integer", nullable: false)
@@ -123,7 +124,8 @@ namespace CrabInABucket.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_User_Username",
                 table: "User",
-                column: "Username");
+                column: "Username",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRole_RoleId",

@@ -13,9 +13,10 @@ builder.Services.AddPostgres<DataContext>(connectionString);
 
 builder.AddAuth();
 
-builder.Services.AddWorkers();
-builder.Services.AddApplicationServices();
 builder.Services.AddValidators();
+builder.Services.AddProcesses();
+builder.Services.AddApplicationServices();
+builder.Services.AddWorkers();
 
 
 var app = builder.Build();

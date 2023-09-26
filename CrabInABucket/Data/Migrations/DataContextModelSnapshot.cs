@@ -22,7 +22,7 @@ namespace CrabInABucket.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CrabInABucket.Models.Account", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace CrabInABucket.Data.Migrations
                     b.ToTable("Account");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.BudgetTransaction", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.BudgetTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace CrabInABucket.Data.Migrations
                     b.ToTable("BudgetTransaction");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.Role", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,6 +84,10 @@ namespace CrabInABucket.Data.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("RowVersion")
                         .HasColumnType("integer");
@@ -96,7 +100,7 @@ namespace CrabInABucket.Data.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.User", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,12 +126,13 @@ namespace CrabInABucket.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Username");
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.UserRole", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.UserRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -157,29 +162,29 @@ namespace CrabInABucket.Data.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.Account", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.Account", b =>
                 {
-                    b.HasOne("CrabInABucket.Models.User", null)
+                    b.HasOne("CrabInABucket.Data.Models.User", null)
                         .WithMany("Accounts")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.BudgetTransaction", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.BudgetTransaction", b =>
                 {
-                    b.HasOne("CrabInABucket.Models.Account", null)
+                    b.HasOne("CrabInABucket.Data.Models.Account", null)
                         .WithMany("BudgetTransactions")
                         .HasForeignKey("AccountId");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.UserRole", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.UserRole", b =>
                 {
-                    b.HasOne("CrabInABucket.Models.Role", "Role")
+                    b.HasOne("CrabInABucket.Data.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CrabInABucket.Models.User", "User")
+                    b.HasOne("CrabInABucket.Data.Models.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -190,12 +195,12 @@ namespace CrabInABucket.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.Account", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.Account", b =>
                 {
                     b.Navigation("BudgetTransactions");
                 });
 
-            modelBuilder.Entity("CrabInABucket.Models.User", b =>
+            modelBuilder.Entity("CrabInABucket.Data.Models.User", b =>
                 {
                     b.Navigation("Accounts");
 

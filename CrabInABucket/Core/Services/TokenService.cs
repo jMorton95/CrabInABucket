@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using CrabInABucket.Core.Services.Dtos;
 using CrabInABucket.Core.Services.Interfaces;
 using CrabInABucket.Data;
 using CrabInABucket.Data.Models;
@@ -20,7 +21,7 @@ public class TokenService : ITokenService
         _db = db;
     }
     
-    public async Task<string> CreateToken(User user)
+    public async Task<TokenDto> CreateToken(User user)
     {
         var userRoles = new List<Role>();
 
@@ -35,14 +36,11 @@ public class TokenService : ITokenService
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-
-        foreach (var role in userRoles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role.Name));
-        }
         
+        claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["Jwt:ExpireDays"]));
 
         var token = new JwtSecurityToken(
@@ -50,9 +48,13 @@ public class TokenService : ITokenService
             _configuration["Jwt:Audience"],
             claims,
             expires: expires,
-            signingCredentials: creds
+            signingCredentials: credentials
         );
         
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var expiresUnixTimestamp = ((DateTimeOffset)expires).ToUnixTimeSeconds();
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        
+        return new TokenDto(jwt, expiresUnixTimestamp);
     }
 }

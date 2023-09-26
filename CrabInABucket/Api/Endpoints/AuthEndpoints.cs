@@ -3,6 +3,8 @@ using CrabInABucket.Api.Requests;
 using CrabInABucket.Api.Responses;
 using CrabInABucket.Core.Services;
 using CrabInABucket.Core.Services.Interfaces;
+using CrabInABucket.Core.Workers;
+using CrabInABucket.Core.Workers.Interfaces;
 using CrabInABucket.Data;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -15,8 +17,8 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/auth/login", async Task<Results<Ok<string>, ValidationProblem, UnauthorizedHttpResult>>
-            ([FromBody] LoginRequest req, [FromServices] DataContext db, [FromServices] ITokenService tokens, IValidator<LoginRequest> validator) =>
+        app.MapPost("/api/auth/login", async Task<Results<Ok<LoginResponse>, ValidationProblem, BadRequest>>
+            ([FromBody] LoginRequest req, [FromServices] IValidator<LoginRequest> validator, [FromServices] ILoginWorker worker) =>
         {
             var validationResult = await validator.ValidateAsync(req);
 
@@ -24,10 +26,13 @@ public static class AuthEndpoints
             {
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
-            
-            var user = await db.User.FirstOrDefaultAsync(x => x.Username == req.Username && x.Password == req.Password);
 
-            return user != null ? TypedResults.Ok(await tokens.CreateToken(user)) : TypedResults.Unauthorized();
+            var res = await worker.Login(req);
+
+            return res != null ? TypedResults.Ok(res) : TypedResults.BadRequest();
         });
+
+        app.MapGet("/api/auth/create", (string password, [FromServices] IPasswordService passwordService) => passwordService.HashPassword(password));
+
     }
 }
