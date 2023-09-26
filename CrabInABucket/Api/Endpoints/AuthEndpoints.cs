@@ -1,7 +1,7 @@
 using CrabInABucket.Api.Mappers;
 using CrabInABucket.Api.Requests;
 using CrabInABucket.Api.Responses;
-using CrabInABucket.Models;
+using CrabInABucket.Data;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ public static class AuthEndpoints
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/api/auth/login", async Task<Results<Ok<UserResponse>, ValidationProblem, UnauthorizedHttpResult>>
-            ([FromBody] LoginRequest req, [FromServices] CrabDbContext db, IValidator<LoginRequest> validator) =>
+            ([FromBody] LoginRequest req, [FromServices] DataContext db, IValidator<LoginRequest> validator) =>
         {
             var validationResult = await validator.ValidateAsync(req);
 

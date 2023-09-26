@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CrabInABucket.Models;
+namespace CrabInABucket.Data.Models;
 
 public class BudgetTransaction : BaseModel
 {

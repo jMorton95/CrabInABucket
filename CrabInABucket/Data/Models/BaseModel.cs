@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CrabInABucket.Models;
+namespace CrabInABucket.Data.Models;
 
 public class BaseModel
 {

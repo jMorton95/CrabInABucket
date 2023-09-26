@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CrabInABucket.Migrations
+namespace CrabInABucket.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

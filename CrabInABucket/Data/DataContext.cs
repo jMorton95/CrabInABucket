@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CrabInABucket.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace CrabInABucket.Models;
+namespace CrabInABucket.Data;
 
-public class CrabDbContext : DbContext
+public class DataContext : DbContext
 {
-    public CrabDbContext(DbContextOptions options) : base(options) { }
+    public DataContext(DbContextOptions options) : base(options) { }
 
     public DbSet<User> User => Set<User>();
     public DbSet<Role> Role => Set<Role>();

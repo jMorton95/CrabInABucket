@@ -1,7 +1,6 @@
 using CrabInABucket.Api.Endpoints;
 using CrabInABucket.Configurators;
-using CrabInABucket.Models;
-using Microsoft.EntityFrameworkCore;
+using CrabInABucket.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,19 +9,14 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? "";
 
-builder.Services.AddDbContext<CrabDbContext>(options => options.UseNpgsql(connectionString));
-
-builder.Services.AddAuthentication();
-builder.Services.AddAuthorization();
-
-
+builder.Services.AddPostgres<DataContext>(connectionString);
+builder.AddAuth();
 builder.Services.AddValidators();
-builder.Services.AddServices();
+builder.Services.AddApplicationServices();
 builder.Services.AddWorkers();
 
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {

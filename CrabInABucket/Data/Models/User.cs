@@ -3,7 +3,7 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
-namespace CrabInABucket.Models;
+namespace CrabInABucket.Data.Models;
 
 
 public class User : BaseModel

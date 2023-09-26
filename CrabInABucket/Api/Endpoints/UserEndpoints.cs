@@ -1,8 +1,8 @@
 ﻿using CrabInABucket.Api.Mappers;
 using CrabInABucket.Api.Requests;
 using CrabInABucket.Api.Responses;
-using CrabInABucket.Api.Validation;
-using CrabInABucket.Models;
+using CrabInABucket.Data;
+using CrabInABucket.Data.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/user/getAll", async Task<Results<Ok<IEnumerable<UserResponse>>, NoContent>> ([FromServices] CrabDbContext db) =>
+        app.MapGet("/api/user/getAll", async Task<Results<Ok<IEnumerable<UserResponse>>, NoContent>> ([FromServices] DataContext db) =>
         {
             var users = await db.User.Include(x => x.Roles).Include(x => x.Accounts).ToListAsync();
 
@@ -24,7 +24,7 @@ public static class UserEndpoints
         });
         
         app.MapGet("/api/user/get", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>>
-            (string username, [FromServices] CrabDbContext db, IValidator<GetUserRequest> validator) =>
+            (string username, [FromServices] DataContext db, IValidator<GetUserRequest> validator) =>
         {
             var validationResult = await validator.ValidateAsync(new GetUserRequest(username));
             
@@ -46,7 +46,7 @@ public static class UserEndpoints
         });
 
         app.MapPost("/api/user/create", async Task<Results<Ok<User>, ValidationProblem>>
-            ([FromBody] CreateUserRequest req, [FromServices] IValidator<CreateUserRequest> validator, CrabDbContext db) =>
+            ([FromBody] CreateUserRequest req, [FromServices] IValidator<CreateUserRequest> validator, DataContext db) =>
         {
             var validationResult = await validator.ValidateAsync(req);
 

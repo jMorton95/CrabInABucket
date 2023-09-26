@@ -2,7 +2,7 @@ namespace CrabInABucket.Configurators;
 
 public static class ServiceConfiguration
 {
-    public static void AddServices(this IServiceCollection services)
+    public static void AddApplicationServices(this IServiceCollection services)
     {
         
     }

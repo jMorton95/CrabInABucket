@@ -1,5 +1,5 @@
 using CrabInABucket.Api.Responses;
-using CrabInABucket.Models;
+using CrabInABucket.Data.Models;
 
 namespace CrabInABucket.Api.Mappers;
 
