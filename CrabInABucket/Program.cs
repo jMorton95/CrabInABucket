@@ -1,5 +1,5 @@
 using CrabInABucket.Api.Endpoints;
-using CrabInABucket.Configurators;
+using CrabInABucket.Core.Configurators;
 using CrabInABucket.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +10,12 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? "";
 
 builder.Services.AddPostgres<DataContext>(connectionString);
+
 builder.AddAuth();
-builder.Services.AddValidators();
-builder.Services.AddApplicationServices();
+
 builder.Services.AddWorkers();
+builder.Services.AddApplicationServices();
+builder.Services.AddValidators();
 
 
 var app = builder.Build();

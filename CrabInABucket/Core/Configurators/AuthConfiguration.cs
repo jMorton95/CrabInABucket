@@ -1,9 +1,10 @@
+using System.Security.Cryptography;
 using System.Text;
 using CrabInABucket.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CrabInABucket.Configurators;
+namespace CrabInABucket.Core.Configurators;
 
 /// <summary>
 /// Configures JWT Authentication & Authorization Policies
@@ -22,6 +23,7 @@ public static class AuthConfiguration
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = builder.Configuration["Jwt:Issuer"],
                 ValidAudience = builder.Configuration["Jwt:Audience"],
+                ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
             };
         });

@@ -4,5 +4,5 @@ namespace CrabInABucket.Data.Models;
 
 public class Role : BaseModel
 {
-    [Required] string Name { get; set; }
+    [Required] public string Name { get; set; }
 }
