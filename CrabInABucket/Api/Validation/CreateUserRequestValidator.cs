@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace CrabInABucket.Api.Validation;
 
-public class CreateUserValidator : AbstractValidator<CreateUserRequest>
+public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
 {
-    public CreateUserValidator()
+    public CreateUserRequestValidator()
     {
         RuleFor(x => x.Username)
             .EmailAddress()
