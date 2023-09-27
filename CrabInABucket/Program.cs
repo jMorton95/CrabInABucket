@@ -11,6 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("PostgresConnec
 
 builder.Services.AddPostgres<DataContext>(connectionString);
 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JWT"));
+
 builder.AddAuth();
 
 builder.Services.AddValidators();
