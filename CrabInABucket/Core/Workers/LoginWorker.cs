@@ -38,7 +38,9 @@ public class LoginWorker : ILoginWorker
             return null;
         }
 
-        var token = await _tokenService.CreateToken(attemptedUser);
+        var userClaims = await _tokenService.GetUserClaims(attemptedUser);
+        
+        var token = _tokenService.CreateToken(userClaims);
 
         return new LoginResponse(token, attemptedUser.ToUserResponse());
     }

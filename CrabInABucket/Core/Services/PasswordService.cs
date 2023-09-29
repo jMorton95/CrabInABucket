@@ -19,29 +19,17 @@ public class PasswordService : IPasswordService
     public string HashPassword(string password)
     {
         var rng = RandomNumberGenerator.Create();
-        var salt = new byte[32];
+        var salt = _passwordProcess.CreateSalt();
 
         rng.GetBytes(salt);
-        
-        var passwordKey = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
-        
-        var hashBytes = passwordKey.GetBytes(32);
-        
-        var bytePassword = new byte[salt.Length + hashBytes.Length];
-        
-        Array.Copy(salt, 0, bytePassword, 0, salt.Length);
-        
-        Array.Copy(hashBytes, 0, bytePassword, salt.Length, hashBytes.Length);
-        
-        var builder = new StringBuilder(bytePassword.Length * 2);
-        
-        foreach (var b in bytePassword)
-        {
-            builder.Append(b.ToString("x2"));
-        }
-        
-        return builder.ToString();
-        
+
+        var passwordKey = _passwordProcess.CreatePasswordKey(password, salt);
+
+        var hashedPassword = _passwordProcess.HashPassword(passwordKey, salt);
+       
+
+        return _passwordProcess.HashedPasswordToString(hashedPassword);
+
     }
 
     public bool CheckPassword(string loginPassword, string storedPassword)

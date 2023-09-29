@@ -20,8 +20,8 @@ public class TokenService : ITokenService
         _configuration = configuration;
         _db = db;
     }
-    
-    public async Task<TokenDto> CreateToken(User user)
+
+    public async Task<List<Claim>> GetUserClaims(User user)
     {
         var userRoles = new List<Role>();
 
@@ -38,7 +38,12 @@ public class TokenService : ITokenService
         };
         
         claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
-
+        
+        return claims;
+    }
+    
+    public TokenDto CreateTokenWithClaims(List<Claim> claims)
+    {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["Jwt:ExpireDays"]));
