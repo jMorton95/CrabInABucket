@@ -29,7 +29,7 @@ public class TokenService : ITokenService
 
         if (user.Roles != null && user.Roles.Any())
         {
-            var roleIds = user.Roles.Select(r => r.Role.Id).ToList();
+            var roleIds = user.Roles.Select(r => r.Role!.Id).ToList();
             userRoles = await _db.Role.Where(role => roleIds.Contains(role.Id)).ToListAsync();
         }
         
@@ -44,7 +44,7 @@ public class TokenService : ITokenService
         return claims;
     }
     
-    public TokenDto CreateTokenWithClaims(IEnumerable<Claim> claims)
+    public TokenWithExpiry CreateTokenWithClaims(IEnumerable<Claim> claims)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -62,6 +62,6 @@ public class TokenService : ITokenService
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         
-        return new TokenDto(jwt, expiresUnixTimestamp);
+        return new TokenWithExpiry(jwt, expiresUnixTimestamp);
     }
 }

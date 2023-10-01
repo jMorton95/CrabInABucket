@@ -17,8 +17,8 @@ public class BaseModel
     
     [Required]
     public int RowVersion { get; set; } = 1;
-    //
-    // public Guid? CreatedBy { get; set; }
-    //
-    // public Guid? EditedBy { get; set; }
+    
+    public Guid? CreatedBy { get; set; }
+    
+    public Guid? EditedBy { get; set; }
 }

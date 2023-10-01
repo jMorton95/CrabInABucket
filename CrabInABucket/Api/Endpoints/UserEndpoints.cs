@@ -48,25 +48,7 @@ public static class UserEndpoints
             return TypedResults.Ok(res);
         });
 
-        usersGroup.MapPost("/register", async Task<Results<Ok<CreateUserResponse>, ValidationProblem>>
-        (
-            [FromBody] CreateUserRequest req,
-            [FromServices] IValidator<CreateUserRequest> validator,
-            [FromServices] ICreateUserWorker createUserWorker
-        ) 
-            =>
-        {
-            var validationResult = await validator.ValidateAsync(req);
-
-            if (!validationResult.IsValid)
-            {
-                return TypedResults.ValidationProblem(validationResult.ToDictionary());
-            }
-
-            var result = await createUserWorker.CreateUser(req);
-
-            return TypedResults.Ok(result);
-        });
+        
 
     }
 }

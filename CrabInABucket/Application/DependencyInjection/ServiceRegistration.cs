@@ -9,6 +9,7 @@ public static class ServiceRegistration
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<IUserAccessorService, UserAccessorService>();
 
         return services;
     }

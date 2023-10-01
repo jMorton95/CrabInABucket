@@ -28,8 +28,14 @@ namespace CrabInABucket.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EditedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -60,8 +66,14 @@ namespace CrabInABucket.Data.Migrations
                     b.Property<Guid?>("AccountId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EditedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("RowVersion")
                         .HasColumnType("integer");
@@ -82,8 +94,14 @@ namespace CrabInABucket.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EditedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -106,8 +124,14 @@ namespace CrabInABucket.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EditedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -138,10 +162,16 @@ namespace CrabInABucket.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid?>("EditedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("RoleId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("RowVersion")
@@ -150,7 +180,7 @@ namespace CrabInABucket.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -180,15 +210,11 @@ namespace CrabInABucket.Data.Migrations
                 {
                     b.HasOne("CrabInABucket.Data.Models.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.HasOne("CrabInABucket.Data.Models.User", "User")
                         .WithMany("Roles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Role");
 

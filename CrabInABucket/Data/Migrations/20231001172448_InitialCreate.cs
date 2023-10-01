@@ -19,7 +19,9 @@ namespace CrabInABucket.Data.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RowVersion = table.Column<int>(type: "integer", nullable: false)
+                    RowVersion = table.Column<int>(type: "integer", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    EditedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,7 +37,9 @@ namespace CrabInABucket.Data.Migrations
                     Password = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RowVersion = table.Column<int>(type: "integer", nullable: false)
+                    RowVersion = table.Column<int>(type: "integer", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    EditedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,7 +55,9 @@ namespace CrabInABucket.Data.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RowVersion = table.Column<int>(type: "integer", nullable: false)
+                    RowVersion = table.Column<int>(type: "integer", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    EditedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -68,11 +74,13 @@ namespace CrabInABucket.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RowVersion = table.Column<int>(type: "integer", nullable: false)
+                    RowVersion = table.Column<int>(type: "integer", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    EditedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,14 +89,12 @@ namespace CrabInABucket.Data.Migrations
                         name: "FK_UserRole_Role_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Role",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserRole_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -99,7 +105,9 @@ namespace CrabInABucket.Data.Migrations
                     AccountId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    RowVersion = table.Column<int>(type: "integer", nullable: false)
+                    RowVersion = table.Column<int>(type: "integer", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    EditedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {

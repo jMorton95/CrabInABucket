@@ -1,12 +1,11 @@
-﻿using CrabInABucket.Data.Models;
+﻿using CrabInABucket.Core.Services.Interfaces;
+using CrabInABucket.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CrabInABucket.Data;
 
-public class DataContext : DbContext
+public class DataContext(DbContextOptions options, IUserAccessorService userAccessorService) : DbContext(options)
 {
-    public DataContext(DbContextOptions options) : base(options) { }
-
     public DbSet<User> User => Set<User>();
     public DbSet<Role> Role => Set<Role>();
     public DbSet<UserRole> UserRole => Set<UserRole>();
@@ -21,17 +20,27 @@ public class DataContext : DbContext
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        var modifiedEntities = ChangeTracker.Entries()
-            .Where(x => x.State == EntityState.Modified)
-            .Select(x => x.Entity as BaseModel);
-
-        foreach (var entity in modifiedEntities)
+        var userId = userAccessorService.GetCurrentUserId();
+        
+        foreach (var entry in ChangeTracker.Entries())
         {
-            if (entity != null)
+            if (entry.Entity is not BaseModel entity ) continue;
+
+            entity.EditedBy = userId;
+            entity.UpdatedDate = DateTime.UtcNow;
+
+            switch (entry)
             {
-                entity.UpdatedDate = DateTime.UtcNow;
+                case { State: EntityState.Added }:
+                    entity.CreatedBy = userId;
+                    break;
+                
+                case { State: EntityState.Modified }:
+                    entity.RowVersion += 1;
+                    break;
             }
         }
+        
         
         return base.SaveChangesAsync(cancellationToken);
     }

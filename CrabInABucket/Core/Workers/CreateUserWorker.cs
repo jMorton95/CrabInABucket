@@ -22,7 +22,7 @@ public class CreateUserWorker(IReadUsers read, IWriteUsers write, IPasswordServi
         var createResult = await write.CreateAsync(new User { Username = request.Username, Password = password });
 
         return createResult > 0
-            ? new CreateUserResponse(true)
+            ? new CreateUserResponse(true, $"Successfully created account for {request.Username}")
             : new CreateUserResponse(false, $"Error occurred creating account for {request.Username}");
     }
 }

@@ -11,7 +11,7 @@ public static class DataRegistration
         services.AddDbContext<TContext>(options => options.UseNpgsql(connectionString));
     }
 
-    public static IServiceCollection AddReaders(this IServiceCollection services)
+    public static IServiceCollection AddQueries(this IServiceCollection services)
     {
         services.AddScoped<IReadUsers, ReadUsers>();
         services.AddScoped<IWriteUsers, WriteUsers>();

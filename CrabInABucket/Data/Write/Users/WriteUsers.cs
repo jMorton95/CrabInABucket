@@ -9,8 +9,13 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
 {
     public async Task<int> CreateAsync(User entity)
     {
-        await db.User.AddAsync(entity);
-
+        var userToAdd = db.User.Add(entity);
+        
+        var userId = userToAdd.Entity.Id;
+        
+        userToAdd.Entity.CreatedBy = userId;
+        userToAdd.Entity.EditedBy = userId;
+        
         return await db.SaveChangesAsync();
     }
 

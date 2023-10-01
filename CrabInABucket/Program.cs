@@ -4,7 +4,6 @@ using CrabInABucket.Application.ConfigurationSettings;
 using CrabInABucket.Application.DependencyInjection;
 using CrabInABucket.Application.OpenApi;
 using CrabInABucket.Data;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +17,9 @@ builder.ConfigureSwaggerGeneration();
 builder.Services.AddPostgres<DataContext>(builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection) ?? "");
 
 builder.Services
+    .AddHttpContextAccessor()
     .AddEndpointValidators()
-    .AddReaders()
+    .AddQueries()
     .AddProcesses()
     .AddApplicationServices()
     .AddWorkers();
