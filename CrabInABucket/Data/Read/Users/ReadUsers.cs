@@ -1,16 +1,18 @@
-using CrabInABucket.Data.Access.Generic;
+using CrabInABucket.Data.Read.Generic;
 using CrabInABucket.Data.Models;
 
-namespace CrabInABucket.Data.Access;
+namespace CrabInABucket.Data.Read.Users;
 
-public class ReadUsers<User> : IRead<User> where User : BaseModel
+public interface IReadUsers : IRead<User> { }
+
+public sealed class ReadUsers : IReadUsers
 {
     public Task<User?> GetByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ICollection<User>> GetAllAsync()
+    public Task<IEnumerable<User>> GetAllAsync()
     {
         throw new NotImplementedException();
     }

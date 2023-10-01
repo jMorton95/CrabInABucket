@@ -1,10 +1,10 @@
 using CrabInABucket.Data.Models;
 
-namespace CrabInABucket.Data.Access.Generic;
+namespace CrabInABucket.Data.Read.Generic;
 
 public interface IRead<TEntity> where TEntity : BaseModel
 {
     Task<TEntity?> GetByIdAsync(Guid id);
 
-    Task<ICollection<TEntity>> GetAllAsync();
+    Task<IEnumerable<TEntity>> GetAllAsync();
 }
