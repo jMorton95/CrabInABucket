@@ -5,8 +5,10 @@ namespace CrabInABucket.Application.DependencyInjection;
 
 public static class ProcessRegistration
 {
-    public static void AddProcesses(this IServiceCollection services)
+    public static IServiceCollection AddProcesses(this IServiceCollection services)
     {
         services.AddScoped<IPasswordProcess, PasswordProcess>();
+
+        return services;
     }
 }

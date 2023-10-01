@@ -5,9 +5,11 @@ namespace CrabInABucket.Application.DependencyInjection;
 
 public static class ServiceRegistration
 {
-    public static void AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordService, PasswordService>();
+
+        return services;
     }
 }

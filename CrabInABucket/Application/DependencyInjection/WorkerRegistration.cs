@@ -4,8 +4,10 @@ using CrabInABucket.Core.Workers.Interfaces;
 namespace CrabInABucket.Application.DependencyInjection;
 public static class WorkerRegistration
 {
-    public static void AddWorkers(this IServiceCollection services)
+    public static IServiceCollection AddWorkers(this IServiceCollection services)
     {
         services.AddScoped<ILoginWorker, LoginWorker>();
+
+        return services;
     }
 }

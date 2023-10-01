@@ -17,11 +17,12 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(Setting
 
 builder.AddAuth();
 
-builder.Services.AddValidators();
-builder.Services.AddProcesses();
-builder.Services.AddApplicationServices();
-builder.Services.AddWorkers();
-
+builder.Services
+    .AddEndpointValidators()
+    .AddReaders()
+    .AddProcesses()
+    .AddApplicationServices()
+    .AddWorkers();
 
 var app = builder.Build();
 
