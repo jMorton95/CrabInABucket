@@ -7,5 +7,5 @@ namespace CrabInABucket.Core.Services.Interfaces;
 public interface ITokenService
 {
     Task<List<Claim>> GetUserClaims(User user);
-    TokenDto CreateToken(List<Claim> claims);
+    TokenDto CreateTokenWithClaims(IEnumerable<Claim> claims);
 }

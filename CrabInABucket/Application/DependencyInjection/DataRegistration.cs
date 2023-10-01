@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace CrabInABucket.Data;
+namespace CrabInABucket.Application.DependencyInjection;
 
-public static class ConfigureDataSource
+public static class DataRegistration
 {
     public static void AddPostgres<TContext>(this IServiceCollection services, string connectionString) where TContext : DbContext
     {

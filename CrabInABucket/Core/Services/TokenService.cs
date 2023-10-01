@@ -1,23 +1,25 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using CrabInABucket.Application.ConfigurationSettings;
 using CrabInABucket.Core.Services.Dtos;
 using CrabInABucket.Core.Services.Interfaces;
 using CrabInABucket.Data;
 using CrabInABucket.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CrabInABucket.Core.Services;
 
 public class TokenService : ITokenService
 {
-    private readonly IConfiguration _configuration;
+    private readonly JwtSettings _jwt;
     private readonly DataContext _db;
 
-    public TokenService(IConfiguration configuration, DataContext db)
+    public TokenService(IOptions<JwtSettings> jwt, DataContext db)
     {
-        _configuration = configuration;
+        _jwt = jwt.Value;
         _db = db;
     }
 
@@ -42,15 +44,15 @@ public class TokenService : ITokenService
         return claims;
     }
     
-    public TokenDto CreateTokenWithClaims(List<Claim> claims)
+    public TokenDto CreateTokenWithClaims(IEnumerable<Claim> claims)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["Jwt:ExpireDays"]));
+        var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_jwt.ExpireDays));
 
         var token = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
+            _jwt.Issuer,
+            _jwt.Audience,
             claims,
             expires: expires,
             signingCredentials: credentials

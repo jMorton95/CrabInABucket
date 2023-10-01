@@ -1,9 +1,9 @@
 using CrabInABucket.Core.Services;
 using CrabInABucket.Core.Services.Interfaces;
 
-namespace CrabInABucket.Core.Configurators;
+namespace CrabInABucket.Application.DependencyInjection;
 
-public static class ServiceConfiguration
+public static class ServiceRegistration
 {
     public static void AddApplicationServices(this IServiceCollection services)
     {

@@ -1,5 +1,7 @@
 using CrabInABucket.Api.Endpoints;
-using CrabInABucket.Core.Configurators;
+using CrabInABucket.Application.AppConstants;
+using CrabInABucket.Application.ConfigurationSettings;
+using CrabInABucket.Application.DependencyInjection;
 using CrabInABucket.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,11 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("PostgresConnection") ?? "";
+var connectionString = builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection) ?? "";
 
 builder.Services.AddPostgres<DataContext>(connectionString);
 
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JWT"));
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingsConstants.JwtSection));
 
 builder.AddAuth();
 

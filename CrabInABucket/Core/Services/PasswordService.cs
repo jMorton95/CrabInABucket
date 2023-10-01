@@ -26,8 +26,7 @@ public class PasswordService : IPasswordService
         var passwordKey = _passwordProcess.CreatePasswordKey(password, salt);
 
         var hashedPassword = _passwordProcess.HashPassword(passwordKey, salt);
-       
-
+        
         return _passwordProcess.HashedPasswordToString(hashedPassword);
 
     }

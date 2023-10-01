@@ -2,8 +2,9 @@ using CrabInABucket.Api.Requests;
 using CrabInABucket.Api.Validation;
 using FluentValidation;
 
-namespace CrabInABucket.Core.Configurators;
-public static class ValidationConfiguration
+namespace CrabInABucket.Application.DependencyInjection;
+
+public static class ValidationRegistration
 {
     public static void AddValidators(this IServiceCollection services)
     {

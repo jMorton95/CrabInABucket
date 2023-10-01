@@ -4,12 +4,12 @@ using CrabInABucket.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CrabInABucket.Core.Configurators;
+namespace CrabInABucket.Application.DependencyInjection;
 
 /// <summary>
 /// Configures JWT Authentication & Authorization Policies
 /// </summary>
-public static class AuthConfiguration
+public static class AuthRegistration
 {
     public static void AddAuth(this WebApplicationBuilder builder)
     {

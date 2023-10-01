@@ -1,8 +1,8 @@
 using CrabInABucket.Core.Workers;
 using CrabInABucket.Core.Workers.Interfaces;
 
-namespace CrabInABucket.Core.Configurators;
-public static class WorkerConfiguration
+namespace CrabInABucket.Application.DependencyInjection;
+public static class WorkerRegistration
 {
     public static void AddWorkers(this IServiceCollection services)
     {

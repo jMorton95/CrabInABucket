@@ -40,7 +40,7 @@ public class LoginWorker : ILoginWorker
 
         var userClaims = await _tokenService.GetUserClaims(attemptedUser);
         
-        var token = _tokenService.CreateToken(userClaims);
+        var token = _tokenService.CreateTokenWithClaims(userClaims);
 
         return new LoginResponse(token, attemptedUser.ToUserResponse());
     }
