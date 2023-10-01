@@ -1,5 +1,5 @@
-﻿using FinanceManager.Core.Utilities;
-using FinanceManager.Data.Models;
+﻿using FinanceManager.Common.Utilities;
+using FinanceManager.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data;

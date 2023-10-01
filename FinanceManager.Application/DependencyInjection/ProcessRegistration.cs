@@ -1,5 +1,6 @@
-using FinanceManager.Api.Core.Processes;
-using FinanceManager.Api.Core.Processes.Interfaces;
+using FinanceManager.Services.Processes;
+using FinanceManager.Services.Processes.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinanceManager.Application.DependencyInjection;
 

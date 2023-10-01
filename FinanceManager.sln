@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Data", "Fina
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Core", "FinanceManager.Core\FinanceManager.Core.csproj", "{0949F76E-151D-4C1A-A67F-FC764757F001}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Common", "FinanceManager.Common\FinanceManager.Common.csproj", "{DD2AB879-8A8D-415B-88C3-7F94D3FF5F07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{0949F76E-151D-4C1A-A67F-FC764757F001}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0949F76E-151D-4C1A-A67F-FC764757F001}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0949F76E-151D-4C1A-A67F-FC764757F001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD2AB879-8A8D-415B-88C3-7F94D3FF5F07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD2AB879-8A8D-415B-88C3-7F94D3FF5F07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD2AB879-8A8D-415B-88C3-7F94D3FF5F07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD2AB879-8A8D-415B-88C3-7F94D3FF5F07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

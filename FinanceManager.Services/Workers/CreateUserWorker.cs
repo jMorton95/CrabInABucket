@@ -1,6 +1,6 @@
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
-using FinanceManager.Data.Models;
+using FinanceManager.Common.Models;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
 using FinanceManager.Services.Services.Interfaces;

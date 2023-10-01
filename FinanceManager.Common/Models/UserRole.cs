@@ -1,6 +1,6 @@
-using FinanceManager.Data.Models;
+using FinanceManager.Common.Models;
 
-namespace FinanceManager.Data.Models;
+namespace FinanceManager.Common.Models;
 
 public class UserRole : BaseModel
 {

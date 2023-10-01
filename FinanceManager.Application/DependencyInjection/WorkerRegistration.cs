@@ -1,5 +1,5 @@
-using FinanceManager.Core.Workers;
-using FinanceManager.Core.Workers.Interfaces;
+using FinanceManager.Services.Workers;
+using FinanceManager.Services.Workers.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FinanceManager.Application.DependencyInjection;

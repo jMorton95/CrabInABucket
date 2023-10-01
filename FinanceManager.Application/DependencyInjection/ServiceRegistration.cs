@@ -1,5 +1,7 @@
-using FinanceManager.Api.Core.Services;
-using FinanceManager.Api.Core.Services.Interfaces;
+using FinanceManager.Common.Utilities;
+using FinanceManager.Services.Services;
+using FinanceManager.Services.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinanceManager.Application.DependencyInjection;
 
@@ -9,7 +11,7 @@ public static class ServiceRegistration
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordService, PasswordService>();
-        services.AddScoped<IUserAccessorService, UserAccessorService>();
+        services.AddScoped<IUserAccessor, UserAccessor>();
 
         return services;
     }

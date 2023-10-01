@@ -11,8 +11,12 @@
     <ItemGroup>
         <ProjectReference Include="..\FinanceManager.Core\FinanceManager.Core.csproj" />
         <ProjectReference Include="..\FinanceManager.Data\FinanceManager.Data.csproj" />
-        <ProjectReference Include="..\FinanceManager.Application\FinanceManager.Application.csproj" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.15.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
+    </ItemGroup>
 
 </Project>

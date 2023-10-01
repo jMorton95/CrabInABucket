@@ -1,5 +1,5 @@
 using FinanceManager.Application.AppConstants;
-using FinanceManager.Application.ConfigurationSettings;
+using FinanceManager.Common.ConfigurationSettings;
 using FinanceManager.Application.DependencyInjection;
 using FinanceManager.Api.Endpoints;
 using FinanceManager.Application.OpenApi;
@@ -16,13 +16,13 @@ builder.ConfigureSwaggerGeneration();
 
 builder.Services.AddPostgres<DataContext>(builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection) ?? "");
 
-// builder.Services
-//     .AddHttpContextAccessor()
-//     .AddEndpointValidators()
-//     .AddQueries()
-//     .AddProcesses()
-//     .AddApplicationServices()
-//     .AddWorkers();
+builder.Services
+    .AddHttpContextAccessor()
+    .AddEndpointValidators()
+    .AddQueries()
+    .AddProcesses()
+    .AddApplicationServices()
+    .AddWorkers();
 
 var app = builder.Build();
 

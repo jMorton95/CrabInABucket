@@ -1,4 +1,4 @@
-namespace FinanceManager.Application.ConfigurationSettings;
+namespace FinanceManager.Common.ConfigurationSettings;
 
 public record JwtSettings()
 {

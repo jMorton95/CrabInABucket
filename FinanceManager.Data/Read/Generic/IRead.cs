@@ -1,4 +1,4 @@
-using FinanceManager.Data.Models;
+using FinanceManager.Common.Models;
 
 namespace FinanceManager.Data.Read.Generic;
 

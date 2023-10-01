@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FinanceManager.Data.Models;
+namespace FinanceManager.Common.Models;
 
 public class BudgetTransaction : BaseModel
 {

@@ -1,6 +1,10 @@
 using FinanceManager.Application.AppConstants;
-using FinanceManager.Application.ConfigurationSettings;
+using FinanceManager.Common.ConfigurationSettings;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace FinanceManager.Application.OpenApi;
 

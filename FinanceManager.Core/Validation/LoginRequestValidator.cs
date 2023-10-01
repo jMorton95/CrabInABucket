@@ -1,7 +1,7 @@
 using FinanceManager.Core.Requests;
 using FluentValidation;
 
-namespace FinanceManager.Api.Validation;
+namespace FinanceManager.Core.Validation;
 
 public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {

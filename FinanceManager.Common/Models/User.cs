@@ -1,11 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Data;
-using FinanceManager.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
-namespace FinanceManager.Data.Models;
-
+namespace FinanceManager.Common.Models;
 
 public class User : BaseModel
 {

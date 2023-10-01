@@ -15,7 +15,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <ProjectReference Include="..\FinanceManager.Core\FinanceManager.Core.csproj" />
+        <ProjectReference Include="..\FinanceManager.Common\FinanceManager.Common.csproj" />
     </ItemGroup>
     
 </Project>

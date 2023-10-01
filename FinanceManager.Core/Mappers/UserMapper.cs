@@ -1,5 +1,5 @@
 using FinanceManager.Core.Responses;
-using FinanceManager.Data.Models;
+using FinanceManager.Common.Models;
 
 namespace FinanceManager.Core.Mappers;
 
