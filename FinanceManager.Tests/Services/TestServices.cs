@@ -7,10 +7,10 @@ public class AccountServiceTests
     [Fact]
     public void Add_TwoNumbers_ReturnsSum()
     {
-        var one = 1;
+        var three = 1;
         var two = 2;
 
-        var result = one + two;
+        var result = three + two;
         
         Assert.Equal(3, result);
     }
