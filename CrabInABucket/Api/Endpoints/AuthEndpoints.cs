@@ -17,8 +17,15 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/auth/login", async Task<Results<Ok<LoginResponse>, ValidationProblem, BadRequest>>
-            ([FromBody] LoginRequest req, [FromServices] IValidator<LoginRequest> validator, [FromServices] ILoginWorker worker) =>
+        var authGroup = app.MapGroup("/api/auth/").WithTags("Auth").AllowAnonymous();
+        
+        authGroup.MapPost("/login", async Task<Results<Ok<LoginResponse>, ValidationProblem, BadRequest>>
+        (
+            [FromBody] LoginRequest req,
+            [FromServices] IValidator<LoginRequest> validator,
+            [FromServices] ILoginWorker worker
+        )
+            =>
         {
             var validationResult = await validator.ValidateAsync(req);
 
@@ -31,8 +38,5 @@ public static class AuthEndpoints
 
             return res != null ? TypedResults.Ok(res) : TypedResults.BadRequest();
         });
-
-        app.MapGet("/api/auth/create", (string password, [FromServices] IPasswordService passwordService) => passwordService.HashPassword(password));
-
     }
 }

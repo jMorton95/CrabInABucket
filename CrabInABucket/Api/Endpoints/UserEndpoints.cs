@@ -15,7 +15,7 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this IEndpointRouteBuilder app)
     {
-        var usersGroup = app.MapGroup("/api/user/").WithTags("User");
+        var usersGroup = app.MapGroup("/api/user/").WithTags("User").RequireAuthorization();
         
         usersGroup.MapGet("/getAll", async Task<Results<Ok<IEnumerable<UserResponse>>, NoContent>> ([FromServices] DataContext db) =>
         {
@@ -48,7 +48,7 @@ public static class UserEndpoints
             return TypedResults.Ok(res);
         });
 
-        usersGroup.MapPost("/create", async Task<Results<Ok<CreateUserResponse>, ValidationProblem>>
+        usersGroup.MapPost("/register", async Task<Results<Ok<CreateUserResponse>, ValidationProblem>>
         (
             [FromBody] CreateUserRequest req,
             [FromServices] IValidator<CreateUserRequest> validator,

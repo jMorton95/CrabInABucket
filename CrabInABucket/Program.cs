@@ -2,20 +2,20 @@ using CrabInABucket.Api.Endpoints;
 using CrabInABucket.Application.AppConstants;
 using CrabInABucket.Application.ConfigurationSettings;
 using CrabInABucket.Application.DependencyInjection;
+using CrabInABucket.Application.OpenApi;
 using CrabInABucket.Data;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var connectionString = builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection) ?? "";
-
-builder.Services.AddPostgres<DataContext>(connectionString);
-
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingsConstants.JwtSection));
+builder.Services.Configure<SwaggerSettings>(builder.Configuration.GetSection(SettingsConstants.SwaggerSection));
 
 builder.AddAuth();
+
+builder.ConfigureSwaggerGeneration();
+
+builder.Services.AddPostgres<DataContext>(builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection) ?? "");
 
 builder.Services
     .AddEndpointValidators()
@@ -26,12 +26,8 @@ builder.Services
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
+app.UseConfiguredSwagger();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
