@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CrabInABucket.Api.Endpoints;
+namespace CrabInABucket.Api.Endpoints.Private;
 
 public static class UserEndpoints
 {

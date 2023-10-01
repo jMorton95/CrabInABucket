@@ -1,7 +1,7 @@
-using CrabInABucket.Api.Endpoints;
 using CrabInABucket.Application.AppConstants;
 using CrabInABucket.Application.ConfigurationSettings;
 using CrabInABucket.Application.DependencyInjection;
+using CrabInABucket.Application.EndpointMapping;
 using CrabInABucket.Application.OpenApi;
 using CrabInABucket.Data;
 
@@ -32,7 +32,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapAuthEndpoints();
-app.MapUserEndpoints();
+app.MapApiEndpoints();
 
 app.Run();

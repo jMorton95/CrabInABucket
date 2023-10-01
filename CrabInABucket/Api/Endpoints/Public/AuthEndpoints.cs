@@ -1,17 +1,11 @@
-using CrabInABucket.Api.Mappers;
 using CrabInABucket.Api.Requests;
 using CrabInABucket.Api.Responses;
-using CrabInABucket.Core.Services;
-using CrabInABucket.Core.Services.Interfaces;
-using CrabInABucket.Core.Workers;
 using CrabInABucket.Core.Workers.Interfaces;
-using CrabInABucket.Data;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace CrabInABucket.Api.Endpoints;
+namespace CrabInABucket.Api.Endpoints.Public;
 
 public static class AuthEndpoints
 {
