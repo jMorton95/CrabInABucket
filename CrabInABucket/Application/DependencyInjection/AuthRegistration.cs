@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using CrabInABucket.Helpers;
+using CrabInABucket.Application.AppConstants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -30,7 +30,7 @@ public static class AuthRegistration
 
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy(RoleConstants.ADMIN_ROLE, policy => policy.RequireClaim(RoleConstants.ADMIN_ROLE));
+            options.AddPolicy(RoleConstants.AdminRole, policy => policy.RequireClaim(RoleConstants.AdminRole));
         });
     }
 }
