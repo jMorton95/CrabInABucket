@@ -4,6 +4,7 @@
 - Refactor JWT Generation & Split TokenCreation and TokenDto
 - Create User Endpoints & Role Assignment
 - Role Management Endpoints
+- Add Middleware to intercept requests & set a request-wide User object for createdBy / editedBy
 
  
 # Feature List:

@@ -1,6 +1,7 @@
 ﻿using CrabInABucket.Api.Mappers;
 using CrabInABucket.Api.Requests;
 using CrabInABucket.Api.Responses;
+using CrabInABucket.Core.Workers.Interfaces;
 using CrabInABucket.Data;
 using CrabInABucket.Data.Models;
 using FluentValidation;
@@ -14,16 +15,18 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/user/getAll", async Task<Results<Ok<IEnumerable<UserResponse>>, NoContent>> ([FromServices] DataContext db) =>
+        var usersGroup = app.MapGroup("/api/user/").WithTags("User");
+        
+        usersGroup.MapGet("/getAll", async Task<Results<Ok<IEnumerable<UserResponse>>, NoContent>> ([FromServices] DataContext db) =>
         {
             var users = await db.User.Include(x => x.Roles).Include(x => x.Accounts).ToListAsync();
 
             var res = users.Select(x => x.ToUserResponse());
             
             return users.Count > 0 ? TypedResults.Ok(res) : TypedResults.NoContent();
-        });
+        }).WithDisplayName("GetAll");
         
-        app.MapGet("/api/user/get", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>>
+        usersGroup.MapGet("/get", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>>
             (string username, [FromServices] DataContext db, IValidator<GetUserRequest> validator) =>
         {
             var validationResult = await validator.ValidateAsync(new GetUserRequest(username));
@@ -45,8 +48,13 @@ public static class UserEndpoints
             return TypedResults.Ok(res);
         });
 
-        app.MapPost("/api/user/create", async Task<Results<Ok<User>, ValidationProblem>>
-            ([FromBody] CreateUserRequest req, [FromServices] IValidator<CreateUserRequest> validator, DataContext db) =>
+        usersGroup.MapPost("/create", async Task<Results<Ok<CreateUserResponse>, ValidationProblem>>
+        (
+            [FromBody] CreateUserRequest req,
+            [FromServices] IValidator<CreateUserRequest> validator,
+            [FromServices] ICreateUserWorker createUserWorker
+        ) 
+            =>
         {
             var validationResult = await validator.ValidateAsync(req);
 
@@ -55,15 +63,10 @@ public static class UserEndpoints
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
 
-            var user = new User { Username = req.Username, Password = req.Password };
+            var result = await createUserWorker.CreateUser(req);
 
-            await db.User.AddAsync(user);
-
-            await db.SaveChangesAsync();
-
-            return TypedResults.Ok(user);
+            return TypedResults.Ok(result);
         });
-
 
     }
 }

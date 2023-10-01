@@ -7,6 +7,7 @@ public static class WorkerRegistration
     public static IServiceCollection AddWorkers(this IServiceCollection services)
     {
         services.AddScoped<ILoginWorker, LoginWorker>();
+        services.AddScoped<ICreateUserWorker, CreateUserWorker>();
 
         return services;
     }

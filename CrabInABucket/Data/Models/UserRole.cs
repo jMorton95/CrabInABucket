@@ -2,6 +2,6 @@ namespace CrabInABucket.Data.Models;
 
 public class UserRole : BaseModel
 {
-    public User User { get; set; }
-    public Role Role { get; set; }
+    public User? User { get; init; }
+    public Role? Role { get; init; }
 }

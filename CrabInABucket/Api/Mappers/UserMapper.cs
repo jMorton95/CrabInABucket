@@ -7,6 +7,9 @@ public static class UserMapper
 {
     public static UserResponse ToUserResponse(this User user)
     {
-        return new UserResponse(user.Username, user.Roles ?? new List<UserRole>(), user.Accounts ?? new List<Account>());
+        var userRoles = user.Roles?.Select(x => x.Role!.Name).ToList() ?? new List<string>();
+        var userAccounts = user.Accounts?.Select(x => x.Name).ToList() ?? new List<string>();
+        
+        return new UserResponse(user.Username, userRoles, userAccounts);
     }
 }
