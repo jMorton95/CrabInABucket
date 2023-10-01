@@ -1,5 +1,4 @@
-using FinanceManager.Common.Models;
-using FinanceManager.Common.Models;
+using FinanceManager.Core.Models;
 
 namespace FinanceManager.Data.Write.Generic;
 

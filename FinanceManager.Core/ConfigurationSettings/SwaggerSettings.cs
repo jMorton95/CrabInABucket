@@ -1,4 +1,4 @@
-namespace FinanceManager.Common.ConfigurationSettings;
+namespace FinanceManager.Core.ConfigurationSettings;
 
 public record SwaggerSettings()
 {

@@ -1,5 +1,5 @@
 using FinanceManager.Application.AppConstants;
-using FinanceManager.Common.ConfigurationSettings;
+using FinanceManager.Core.ConfigurationSettings;
 using FinanceManager.Application.DependencyInjection;
 using FinanceManager.Api.Endpoints;
 using FinanceManager.Application.OpenApi;

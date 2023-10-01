@@ -1,4 +1,4 @@
-using FinanceManager.Common.Utilities;
+using FinanceManager.Core.Utilities;
 using FinanceManager.Services.Services;
 using FinanceManager.Services.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

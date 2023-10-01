@@ -1,5 +1,5 @@
+using FinanceManager.Core.Models;
 using FinanceManager.Data.Read.Generic;
-using FinanceManager.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Users;

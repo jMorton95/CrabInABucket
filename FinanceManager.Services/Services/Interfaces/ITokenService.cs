@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using FinanceManager.Core.Responses;
-using FinanceManager.Common.Models;
+using FinanceManager.Core.Models;
 
 namespace FinanceManager.Services.Services.Interfaces;
 

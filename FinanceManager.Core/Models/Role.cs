@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FinanceManager.Common.Models;
+namespace FinanceManager.Core.Models;
 
 public class Role : BaseModel
 {

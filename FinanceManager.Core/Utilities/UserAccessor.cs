@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace FinanceManager.Common.Utilities;
+namespace FinanceManager.Core.Utilities;
 
 public interface IUserAccessor
 {

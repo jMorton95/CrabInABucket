@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FinanceManager.Common.ConfigurationSettings;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data;
-using FinanceManager.Common.Models;
+using FinanceManager.Core.ConfigurationSettings;
+using FinanceManager.Core.Models;
 using FinanceManager.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
