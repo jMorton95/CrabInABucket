@@ -1,3 +1,3 @@
 namespace FinanceManager.Core.Responses;
 
-public record CreateUserResponse(bool Success, string Message = "");
+public record PostResponse(bool Success, string Message = "");

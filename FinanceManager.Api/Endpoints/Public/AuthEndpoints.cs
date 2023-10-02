@@ -33,7 +33,7 @@ public static class AuthEndpoints
             return res != null ? TypedResults.Ok(res) : TypedResults.BadRequest();
         });
         
-        authGroup.MapPost("/register", async Task<Results<Ok<CreateUserResponse>, ValidationProblem>>
+        authGroup.MapPost("/register", async Task<Results<Ok<PostResponse>, ValidationProblem>>
         (
             [FromBody] CreateUserRequest req,
             [FromServices] IValidator<CreateUserRequest> validator,

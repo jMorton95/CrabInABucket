@@ -1,5 +1,6 @@
 using System.Text;
 using FinanceManager.Application.AppConstants;
+using FinanceManager.Core.AppConstants;
 using FinanceManager.Core.ConfigurationSettings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

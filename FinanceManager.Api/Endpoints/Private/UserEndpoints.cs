@@ -3,6 +3,7 @@ using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data;
 using FinanceManager.Data.Read.Users;
+using FinanceManager.Services.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ public static class UserEndpoints
         })
         .WithName("GetAll");
        
-        usersGroup.MapGet("/get", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>>
+        usersGroup.MapGet("/getByEmail", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>>
         (
             string username,
             IValidator<GetUserRequest> validator,
@@ -54,5 +55,13 @@ public static class UserEndpoints
             return TypedResults.Ok(res);
         })
         .WithName("GetByUsername");
+        
+        usersGroup.MapPost("/grant", async Task<Results<Ok<PostResponse>, BadRequest>>
+        (
+            [FromBody] Guid userId,
+            [FromServices] IGrantAdministratorService service
+        )
+            => TypedResults.Ok(await service.GrantAdministrator(userId))
+        );
     }
 }

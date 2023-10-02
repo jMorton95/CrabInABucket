@@ -10,11 +10,11 @@ namespace FinanceManager.Services.Workers;
 
 public class CreateUserWorker(IReadUsers read, IWriteUsers write, IPasswordService passwordService) : ICreateUserWorker
 {
-    public async Task<CreateUserResponse> CreateUser(CreateUserRequest request)
+    public async Task<PostResponse> CreateUser(CreateUserRequest request)
     {
         if (await read.CheckUserExistsByEmail(request.Username))
         {
-            return new CreateUserResponse(false, "Account with that Email Address already exists.");
+            return new PostResponse(false, "Account with that Email Address already exists.");
         }
 
         var password = passwordService.HashPassword(request.Password);
@@ -22,7 +22,7 @@ public class CreateUserWorker(IReadUsers read, IWriteUsers write, IPasswordServi
         var createResult = await write.CreateAsync(new User { Username = request.Username, Password = password });
 
         return createResult > 0
-            ? new CreateUserResponse(true, $"Successfully created account for {request.Username}")
-            : new CreateUserResponse(false, $"Error occurred creating account for {request.Username}");
+            ? new PostResponse(true, $"Successfully created account for {request.Username}")
+            : new PostResponse(false, $"Error occurred creating account for {request.Username}");
     }
 }

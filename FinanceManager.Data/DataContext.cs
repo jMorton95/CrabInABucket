@@ -15,9 +15,9 @@ public class DataContext(DbContextOptions options, IUserAccessor userAccessor) :
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
+        modelBuilder.Entity<Role>().HasIndex(r => r.Name).IsUnique();
     }
-
-
+    
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         var userId = userAccessor.GetCurrentUserId();
@@ -40,7 +40,6 @@ public class DataContext(DbContextOptions options, IUserAccessor userAccessor) :
                     break;
             }
         }
-        
         
         return base.SaveChangesAsync(cancellationToken);
     }
