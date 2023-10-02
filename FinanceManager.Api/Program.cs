@@ -14,7 +14,7 @@ builder.AddAuth();
 
 builder.ConfigureSwaggerGeneration();
 
-builder.Services.AddPostgres<DataContext>(builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection) ?? "");
+builder.AddPostgresConnection();
 
 builder.Services
     .AddHttpContextAccessor()

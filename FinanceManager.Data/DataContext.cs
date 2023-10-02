@@ -26,13 +26,13 @@ public class DataContext(DbContextOptions options, IUserAccessor userAccessor) :
         {
             if (entry.Entity is not BaseModel entity ) continue;
 
-            entity.EditedBy = userId;
+            if (userId != null) entity.EditedBy = userId;
             entity.UpdatedDate = DateTime.UtcNow;
 
             switch (entry)
             {
                 case { State: EntityState.Added }:
-                    entity.CreatedBy = userId;
+                    if (userId != null) entity.CreatedBy = userId;
                     break;
                 
                 case { State: EntityState.Modified }:

@@ -1,15 +1,20 @@
+using FinanceManager.Application.AppConstants;
+using FinanceManager.Data;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FinanceManager.Application.DependencyInjection;
 
 public static class DataRegistration
 {
-    public static void AddPostgres<TContext>(this IServiceCollection services, string connectionString) where TContext : DbContext
+    public static void AddPostgresConnection(this WebApplicationBuilder builder)
     {
-        services.AddDbContext<TContext>(options => options.UseNpgsql(connectionString));
+        var connectionString = builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection);
+        builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
     }
 
     public static IServiceCollection AddQueries(this IServiceCollection services)
