@@ -9,5 +9,6 @@ public static class EndpointMapping
     {
         app.MapAuthEndpoints();
         app.MapUserEndpoints();
+        app.MapAccountEndpoints();
     }
 }

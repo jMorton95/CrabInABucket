@@ -33,7 +33,6 @@
         <ProjectReference Include="..\FinanceManager.Core\FinanceManager.Core.csproj" />
         <ProjectReference Include="..\FinanceManager.Data\FinanceManager.Data.csproj" />
         <ProjectReference Include="..\FinanceManager.Services\FinanceManager.Services.csproj" />
-        <ProjectReference Include="..\FinanceManager.Common\FinanceManager.Services.csproj" />
     </ItemGroup>
 
 
