@@ -1,4 +1,5 @@
-﻿using FinanceManager.Core.Mappers;
+﻿using FinanceManager.Core.AppConstants;
+using FinanceManager.Core.Mappers;
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data;
@@ -15,7 +16,7 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this IEndpointRouteBuilder app)
     {
-        var usersGroup = app.MapGroup("/api/user/").WithTags("User");//.RequireAuthorization();
+        var usersGroup = app.MapGroup("/api/user/").WithTags("User");//.RequireAuthorization(RoleConstants.AdminRole);
         
         usersGroup.MapGet("/getAll", async Task<Results<Ok<List<UserResponse>>, NoContent>>
             ([FromServices] IReadUsers query) =>
@@ -28,11 +29,10 @@ public static class UserEndpoints
         })
         .WithName("GetAll");
        
-        usersGroup.MapGet("/getByEmail", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>>
-        (
-            string username,
-            IValidator<GetUserRequest> validator,
-            [FromServices] IReadUsers query
+        usersGroup.MapGet("/getByEmail", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>> (
+                string username,
+                IValidator<GetUserRequest> validator,
+                [FromServices] IReadUsers query
         ) 
             =>
         {

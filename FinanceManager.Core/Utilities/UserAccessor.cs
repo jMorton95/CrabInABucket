@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace FinanceManager.Core.Utilities;
 

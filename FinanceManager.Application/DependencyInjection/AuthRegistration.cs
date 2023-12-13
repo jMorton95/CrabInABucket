@@ -27,16 +27,17 @@ public static class AuthRegistration
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings!.Issuer,
-                ValidAudience = jwtSettings.Audience,
+                ValidIssuer = jwtSettings?.Issuer,
+                ValidAudience = jwtSettings?.Audience,
                 ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings?.Key ?? ""))
             };
         });
 
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy(RoleConstants.AdminRole, policy => policy.RequireClaim(RoleConstants.AdminRole));
+            options.AddPolicy(PolicyConstants.AuthenticatedUser, policy => policy.RequireAuthenticatedUser());
+            options.AddPolicy(PolicyConstants.AdminRole, policy => policy.RequireClaim(PolicyConstants.AdminRole));
         });
     }
 }

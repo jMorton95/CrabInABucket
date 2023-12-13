@@ -33,11 +33,11 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
 
     public async Task<int> GrantAdministratorRole(User user)
     {
-        var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == RoleConstants.AdminRole);
+        var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole);
 
         if (adminRole == null)
         {
-            adminRole = new Role() { Name = RoleConstants.AdminRole };
+            adminRole = new Role() { Name = PolicyConstants.AdminRole };
             db.Role.Add(adminRole);
         }
         
