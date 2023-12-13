@@ -8,19 +8,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.0-preview.6.23329.11\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
-      </Reference>
+      <PackageReference Include="FluentValidation" Version="11.8.1" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.0-preview.6.23329.11\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.7.1" />
-    </ItemGroup>
-
+    
 </Project>
