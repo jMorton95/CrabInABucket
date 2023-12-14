@@ -5,18 +5,20 @@ using FinanceManager.Services.Services.Interfaces;
 
 namespace FinanceManager.Services.Services;
 
-public class GrantAdministratorService(IReadUsers query, IWriteUsers write) : IGrantAdministratorService
+public class RoleService(IReadUsers query, IWriteUsers write) : IRoleService
 {
-    public async Task<PostResponse> GrantAdministrator(Guid userId)
+    public async Task<PostResponse> ChangeUserAdminRole(Guid userId, bool isAdmin)
     {
         var user = await query.GetByIdAsync(userId);
 
         if (user == null) return new PostResponse(false, "Could not find user.");
 
-        var result = await write.GrantAdministratorRole(user);
+        var result = isAdmin
+            ? await write.GrantAdministratorRole(user) 
+            : await write.RemoveAdministratorRole(user);
 
         return result < 0 
-            ? new PostResponse(false, "Error granting role.")
+            ? new PostResponse(false, "Error changing role.")
             : new PostResponse(true, "Success");
     }
 }

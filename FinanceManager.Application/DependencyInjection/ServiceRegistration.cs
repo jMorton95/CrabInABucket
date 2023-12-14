@@ -12,7 +12,7 @@ public static class ServiceRegistration
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IUserAccessor, UserAccessor>();
-        services.AddScoped<IGrantAdministratorService, GrantAdministratorService>();
+        services.AddScoped<IRoleService, RoleService>();
 
         return services;
     }

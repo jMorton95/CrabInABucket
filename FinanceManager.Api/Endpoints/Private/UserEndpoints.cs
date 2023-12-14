@@ -56,12 +56,22 @@ public static class UserEndpoints
         })
         .WithName("GetByUsername");
         
-        usersGroup.MapPost("/grant", async Task<Results<Ok<PostResponse>, BadRequest>>
-        (
-            [FromBody] Guid userId,
-            [FromServices] IGrantAdministratorService service
+        usersGroup.MapPost("/administer-role", async Task<Results<Ok<PostResponse>,ValidationProblem, BadRequest>>
+         (
+             [FromBody] AdministerRoleRequest req,
+             IValidator<AdministerRoleRequest> validator,
+             [FromServices] IRoleService service
         )
-            => TypedResults.Ok(await service.GrantAdministrator(userId))
-        );
+            =>
+        {
+            var validationResult = await validator.ValidateAsync(req);
+
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }
+            
+            return TypedResults.Ok(await service.ChangeUserAdminRole(req.UserId, req.IsAdmin));
+        });
     }
 }

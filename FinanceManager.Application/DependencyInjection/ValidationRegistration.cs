@@ -12,6 +12,7 @@ public static class ValidationRegistration
         services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
         services.AddScoped<IValidator<GetUserRequest>, GetUserRequestValidator>();
+        services.AddScoped<IValidator<AdministerRoleRequest>, AdministerRoleRequestValidator>();
 
         return services;
     }
