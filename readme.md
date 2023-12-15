@@ -4,9 +4,9 @@
 
 # TODO List:
 
-- [ ] Role Management Endpoints
-    - [ ] Grant Admin
-    - [ ] Revoke Admin
+- [x] Role Management Endpoints
+    - [x] Grant Admin
+    - [x] Revoke Admin
 - [ ] "Account" CRUD
 - [ ] BudgetTransaction CRUD
 - [ ] Unit Testing
