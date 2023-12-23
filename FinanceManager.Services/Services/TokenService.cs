@@ -8,6 +8,7 @@ using FinanceManager.Core.Models;
 using FinanceManager.Services.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FinanceManager.Services.Services;
@@ -64,4 +65,20 @@ public class TokenService : ITokenService
         
         return new TokenWithExpiry(jwt, expiresUnixTimestamp);
     }
+
+    public DecodedAccessToken DecodeAccessToken(string accessToken)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
+
+        var userId = Guid.Parse(jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value);
+        var jti = Guid.Parse(jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value);
+        var expiryDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Exp).Value))
+            .DateTime;
+        var roles = jsonToken.Claims.Where(claim => claim.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
+        var audience = jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Aud).Value;
+
+        return new DecodedAccessToken(userId, jti, expiryDate, audience, roles);
+    }
+
 }

@@ -1,6 +1,8 @@
-﻿using FinanceManager.Core.Models;
+﻿using FinanceManager.Core.Requests;
 using FinanceManager.Data;
+using FinanceManager.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Api.Endpoints.Private;
 
@@ -10,16 +12,17 @@ public static class AccountEndpoints
     {
         var accountGroup = app.MapGroup("/api/account/").WithTags("Account").RequireAuthorization();
 
-        accountGroup.MapPost("/create", async ([FromServices] DataContext db) =>
+        accountGroup.MapPost("/create", async ([FromBody] CreateAccountRequest req, [FromServices] DataContext db, [FromServices] IHttpContextAccessor context, [FromServices] ITokenService tokenService) =>
         {
-            var newAccount = new Account()
-            {
-                Name = "Josh's Account"
-            };
-            var account = db.Account.Add(newAccount);
-            await db.SaveChangesAsync();
+            var authorizationHeader = context.HttpContext.Request.Headers.Authorization.ToString();
             
-            return TypedResults.Ok();
+            var token = authorizationHeader["Bearer ".Length..].Trim();
+            
+            var decodedToken = tokenService.DecodeAccessToken(token);
+
+            var user = await db.User.FirstAsync(x => x.Id == decodedToken.UserId);
+          
+            return TypedResults.Ok(user);
         });
     }    
 }
