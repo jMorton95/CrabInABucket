@@ -31,6 +31,7 @@ app.UseConfiguredSwagger();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCustomMiddleware();
 
 app.MapApiEndpoints();
 

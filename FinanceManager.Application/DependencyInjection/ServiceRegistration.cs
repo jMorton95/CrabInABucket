@@ -14,6 +14,7 @@ public static class ServiceRegistration
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IUserAccessor, UserAccessor>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IUserContextService, UserContextService>();
 
         return services;
     }
