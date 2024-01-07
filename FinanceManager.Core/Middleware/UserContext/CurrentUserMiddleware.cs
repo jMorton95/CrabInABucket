@@ -1,5 +1,4 @@
 ﻿using FinanceManager.Core.Interfaces;
-using FinanceManager.Services.Middleware.UserContext;
 using Microsoft.AspNetCore.Http;
 
 namespace FinanceManager.Core.Middleware.UserContext;
@@ -16,7 +15,7 @@ public class CurrentUserMiddleware(RequestDelegate next)
             try
             {
                 var decodedToken = userTokenService.DecodeAccessToken(token);
-                var user = new Services.Middleware.UserContext.UserContext { UserAccessToken = decodedToken };
+                var user = new UserContext(decodedToken);
 
                 userContextService.SetCurrentUser(user);
             }

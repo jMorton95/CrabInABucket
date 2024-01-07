@@ -1,7 +1,7 @@
 using FinanceManager.Core.Interfaces;
+using FinanceManager.Core.Middleware.UserContext;
 using FinanceManager.Core.Utilities;
 using FinanceManager.Services.Generic.Password;
-using FinanceManager.Services.Middleware.UserContext;
 using FinanceManager.Services.Services;
 using FinanceManager.Services.Services.Domain;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +21,6 @@ public static class ServiceRegistration
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserContextService, UserContextService>();
         
-        
-
         return services;
     }
 }

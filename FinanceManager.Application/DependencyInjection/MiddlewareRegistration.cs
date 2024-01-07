@@ -1,6 +1,4 @@
 ﻿using FinanceManager.Core.Middleware.UserContext;
-using FinanceManager.Services.Middleware;
-using FinanceManager.Services.Middleware.UserContext;
 using Microsoft.AspNetCore.Builder;
 
 namespace FinanceManager.Application.DependencyInjection;

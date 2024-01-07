@@ -1,18 +1,14 @@
 ﻿using FinanceManager.Core.Utilities;
 
-namespace FinanceManager.Services.Middleware.UserContext;
+namespace FinanceManager.Core.Middleware.UserContext;
+public record UserContext(DecodedAccessToken? UserAccessToken);
 
 public interface IUserContextService
 {
     UserContext? CurrentUser { get; }
     void SetCurrentUser(UserContext user);
-}
-
-public class UserContext
-{
-    public DecodedAccessToken? UserAccessToken { get; set; }
-
-    public bool IsTokenExpired () => UserAccessToken != null && DateTime.UtcNow > UserAccessToken.ExpiryDate;
+    Guid? GetCurrentUserId();
+    bool IsAccessTokenExpired();
 }
 
 public class UserContextService : IUserContextService
@@ -23,4 +19,14 @@ public class UserContextService : IUserContextService
     {
         CurrentUser = user;
     }
+
+    public Guid? GetCurrentUserId()
+    {
+        return CurrentUser?.UserAccessToken?.UserId;
+    }
+
+    public bool IsAccessTokenExpired()
+    {
+        return CurrentUser != null && DateTime.UtcNow > CurrentUser.UserAccessToken?.ExpiryDate;
+    } 
 }
