@@ -1,10 +1,10 @@
 ﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Utilities;
+using FinanceManager.Services.Middleware.UserContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data;
 
-public class DataContext(DbContextOptions options, IUserAccessor userAccessor) : DbContext(options)
+public class DataContext(DbContextOptions options, IUserContextService userContextService) : DbContext(options)
 {
     public DbSet<User> User => Set<User>();
     public DbSet<Role> Role => Set<Role>();
@@ -20,7 +20,7 @@ public class DataContext(DbContextOptions options, IUserAccessor userAccessor) :
     
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        var userId = userAccessor.GetCurrentUserId();
+        var userId = userContextService.CurrentUser?.UserAccessToken?.UserId;
         
         foreach (var entry in ChangeTracker.Entries())
         {

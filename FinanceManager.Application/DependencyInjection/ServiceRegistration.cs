@@ -1,7 +1,9 @@
+using FinanceManager.Core.Interfaces;
 using FinanceManager.Core.Utilities;
 using FinanceManager.Services.Generic.Password;
 using FinanceManager.Services.Middleware.UserContext;
 using FinanceManager.Services.Services;
+using FinanceManager.Services.Services.Domain;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FinanceManager.Application.DependencyInjection;
@@ -16,7 +18,6 @@ public static class ServiceRegistration
         
         services.AddScoped<IUserTokenService, UserTokenService>();
         services.AddScoped<IPasswordService, PasswordService>();
-        services.AddScoped<IUserAccessor, UserAccessor>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IUserContextService, UserContextService>();
         

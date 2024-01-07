@@ -1,6 +1,6 @@
 using FinanceManager.Core.DataEntities;
 
-namespace FinanceManager.Data.Read.Generic;
+namespace FinanceManager.Data.Read;
 
 public interface IRead<TEntity> where TEntity : BaseModel
 {

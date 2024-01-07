@@ -1,9 +1,9 @@
+using FinanceManager.Core.Interfaces;
 using FinanceManager.Core.Mappers;
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
-using FinanceManager.Data;
+using FinanceManager.Data.Read.Users;
 using FinanceManager.Services.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Services.Handlers;
 
@@ -12,11 +12,11 @@ public interface ILoginHandler
     Task<LoginResponse?> Login(LoginRequest req);
 }
 
-public class LoginHandler(DataContext db, IPasswordService passwordService, IUserTokenService userTokenService) : ILoginHandler
+public class LoginHandler(IReadUsers readUsers, IPasswordService passwordService, IUserTokenService userTokenService) : ILoginHandler
 {
     public async Task<LoginResponse?> Login(LoginRequest req)
     {
-        var attemptedUser = await db.User.FirstOrDefaultAsync(x => req.Username == x.Username);
+        var attemptedUser = await readUsers.GetUserByEmailAsync(req.Username);
 
         if (attemptedUser == null)
         {

@@ -1,5 +1,4 @@
 using FinanceManager.Core.DataEntities;
-using FinanceManager.Data.Read.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Users;

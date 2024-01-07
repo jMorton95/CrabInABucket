@@ -1,4 +1,5 @@
-﻿using FinanceManager.Services.Middleware;
+﻿using FinanceManager.Core.Middleware.UserContext;
+using FinanceManager.Services.Middleware;
 using FinanceManager.Services.Middleware.UserContext;
 using Microsoft.AspNetCore.Builder;
 

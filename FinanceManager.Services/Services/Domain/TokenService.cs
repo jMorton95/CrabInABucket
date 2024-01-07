@@ -1,23 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FinanceManager.Core.Responses;
-using FinanceManager.Data;
 using FinanceManager.Core.ConfigurationSettings;
 using FinanceManager.Core.DataEntities;
+using FinanceManager.Core.Interfaces;
+using FinanceManager.Core.Responses;
 using FinanceManager.Core.Utilities;
+using FinanceManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FinanceManager.Services.Services;
-
-public interface IUserTokenService
-{
-    Task<List<Claim>> GetUserClaims(User user);
-    TokenWithExpiryResponse CreateTokenWithClaims(IEnumerable<Claim> claims);
-    DecodedAccessToken? DecodeAccessToken(string accessToken);
-}
+namespace FinanceManager.Services.Services.Domain;
 
 public class UserTokenService(IOptions<JwtSettings> jwtOptions, DataContext db) : IUserTokenService
 {

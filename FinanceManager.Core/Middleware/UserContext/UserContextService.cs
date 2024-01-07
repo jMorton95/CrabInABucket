@@ -1,4 +1,6 @@
-﻿namespace FinanceManager.Services.Middleware.UserContext;
+﻿using FinanceManager.Core.Utilities;
+
+namespace FinanceManager.Services.Middleware.UserContext;
 
 public interface IUserContextService
 {
@@ -8,7 +10,9 @@ public interface IUserContextService
 
 public class UserContext
 {
-    public Guid UserId { get; set; }
+    public DecodedAccessToken? UserAccessToken { get; set; }
+
+    public bool IsTokenExpired () => UserAccessToken != null && DateTime.UtcNow > UserAccessToken.ExpiryDate;
 }
 
 public class UserContextService : IUserContextService

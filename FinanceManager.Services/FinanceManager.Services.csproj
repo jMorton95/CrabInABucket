@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <Folder Include="Domain\" />
+      <Folder Include="Services\Interfaces\" />
     </ItemGroup>
 
 

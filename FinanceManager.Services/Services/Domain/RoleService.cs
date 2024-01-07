@@ -1,7 +1,6 @@
 ﻿using FinanceManager.Core.Responses;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
-using FinanceManager.Services.Services.Interfaces;
 
 namespace FinanceManager.Services.Services;
 
