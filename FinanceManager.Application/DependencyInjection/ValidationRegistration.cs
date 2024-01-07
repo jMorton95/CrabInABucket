@@ -7,7 +7,7 @@ namespace FinanceManager.Application.DependencyInjection;
 
 public static class ValidationRegistration
 {
-    public static IServiceCollection AddEndpointValidators(this IServiceCollection services)
+    public static IServiceCollection AddRequestValidators(this IServiceCollection services)
     {
         services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();

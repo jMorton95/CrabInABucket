@@ -1,4 +1,4 @@
-using FinanceManager.Application.AppConstants;
+using FinanceManager.Core.AppConstants;
 using FinanceManager.Data;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
@@ -17,7 +17,7 @@ public static class DataRegistration
         builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
     }
 
-    public static IServiceCollection AddQueries(this IServiceCollection services)
+    public static IServiceCollection AddDataAccessServices(this IServiceCollection services)
     {
         services.AddScoped<IReadUsers, ReadUsers>();
         services.AddScoped<IWriteUsers, WriteUsers>();

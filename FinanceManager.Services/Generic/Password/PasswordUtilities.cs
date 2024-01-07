@@ -1,10 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
-using FinanceManager.Services.Processes.Interfaces;
 
-namespace FinanceManager.Services.Processes;
+namespace FinanceManager.Services.Generic.Password;
 
-public class PasswordProcess : IPasswordProcess
+public class PasswordUtilities : IPasswordUtilities
 {
     public byte[] CreateSalt() => new byte[32];
 

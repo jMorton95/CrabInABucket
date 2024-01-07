@@ -1,6 +1,10 @@
-﻿using FinanceManager.Services.Services.Interfaces;
+﻿namespace FinanceManager.Services.Middleware.UserContext;
 
-namespace FinanceManager.Services.Services;
+public interface IUserContextService
+{
+    UserContext? CurrentUser { get; }
+    void SetCurrentUser(UserContext user);
+}
 
 public class UserContext
 {

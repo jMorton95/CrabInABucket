@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
 
-namespace FinanceManager.Services.Processes.Interfaces;
+namespace FinanceManager.Services.Generic.Password;
 
-public interface IPasswordProcess
+public interface IPasswordUtilities
 {
     byte[] HashPassword(Rfc2898DeriveBytes passwordKey, byte[] salt);
     string HashedPasswordToString(byte[] bytePassword);

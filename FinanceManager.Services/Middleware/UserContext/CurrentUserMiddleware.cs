@@ -2,11 +2,11 @@
 using FinanceManager.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace FinanceManager.Services.Middleware;
+namespace FinanceManager.Services.Middleware.UserContext;
 
 public class CurrentUserMiddleware(RequestDelegate next)
 {
-    public async Task InvokeAsync(HttpContext context, IUserContextService userContextService, ITokenService tokenService)
+    public async Task InvokeAsync(HttpContext context, IUserContextService userContextService, IUserTokenService userTokenService)
     {
         var authorizationHeader = context.Request.Headers["Authorization"].ToString();
         
@@ -15,7 +15,7 @@ public class CurrentUserMiddleware(RequestDelegate next)
             var token = authorizationHeader["Bearer".Length..].Trim();
             try
             {
-                var decodedToken = tokenService.DecodeAccessToken(token);
+                var decodedToken = userTokenService.DecodeAccessToken(token);
                 var user = new UserContext { UserId = decodedToken.UserId };
 
                 userContextService.SetCurrentUser(user);

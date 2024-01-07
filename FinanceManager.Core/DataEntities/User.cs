@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FinanceManager.Core.Models;
+namespace FinanceManager.Core.DataEntities;
 
 public class User : BaseModel
 {

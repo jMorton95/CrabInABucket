@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using FinanceManager.Core.DataEntities;
 
-namespace FinanceManager.Core.Models;
+namespace FinanceManager.Core.DataEntities;
 
 public class Account : BaseModel
 {

@@ -1,4 +1,4 @@
-namespace FinanceManager.Application.AppConstants;
+namespace FinanceManager.Core.AppConstants;
 
 public static class SettingsConstants
 {

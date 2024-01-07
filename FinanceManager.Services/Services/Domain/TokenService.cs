@@ -4,34 +4,32 @@ using System.Text;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data;
 using FinanceManager.Core.ConfigurationSettings;
-using FinanceManager.Core.Models;
-using FinanceManager.Services.Services.Interfaces;
+using FinanceManager.Core.DataEntities;
+using FinanceManager.Core.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FinanceManager.Services.Services;
 
-public class TokenService : ITokenService
+public interface IUserTokenService
 {
-    private readonly JwtSettings _jwt;
-    private readonly DataContext _db;
+    Task<List<Claim>> GetUserClaims(User user);
+    TokenWithExpiryResponse CreateTokenWithClaims(IEnumerable<Claim> claims);
+    DecodedAccessToken? DecodeAccessToken(string accessToken);
+}
 
-    public TokenService(IOptions<JwtSettings> jwt, DataContext db)
-    {
-        _jwt = jwt.Value;
-        _db = db;
-    }
-
+public class UserTokenService(IOptions<JwtSettings> jwtOptions, DataContext db) : IUserTokenService
+{
+    private readonly JwtSettings _jwtSettings = jwtOptions.Value;
     public async Task<List<Claim>> GetUserClaims(User user)
     {
         var userRoles = new List<Role>();
 
-        if (user.Roles != null && user.Roles.Any())
+        if (user.Roles.Any())
         {
             var roleIds = user.Roles.Select(r => r.Role!.Id).ToList();
-            userRoles = await _db.Role.Where(role => roleIds.Contains(role.Id)).ToListAsync();
+            userRoles = await db.Role.Where(role => roleIds.Contains(role.Id)).ToListAsync();
         }
         
         var claims = new List<Claim>
@@ -45,15 +43,15 @@ public class TokenService : ITokenService
         return claims;
     }
     
-    public TokenWithExpiry CreateTokenWithClaims(IEnumerable<Claim> claims)
+    public TokenWithExpiryResponse CreateTokenWithClaims(IEnumerable<Claim> claims)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_jwt.ExpireDays));
+        var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_jwtSettings.ExpireDays));
 
         var token = new JwtSecurityToken(
-            _jwt.Issuer,
-            _jwt.Audience,
+            _jwtSettings.Issuer,
+            _jwtSettings.Audience,
             claims,
             expires: expires,
             signingCredentials: credentials
@@ -63,13 +61,17 @@ public class TokenService : ITokenService
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         
-        return new TokenWithExpiry(jwt, expiresUnixTimestamp);
+        return new TokenWithExpiryResponse(jwt, expiresUnixTimestamp);
     }
 
-    public DecodedAccessToken DecodeAccessToken(string accessToken)
+    public DecodedAccessToken? DecodeAccessToken(string accessToken)
     {
         var handler = new JwtSecurityTokenHandler();
-        var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
+
+        if (handler.ReadToken(accessToken) is not JwtSecurityToken jsonToken)
+        {
+            return null;
+        }
 
         var userId = Guid.Parse(jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value);
         var jti = Guid.Parse(jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value);

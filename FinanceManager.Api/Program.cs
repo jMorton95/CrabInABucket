@@ -1,9 +1,8 @@
-using FinanceManager.Application.AppConstants;
+using FinanceManager.Core.AppConstants;
 using FinanceManager.Core.ConfigurationSettings;
 using FinanceManager.Application.DependencyInjection;
 using FinanceManager.Api.Endpoints;
 using FinanceManager.Application.OpenApi;
-using FinanceManager.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,21 +17,21 @@ builder.AddPostgresConnection();
 
 builder.Services
     .AddHttpContextAccessor()
-    .AddEndpointValidators()
-    .AddQueries()
-    .AddProcesses()
-    .AddApplicationServices()
-    .AddWorkers();
+    .AddRequestValidators()
+    .AddDataAccessServices()
+    .AddAppServices()
+    .AddServiceHandlers();
 
 var app = builder.Build();
 
 
 app.UseConfiguredSwagger();
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCustomMiddleware();
 
+app.UseCustomMiddleware();
 app.MapApiEndpoints();
 
 app.Run();

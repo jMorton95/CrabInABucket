@@ -1,14 +1,7 @@
 using System.Security.Claims;
 using FinanceManager.Core.Responses;
-using FinanceManager.Core.Models;
-using Microsoft.Extensions.Primitives;
+using FinanceManager.Core.DataEntities;
+using FinanceManager.Core.Utilities;
 
 namespace FinanceManager.Services.Services.Interfaces;
 
-public interface ITokenService
-{
-    Task<List<Claim>> GetUserClaims(User user);
-    TokenWithExpiry CreateTokenWithClaims(IEnumerable<Claim> claims);
-
-    DecodedAccessToken DecodeAccessToken(string accessToken);
-}

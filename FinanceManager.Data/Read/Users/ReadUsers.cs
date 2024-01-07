@@ -1,4 +1,4 @@
-using FinanceManager.Core.Models;
+using FinanceManager.Core.DataEntities;
 using FinanceManager.Data.Read.Generic;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,14 +1,11 @@
-﻿using FinanceManager.Core.AppConstants;
-using FinanceManager.Core.Mappers;
+﻿using FinanceManager.Core.Mappers;
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
-using FinanceManager.Data;
 using FinanceManager.Data.Read.Users;
-using FinanceManager.Services.Services.Interfaces;
+using FinanceManager.Services.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Api.Endpoints.Private;
 
@@ -56,7 +53,7 @@ public static class UserEndpoints
         })
         .WithName("GetByUsername");
         
-        usersGroup.MapPost("/administer-role", async Task<Results<Ok<PostResponse>,ValidationProblem, BadRequest>>
+        usersGroup.MapPost("/administer-role", async Task<Results<Ok<BasePostResponse>,ValidationProblem, BadRequest>>
          (
              [FromBody] AdministerRoleRequest req,
              IValidator<AdministerRoleRequest> validator,

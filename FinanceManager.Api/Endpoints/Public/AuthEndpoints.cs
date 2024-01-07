@@ -1,6 +1,6 @@
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
-using FinanceManager.Services.Workers.Interfaces;
+using FinanceManager.Services.Handlers;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ public static class AuthEndpoints
         (
             [FromBody] LoginRequest req,
             [FromServices] IValidator<LoginRequest> validator,
-            [FromServices] ILoginWorker worker
+            [FromServices] ILoginHandler handler
         )
             =>
         {
@@ -28,16 +28,16 @@ public static class AuthEndpoints
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
 
-            var res = await worker.Login(req);
+            var res = await handler.Login(req);
 
             return res != null ? TypedResults.Ok(res) : TypedResults.BadRequest();
         });
         
-        authGroup.MapPost("/register", async Task<Results<Ok<PostResponse>, ValidationProblem>>
+        authGroup.MapPost("/register", async Task<Results<Ok<BasePostResponse>, ValidationProblem>>
         (
             [FromBody] CreateUserRequest req,
             [FromServices] IValidator<CreateUserRequest> validator,
-            [FromServices] ICreateUserWorker createUserWorker
+            [FromServices] ICreateUserHandler handler
         ) 
             =>
         {
@@ -48,7 +48,7 @@ public static class AuthEndpoints
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
 
-            var result = await createUserWorker.CreateUser(req);
+            var result = await handler.CreateUser(req);
 
             return TypedResults.Ok(result);
         });

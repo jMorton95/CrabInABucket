@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceManager.Core.Models;
+namespace FinanceManager.Core.DataEntities;
 
 public class BaseModel
 {
