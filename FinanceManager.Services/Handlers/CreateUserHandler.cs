@@ -3,7 +3,7 @@ using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
-using FinanceManager.Services.Services;
+using FinanceManager.Services.Generic.Password;
 
 namespace FinanceManager.Services.Handlers;
 
@@ -11,7 +11,7 @@ public interface ICreateUserHandler
 {
     Task<BasePostResponse> CreateUser(CreateUserRequest request);
 }
-public class CreateUserHandler(IReadUsers read, IWriteUsers write, IPasswordService passwordService) : ICreateUserHandler
+public class CreateUserHandler(IReadUsers read, IWriteUsers write, IPasswordHasher passwordHasher) : ICreateUserHandler
 {
     public async Task<BasePostResponse> CreateUser(CreateUserRequest request)
     {
@@ -20,7 +20,7 @@ public class CreateUserHandler(IReadUsers read, IWriteUsers write, IPasswordServ
             return new BasePostResponse(false, "Account with that Email Address already exists.");
         }
 
-        var password = passwordService.HashPassword(request.Password);
+        var password = passwordHasher.HashPassword(request.Password);
         
         var createResult = await write.CreateAsync(new User { Username = request.Username, Password = password });
 

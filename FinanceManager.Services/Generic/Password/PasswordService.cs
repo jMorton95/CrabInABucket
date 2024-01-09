@@ -1,48 +1,39 @@
 using System.Security.Cryptography;
-using FinanceManager.Services.Generic.Password;
 
-namespace FinanceManager.Services.Services;
+namespace FinanceManager.Services.Generic.Password;
 
-public interface IPasswordService
+public interface IPasswordHasher
 {
     string HashPassword(string password);
 
     bool CheckPassword(string loginPassword, string storedPassword);
 }
 
-public class PasswordService : IPasswordService
-{
-    private readonly IPasswordUtilities _passwordUtilities;
-
-    public PasswordService(IPasswordUtilities passwordUtilities)
-    {
-        _passwordUtilities = passwordUtilities;
-    }
-    
+public class PasswordHasher(IPasswordUtilities passwordUtilities) : IPasswordHasher
+{ 
     public string HashPassword(string password)
     {
         var rng = RandomNumberGenerator.Create();
-        var salt = _passwordUtilities.CreateSalt();
+        var salt = passwordUtilities.CreateSalt();
 
         rng.GetBytes(salt);
 
-        var passwordKey = _passwordUtilities.CreatePasswordKey(password, salt);
+        var passwordKey = passwordUtilities.CreatePasswordKey(password, salt);
 
-        var hashedPassword = _passwordUtilities.HashPassword(passwordKey, salt);
+        var hashedPassword = passwordUtilities.HashPassword(passwordKey, salt);
         
-        return _passwordUtilities.HashedPasswordToString(hashedPassword);
-
+        return passwordUtilities.HashedPasswordToString(hashedPassword);
     }
 
     public bool CheckPassword(string loginPassword, string storedPassword)
     {
-        var bytes = _passwordUtilities.PasswordToBytes(storedPassword);
+        var bytes = passwordUtilities.PasswordToBytes(storedPassword);
 
-        var salt = _passwordUtilities.ExtractSalt(bytes);
+        var salt = passwordUtilities.ExtractSalt(bytes);
 
-        var passwordKey = _passwordUtilities.CreatePasswordKey(loginPassword, salt);
+        var passwordKey = passwordUtilities.CreatePasswordKey(loginPassword, salt);
 
-        var compared = _passwordUtilities.ComparePassword(passwordKey, salt, bytes);
+        var compared = passwordUtilities.ComparePassword(passwordKey, salt, bytes);
 
         return compared;
     }

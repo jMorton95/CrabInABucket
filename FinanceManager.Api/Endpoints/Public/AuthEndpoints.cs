@@ -13,12 +13,18 @@ public static class AuthEndpoints
     {
         var authGroup = app.MapGroup("/api/auth/").WithTags("Auth").AllowAnonymous();
         
-        authGroup.MapPost("/login", async Task<Results<Ok<LoginResponse>, ValidationProblem, BadRequest>>
-        (
-            [FromBody] LoginRequest req,
-            [FromServices] IValidator<LoginRequest> validator,
-            [FromServices] ILoginHandler handler
-        )
+        authGroup.MapRegisterEndpoint();
+        authGroup.MapLoginEndpoint();
+    }
+
+    private static void MapLoginEndpoint(this IEndpointRouteBuilder builder)
+    {
+        builder.MapPost("/login", async Task<Results<Ok<LoginResponse>, ValidationProblem, BadRequest>>
+            (
+                [FromBody] LoginRequest req,
+                [FromServices] IValidator<LoginRequest> validator,
+                [FromServices] ILoginHandler handler
+            )
             =>
         {
             var validationResult = await validator.ValidateAsync(req);
@@ -32,14 +38,14 @@ public static class AuthEndpoints
 
             return res != null ? TypedResults.Ok(res) : TypedResults.BadRequest();
         });
-        
-        authGroup.MapPost("/register", async Task<Results<Ok<BasePostResponse>, ValidationProblem>>
-        (
+    }
+
+    private static void MapRegisterEndpoint(this IEndpointRouteBuilder builder)
+    {
+        builder.MapPost("/register", async Task<Results<Ok<BasePostResponse>, ValidationProblem>>(
             [FromBody] CreateUserRequest req,
             [FromServices] IValidator<CreateUserRequest> validator,
-            [FromServices] ICreateUserHandler handler
-        ) 
-            =>
+            [FromServices] ICreateUserHandler handler) => 
         {
             var validationResult = await validator.ValidateAsync(req);
 
