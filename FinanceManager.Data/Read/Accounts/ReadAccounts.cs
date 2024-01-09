@@ -4,17 +4,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Accounts;
 
-public class ReadAccounts(DataContext db, IUserContextService userContextService) : AccessUserContext(userContextService), IRead<Account>
+public class ReadAccounts(DataContext db, IUserContextService userContextService) : IRead<Account>
 {
+    private readonly Guid? _userId = userContextService.GetCurrentUserId();
     public async Task<IEnumerable<Account>> GetAllAsync()
     {
-        return UserId != null 
-            ? await db.Account.Include(x => x.BudgetTransactions).Where(x => x.User.Id == UserId).ToListAsync()
-            : Enumerable.Empty<Account>();
+        if (_userId == null)
+        {
+            return Enumerable.Empty<Account>();
+        }
+
+        return await db.Account
+            .Include(x => x.BudgetTransactions)
+            .Where(x => x.User.Id == _userId)
+            .ToListAsync();
     }
 
-    public Task<Account?> GetByIdAsync(Guid id)
+    public async Task<Account?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        if (_userId == null)
+        {
+            return null;
+        }
+
+        return await db.Account
+            .Include(x => x.BudgetTransactions)
+            .FirstOrDefaultAsync(x => x.User.Id == _userId && x.Id == id);
     }
 }
