@@ -18,21 +18,12 @@ public class LoginHandler(IReadUsers readUsers, IPasswordService passwordService
     {
         var attemptedUser = await readUsers.GetUserByEmailAsync(req.Username);
 
-        if (attemptedUser == null)
+        if (attemptedUser == null || !passwordService.CheckPassword(req.Password, attemptedUser.Password))
         {
             return null;
         }
-
-        var authSuccess = passwordService.CheckPassword(req.Password, attemptedUser.Password);
-
-        if (!authSuccess)
-        {
-            return null;
-        }
-
-        var userClaims = await userTokenService.GetUserClaims(attemptedUser);
         
-        var token = userTokenService.CreateTokenWithClaims(userClaims);
+        var token = userTokenService.CreateTokenWithClaims(await userTokenService.GetUserClaims(attemptedUser));
 
         return new LoginResponse(token, attemptedUser.ToUserResponse());
     }

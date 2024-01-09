@@ -28,8 +28,8 @@ public class UserTokenService(IOptions<JwtSettings> jwtOptions, DataContext db) 
         
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
         
         claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
