@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Accounts;
 
-public class ReadAccounts(DataContext db, IUserContextService userContextService) : IRead<Account>
+public interface IReadAccounts : IRead<Account> { };
+public class ReadAccounts(DataContext db, IUserContextService userContextService) : IReadAccounts
 {
     private readonly Guid? _userId = userContextService.GetCurrentUserId();
     public async Task<IEnumerable<Account>> GetAllAsync()
