@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\FinanceManager.Core\FinanceManager.Core.csproj" />
+        <ProjectReference Include="..\FinanceManager.Common\FinanceManager.Common.csproj" />
         <ProjectReference Include="..\FinanceManager.Data\FinanceManager.Data.csproj" />
     </ItemGroup>
 
@@ -23,10 +23,6 @@
 
 
 
-    <ItemGroup>
-      <Folder Include="Domain\" />
-      <Folder Include="Services\Interfaces\" />
-    </ItemGroup>
 
 
 </Project>

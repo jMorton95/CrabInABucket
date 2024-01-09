@@ -9,10 +9,12 @@ public static class ValidationRegistration
 {
     public static IServiceCollection AddRequestValidators(this IServiceCollection services)
     {
+        services.AddScoped<IValidator<GetUserRequest>, GetUserRequestValidator>();
+        
         services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
-        services.AddScoped<IValidator<GetUserRequest>, GetUserRequestValidator>();
         services.AddScoped<IValidator<AdministerRoleRequest>, AdministerRoleRequestValidator>();
+        services.AddScoped<IValidator<CreateAccountRequest>, CreateAccountRequestValidator>();
 
         return services;
     }

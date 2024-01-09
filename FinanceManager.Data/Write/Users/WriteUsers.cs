@@ -1,26 +1,19 @@
 using FinanceManager.Core.AppConstants;
 using FinanceManager.Core.DataEntities;
-using FinanceManager.Data.Write.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Users;
 
 public interface IWriteUsers : IWrite<User>
 {
-    Task<int> GrantAdministratorRole(User user);
-    Task<int> RemoveAdministratorRole(User user);
+    Task<int> ManageUserAdministratorRole(User user, bool isAdmin);
 }
 
 public sealed class WriteUsers(DataContext db) : IWriteUsers
 {
     public async Task<int> CreateAsync(User entity)
     {
-        var userToAdd = db.User.Add(entity);
-        
-        var userId = userToAdd.Entity.Id;
-        
-        userToAdd.Entity.CreatedBy = userId;
-        userToAdd.Entity.EditedBy = userId;
+        db.User.Add(entity);
         
         return await db.SaveChangesAsync();
     }
@@ -32,32 +25,27 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         return await db.SaveChangesAsync();
     }
 
-    public async Task<int> GrantAdministratorRole(User user)
+    private Role CreateAdministratorRole()
     {
-        var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole);
+        var adminRole = new Role() { Name = PolicyConstants.AdminRole };
+        db.Role.Add(adminRole);
 
-        if (adminRole == null)
-        {
-            adminRole = new Role() { Name = PolicyConstants.AdminRole };
-            db.Role.Add(adminRole);
-        }
-        
-        db.UserRole.Add(new UserRole() { User = user, Role = adminRole });
-
-        return await db.SaveChangesAsync();
+        return adminRole;
     }
-
-    public async Task<int> RemoveAdministratorRole(User user)
+    
+    public async Task<int> ManageUserAdministratorRole(User user, bool isAdmin)
     {
-        var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole);
+        var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole) ?? CreateAdministratorRole();
 
-        if (adminRole == null)
+        if (isAdmin)
         {
-            return 0;
+            db.UserRole.Add(new UserRole() { User = user, Role = adminRole });
+        }
+        else
+        {
+            user.Roles = user.Roles.Where(x => x.Role?.Id == adminRole.Id);    
         }
         
-        user.Roles = user.Roles.Where(x => x.Role?.Id == adminRole.Id);
-
         return await db.SaveChangesAsync();
     }
 }

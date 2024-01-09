@@ -2,7 +2,8 @@
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data.Read.Users;
-using FinanceManager.Services.Services;
+using FinanceManager.Services.Domain;
+using FinanceManager.Services.Handlers;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -53,11 +54,10 @@ public static class UserEndpoints
         })
         .WithName("GetByUsername");
         
-        usersGroup.MapPost("/administer-role", async Task<Results<Ok<BasePostResponse>,ValidationProblem, BadRequest>>
-         (
+        usersGroup.MapPost("/administer-role", async Task<Results<Ok<BasePostResponse>,ValidationProblem, BadRequest>> (
              [FromBody] AdministerRoleRequest req,
              IValidator<AdministerRoleRequest> validator,
-             [FromServices] IRoleService service
+             [FromServices] IRoleHandler handler
         )
             =>
         {
@@ -68,7 +68,7 @@ public static class UserEndpoints
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
             
-            return TypedResults.Ok(await service.ChangeUserAdminRole(req.UserId, req.IsAdmin));
+            return TypedResults.Ok(await handler.ChangeUserAdminRole(req.UserId, req.IsAdmin));
         });
     }
 }

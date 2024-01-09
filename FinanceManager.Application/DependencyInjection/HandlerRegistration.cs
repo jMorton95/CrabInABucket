@@ -9,6 +9,8 @@ public static class HandlerRegistration
     {
         services.AddScoped<ILoginHandler, LoginHandler>();
         services.AddScoped<ICreateUserHandler, CreateUserHandler>();
+        services.AddScoped<IRoleHandler, RoleHandler>();
+        services.AddScoped<ICreateAccountHandler, CreateAccountHandler>();
 
         return services;
     }

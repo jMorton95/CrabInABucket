@@ -2,26 +2,22 @@
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
 
-namespace FinanceManager.Services.Services;
+namespace FinanceManager.Services.Handlers;
 
-public interface IRoleService
+public interface IRoleHandler
 {
     Task<BasePostResponse> ChangeUserAdminRole(Guid userId, bool isAdmin);
 }
 
-public class RoleService(IReadUsers query, IWriteUsers write) : IRoleService
+public class RoleHandler(IReadUsers query, IWriteUsers write) : IRoleHandler
 {
     public async Task<BasePostResponse> ChangeUserAdminRole(Guid userId, bool isAdmin)
     {
         var user = await query.GetByIdAsync(userId);
 
         if (user == null) return new BasePostResponse(false, "Could not find user.");
-
-        var result = isAdmin
-            ? await write.GrantAdministratorRole(user) 
-            : await write.RemoveAdministratorRole(user);
-
-        return result < 0 
+        
+        return await write.ManageUserAdministratorRole(user, isAdmin) < 0 
             ? new BasePostResponse(false, "Error changing role.")
             : new BasePostResponse(true, "Success");
     }

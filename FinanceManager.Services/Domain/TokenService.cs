@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FinanceManager.Services.Services.Domain;
+namespace FinanceManager.Services.Domain;
 
 public class UserTokenService(IOptions<JwtSettings> jwtOptions, DataContext db) : IUserTokenService
 {
@@ -71,6 +71,7 @@ public class UserTokenService(IOptions<JwtSettings> jwtOptions, DataContext db) 
         var jti = Guid.Parse(jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Jti).Value);
         var expiryDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Exp).Value))
             .DateTime;
+        
         var roles = jsonToken.Claims.Where(claim => claim.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
         var audience = jsonToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Aud).Value;
 

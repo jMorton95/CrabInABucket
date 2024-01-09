@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Services", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Data", "FinanceManager.Data\FinanceManager.Data.csproj", "{89A24FD0-5AA8-4800-AB8C-99E648C6EB3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Core", "FinanceManager.Core\FinanceManager.Core.csproj", "{0949F76E-151D-4C1A-A67F-FC764757F001}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Common", "FinanceManager.Common\FinanceManager.Common.csproj", "{0949F76E-151D-4C1A-A67F-FC764757F001}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

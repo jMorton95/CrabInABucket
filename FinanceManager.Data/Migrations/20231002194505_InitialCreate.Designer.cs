@@ -25,7 +25,7 @@ namespace FinanceManager.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FinanceManager.Core.Models.Account", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("Account");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.BudgetTransaction", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.BudgetTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +91,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("BudgetTransaction");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.Role", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,7 +121,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.User", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -159,7 +159,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.UserRole", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.UserRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,27 +195,27 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.Account", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.Account", b =>
                 {
-                    b.HasOne("FinanceManager.Core.Models.User", null)
+                    b.HasOne("FinanceManager.Common.Models.User", null)
                         .WithMany("Accounts")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.BudgetTransaction", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.BudgetTransaction", b =>
                 {
-                    b.HasOne("FinanceManager.Core.Models.Account", null)
+                    b.HasOne("FinanceManager.Common.Models.Account", null)
                         .WithMany("BudgetTransactions")
                         .HasForeignKey("AccountId");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.UserRole", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.UserRole", b =>
                 {
-                    b.HasOne("FinanceManager.Core.Models.Role", "Role")
+                    b.HasOne("FinanceManager.Common.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId");
 
-                    b.HasOne("FinanceManager.Core.Models.User", "User")
+                    b.HasOne("FinanceManager.Common.Models.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId");
 
@@ -224,12 +224,12 @@ namespace FinanceManager.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.Account", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.Account", b =>
                 {
                     b.Navigation("BudgetTransactions");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.Models.User", b =>
+            modelBuilder.Entity("FinanceManager.Common.Models.User", b =>
                 {
                     b.Navigation("Accounts");
 
