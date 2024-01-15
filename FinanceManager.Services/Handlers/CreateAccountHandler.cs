@@ -28,7 +28,7 @@ public class CreateAccountHandler(IReadAccounts read, IWriteAccounts write) : IC
     private async Task<BasePostResponse> CreateNewAccount(CreateAccountRequest req)
     {
         var creationResult = await write.CreateAsync(new Account() { Name = req.AccountName });
-        var success = creationResult > 0;
-        return new BasePostResponse(success, success ? "" : "Could not create account");
+        
+        return new BasePostResponse(creationResult, creationResult ? "" : "Could not create account");
     }
 }

@@ -1,4 +1,5 @@
-﻿using FinanceManager.Core.DataEntities;
+﻿using System.Security.Authentication;
+using FinanceManager.Core.DataEntities;
 using FinanceManager.Core.Middleware.UserContext;
 using FinanceManager.Core.Requests;
 using Microsoft.EntityFrameworkCore;
@@ -10,41 +11,37 @@ public interface IWriteAccounts : IWrite<Account, EditAccountRequest> { }
 public sealed class WriteAccounts(DataContext db, IUserContextService userContextService) : IWriteAccounts
 {
     private readonly Guid? _userId = userContextService.GetCurrentUserId();
-    public async Task<int> CreateAsync(Account entity)
+    public async Task<bool> CreateAsync(Account entity)
     {
-        var user = await db.User.FirstOrDefaultAsync(x => x.Id == _userId);
-
-        if (user == null)
+        if (_userId == null)
         {
-            return 0;
+            //TODO: Integrate logger.
+            throw new AuthenticationException("Error accessing User Context");
         }
         
-        entity.User = user;
+        entity.User.Id = _userId.Value;
         
         db.Account.Add(entity);
+        
+        var saveResult = await db.SaveChangesAsync().ConfigureAwait(false);
 
-        return await db.SaveChangesAsync();
+        return saveResult > 0;
     }
     
-    public async Task<int> EditAsync(EditAccountRequest req)
+    public async Task<bool> EditAsync(EditAccountRequest req)
     {
-        var user = await db.User.FirstOrDefaultAsync(x => x.Id == _userId);
-
-        if (user == null)
-        {
-            return 0;
-        }
-
-        var entity = await db.Account.FirstOrDefaultAsync(x => x.Id == req.Id);
+        var account = await db.Account.FirstOrDefaultAsync(x => x.Id == req.Id && x.User.Id == _userId).ConfigureAwait(false);
          
-        if (entity == null)
+        if (account == null)
         {
-            return 0;
+            //TODO: Integrate logger.
+            throw new InvalidOperationException("Account does not exist");
         }
         
-        entity.User = user;
-        entity.Name = req.AccountName;
+        account.Name = req.AccountName;
 
-        return await db.SaveChangesAsync();
+        var saveResult = await db.SaveChangesAsync().ConfigureAwait(false);
+
+        return saveResult > 0;
     }
 }

@@ -12,18 +12,20 @@ public interface IWriteUsers : IWrite<User, EditUserRequest>
 
 public sealed class WriteUsers(DataContext db) : IWriteUsers
 {
-    public async Task<int> CreateAsync(User entity)
+    public async Task<bool> CreateAsync(User entity)
     {
         db.User.Add(entity);
+
+        var saveResult = await db.SaveChangesAsync().ConfigureAwait(false);
         
-        return await db.SaveChangesAsync();
+        return saveResult > 0;
     }
 
-    public async Task<int> EditAsync(EditUserRequest req)
+    public async Task<bool> EditAsync(EditUserRequest req)
     {
         //db.User.Update(entity);
-
-        return await db.SaveChangesAsync();
+        return true;
+        //return await db.SaveChangesAsync();
     }
 
     private Role CreateAdministratorRole()

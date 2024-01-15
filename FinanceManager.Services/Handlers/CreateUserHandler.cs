@@ -24,7 +24,7 @@ public class CreateUserHandler(IReadUsers read, IWriteUsers write, IPasswordHash
         
         var createResult = await write.CreateAsync(new User { Username = request.Username, Password = password });
 
-        return createResult > 0
+        return createResult
             ? new BasePostResponse(true, $"Successfully created account for {request.Username}")
             : new BasePostResponse(false, $"Error occurred creating account for {request.Username}");
     }

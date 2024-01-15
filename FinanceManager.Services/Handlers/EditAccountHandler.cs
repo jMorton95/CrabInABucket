@@ -17,6 +17,6 @@ public class EditAccountHandler(IWriteAccounts write) : IEditAccountHandler
     {
         var result = await write.EditAsync(req);
 
-        return new BasePostResponse(Success: result > 0, Message: result > 0 ? $"Error editing account." : "");
+        return new BasePostResponse(Success: result, Message: result ? "" : $"Error editing account.");
     }
 }
