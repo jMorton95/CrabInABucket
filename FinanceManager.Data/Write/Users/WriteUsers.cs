@@ -1,10 +1,11 @@
 using FinanceManager.Core.AppConstants;
 using FinanceManager.Core.DataEntities;
+using FinanceManager.Core.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Users;
 
-public interface IWriteUsers : IWrite<User>
+public interface IWriteUsers : IWrite<User, EditUserRequest>
 {
     Task<int> ManageUserAdministratorRole(User user, bool isAdmin);
 }
@@ -18,9 +19,9 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         return await db.SaveChangesAsync();
     }
 
-    public async Task<int> EditAsync(User entity)
+    public async Task<int> EditAsync(EditUserRequest req)
     {
-        db.User.Update(entity);
+        //db.User.Update(entity);
 
         return await db.SaveChangesAsync();
     }

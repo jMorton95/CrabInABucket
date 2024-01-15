@@ -11,6 +11,7 @@ public static class HandlerRegistration
         services.AddScoped<ICreateUserHandler, CreateUserHandler>();
         services.AddScoped<IRoleHandler, RoleHandler>();
         services.AddScoped<ICreateAccountHandler, CreateAccountHandler>();
+        services.AddScoped<IEditAccountHandler, EditAccountHandler>();
 
         return services;
     }

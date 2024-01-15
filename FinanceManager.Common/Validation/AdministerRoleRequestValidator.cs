@@ -4,7 +4,7 @@ using Microsoft.Win32;
 
 namespace FinanceManager.Core.Validation;
 
-public class AdministerRoleRequestValidator : AbstractValidator<AdministerRoleRequest>
+public class AdministerRoleRequestValidator : AbstractValidator<ChangeAdministratorRoleRequest>
 {
     public AdministerRoleRequestValidator()
     {

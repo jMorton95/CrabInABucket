@@ -2,6 +2,7 @@ using FinanceManager.Core.AppConstants;
 using FinanceManager.Data;
 using FinanceManager.Data.Read.Accounts;
 using FinanceManager.Data.Read.Users;
+using FinanceManager.Data.Write.Accounts;
 using FinanceManager.Data.Write.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ public static class DataRegistration
         services.AddScoped<IReadUsers, ReadUsers>();
         services.AddScoped<IWriteUsers, WriteUsers>();
         services.AddScoped<IReadAccounts, ReadAccounts>();
+        services.AddScoped<IWriteAccounts, WriteAccounts>();
 
         return services;
     }

@@ -16,4 +16,8 @@
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
     </ItemGroup>
     
+    <ItemGroup>
+        <ProjectReference Include="..\FinanceManager.Data\FinanceManager.Data.csproj" />
+    </ItemGroup>
+    
 </Project>

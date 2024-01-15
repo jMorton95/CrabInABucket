@@ -54,9 +54,9 @@ public static class UserEndpoints
         })
         .WithName("GetByUsername");
         
-        usersGroup.MapPost("/administer-role", async Task<Results<Ok<BasePostResponse>,ValidationProblem, BadRequest>> (
-             [FromBody] AdministerRoleRequest req,
-             IValidator<AdministerRoleRequest> validator,
+        usersGroup.MapPost("/change-administrator-role", async Task<Results<Ok<BasePostResponse>,ValidationProblem, BadRequest>> (
+             [FromBody] ChangeAdministratorRoleRequest req,
+             IValidator<ChangeAdministratorRoleRequest> validator,
              [FromServices] IRoleHandler handler
         )
             =>

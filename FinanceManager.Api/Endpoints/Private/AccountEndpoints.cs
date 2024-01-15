@@ -1,4 +1,5 @@
-﻿using FinanceManager.Core.Requests;
+﻿using System.ComponentModel.DataAnnotations;
+using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Core.Validation;
 using FinanceManager.Services.Handlers;
@@ -12,9 +13,10 @@ public static class AccountEndpoints
 {
     public static void MapAccountEndpoints(this IEndpointRouteBuilder app)
     {
-        var accountGroup = app.MapGroup("/api/account/")
+        app.MapGroup("/api/account/")
             .WithTags("Account")
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .MapCreateAccountEndpoint();
     }
 
     private static void MapCreateAccountEndpoint(this IEndpointRouteBuilder builder)
@@ -31,8 +33,34 @@ public static class AccountEndpoints
             {
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
+
+            var result = await handler.CreateAccount(req);
             
-            return TypedResults.Ok(await handler.CreateAccount(req));
+            
+            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest();
+        }).WithName("create");
+    }
+
+    private static void MapEditAccountNameEndpoint(this IEndpointRouteBuilder builder)
+    {
+        builder.MapPost("/edit", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
+                [FromBody] EditAccountRequest req,
+                IValidator<EditAccountRequest> validator,
+                IEditAccountHandler handler)
+            =>
+        {
+            var validationResult = await validator.ValidateAsync(req);
+            
+            
+            
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }
+
+            var result = await handler.ChangeAccountName(req);
+
+            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest();
         });
     }
 }
