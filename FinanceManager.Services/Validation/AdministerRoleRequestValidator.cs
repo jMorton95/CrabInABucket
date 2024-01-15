@@ -1,8 +1,7 @@
 ﻿using FinanceManager.Core.Requests;
 using FluentValidation;
-using Microsoft.Win32;
 
-namespace FinanceManager.Core.Validation;
+namespace FinanceManager.Services.Validation;
 
 public class AdministerRoleRequestValidator : AbstractValidator<ChangeAdministratorRoleRequest>
 {

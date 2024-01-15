@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
-using FinanceManager.Core.Validation;
 using FinanceManager.Services.Handlers;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;

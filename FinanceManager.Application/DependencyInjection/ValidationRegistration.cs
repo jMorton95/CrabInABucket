@@ -1,5 +1,5 @@
 using FinanceManager.Core.Requests;
-using FinanceManager.Core.Validation;
+using FinanceManager.Services.Validation;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 

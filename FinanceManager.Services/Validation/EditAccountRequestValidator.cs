@@ -2,7 +2,7 @@
 using FinanceManager.Data.Read.Accounts;
 using FluentValidation;
 
-namespace FinanceManager.Core.Validation;
+namespace FinanceManager.Services.Validation;
 
 public class EditAccountRequestValidator : AbstractValidator<EditAccountRequest>
 {
