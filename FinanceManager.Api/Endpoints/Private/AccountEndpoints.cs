@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using FinanceManager.Core.Requests;
+﻿using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Services.Handlers;
 using FluentValidation;
@@ -15,10 +14,11 @@ public static class AccountEndpoints
         app.MapGroup("/api/account/")
             .WithTags("Account")
             .RequireAuthorization()
-            .MapCreateAccountEndpoint();
+            .MapCreateAccountEndpoint()
+            .MapEditAccountNameEndpoint();
     }
 
-    private static void MapCreateAccountEndpoint(this IEndpointRouteBuilder builder)
+    private static IEndpointRouteBuilder MapCreateAccountEndpoint(this IEndpointRouteBuilder builder)
     {
         builder.MapPost("/create", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
             [FromBody] CreateAccountRequest req,
@@ -38,9 +38,11 @@ public static class AccountEndpoints
             
             return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest();
         }).WithName("create");
+
+        return builder;
     }
 
-    private static void MapEditAccountNameEndpoint(this IEndpointRouteBuilder builder)
+    private static IEndpointRouteBuilder MapEditAccountNameEndpoint(this IEndpointRouteBuilder builder)
     {
         builder.MapPost("/edit", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
                 [FromBody] EditAccountRequest req,
@@ -61,5 +63,7 @@ public static class AccountEndpoints
 
             return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest();
         });
+        
+        return builder;
     }
 }
