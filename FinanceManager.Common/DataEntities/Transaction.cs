@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceManager.Core.DataEntities;
 
@@ -9,7 +10,9 @@ public class Transaction : BaseModel
 
     public bool RecurringTransaction { get; set; } = false;
     
-    public virtual Account RecipientAccount { get; set; }
+    [ForeignKey("RecipientAccountId")]
+    public Guid RecipientAccountId { get; set; }
     
-    public virtual Account? SenderAccount { get; set; }
+    [ForeignKey("SenderAccountId")]
+    public Guid? SenderAccountId { get; set; }
 }

@@ -5,7 +5,7 @@ namespace FinanceManager.Data.Write.Transactions;
 
 public interface IWriteTransaction : ICreateEntity<Transaction> { }
 
-public class WriteTransaction(DataContext db, IUserContextService userContextService) : IWriteTransaction
+public sealed class WriteTransaction(DataContext db, IUserContextService userContextService) : IWriteTransaction
 {
     public async Task<bool> CreateAsync(Transaction entity)
     {

@@ -19,9 +19,7 @@ public class EditAccountRequestValidator : AbstractValidator<EditAccountRequest>
             .WithMessage("Account Name must not be empty and be between 3 and 30 characters.");
         
         RuleFor(x => x.AccountName)
-            .MustAsync(async (name, cancel) => await readAccounts.DoesAccountExist(name) == false)
+            .MustAsync(async (name, cancel) => await readAccounts.DoesUserAccountExist(name) == false)
             .WithMessage("You already have an account with this name.");
-        
     }
-
 }

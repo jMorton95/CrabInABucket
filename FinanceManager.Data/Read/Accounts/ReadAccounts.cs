@@ -6,7 +6,7 @@ namespace FinanceManager.Data.Read.Accounts;
 
 public interface IReadAccounts : IGetAllEntitiesAsync<Account>, IGetEntityByIdAsync<Account>
 {
-    Task<bool?> DoesAccountExist(string accountName);
+    Task<bool?> DoesUserAccountExist(string accountName);
 };
 public sealed class ReadAccounts(DataContext db, IUserContextService userContextService) : IReadAccounts
 {
@@ -36,7 +36,7 @@ public sealed class ReadAccounts(DataContext db, IUserContextService userContext
             .FirstOrDefaultAsync(x => x.User.Id == _userId && x.Id == id);
     }
 
-    public async Task<bool?> DoesAccountExist(string accountName)
+    public async Task<bool?> DoesUserAccountExist(string accountName)
     {
         if (_userId == null) return null;
         

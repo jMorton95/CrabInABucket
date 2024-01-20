@@ -15,7 +15,7 @@ public class CreateAccountHandler(IReadAccounts read, IWriteAccounts write) : IC
 {
     public async Task<BasePostResponse> CreateAccount(CreateAccountRequest req)
     {
-        var doesAccountExist = await read.DoesAccountExist(req.AccountName);
+        var doesAccountExist = await read.DoesUserAccountExist(req.AccountName);
 
         return (doesAccountExist) switch
         {
