@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Accounts;
 
-public interface IReadAccounts : IRead<Account>
+public interface IReadAccounts : IGetAllEntitiesAsync<Account>, IGetEntityByIdAsync<Account>
 {
     Task<bool?> DoesAccountExist(string accountName);
 };

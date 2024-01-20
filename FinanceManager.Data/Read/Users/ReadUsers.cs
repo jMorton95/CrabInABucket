@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Users;
 
-public interface IReadUsers : IRead<User>
+public interface IReadUsers : IGetEntityByIdAsync<User>, IGetAllEntitiesAsync<User>
 {
     Task<bool> CheckUserExistsByEmail(string emailAddress);
     Task<User?> GetUserByEmailAsync(string emailAddress);

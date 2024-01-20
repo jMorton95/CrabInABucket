@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Users;
 
-public interface IWriteUsers : IWrite<User, EditUserRequest>
+public interface IWriteUsers :
+    ICreateEntity<User>,
+    IEditEntity<EditUserRequest>
 {
     Task<int> ManageUserAdministratorRole(User user, bool isAdmin);
 }

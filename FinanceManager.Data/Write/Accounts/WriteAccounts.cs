@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Accounts;
 
-public interface IWriteAccounts : IWrite<Account, EditAccountRequest> { }
+public interface IWriteAccounts : ICreateEntity<Account>, IEditEntity<EditAccountRequest> { }
 
 public sealed class WriteAccounts(DataContext db, IUserContextService userContextService) : IWriteAccounts
 {
@@ -28,9 +28,9 @@ public sealed class WriteAccounts(DataContext db, IUserContextService userContex
         return saveResult > 0;
     }
     
-    public async Task<bool> EditAsync(EditAccountRequest req)
+    public async Task<bool> EditAsync(EditAccountRequest request)
     {
-        var account = await db.Account.FirstOrDefaultAsync(x => x.Id == req.Id && x.User.Id == _userId).ConfigureAwait(false);
+        var account = await db.Account.FirstOrDefaultAsync(x => x.Id == request.Id && x.User.Id == _userId).ConfigureAwait(false);
          
         if (account == null)
         {
@@ -38,7 +38,7 @@ public sealed class WriteAccounts(DataContext db, IUserContextService userContex
             throw new InvalidOperationException("Account does not exist");
         }
         
-        account.Name = req.AccountName;
+        account.Name = request.AccountName;
 
         var saveResult = await db.SaveChangesAsync().ConfigureAwait(false);
 
