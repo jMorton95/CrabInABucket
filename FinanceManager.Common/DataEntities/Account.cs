@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using FinanceManager.Core.DataEntities;
 
 namespace FinanceManager.Core.DataEntities;
 
 public class Account : BaseModel
 {
     [Required] public string Name { get; set; }
-    public IEnumerable<BudgetTransaction> BudgetTransactions { get; set; }
-    public virtual User User { get; set; }
+    
+    public decimal Balance { get; set; } = 0;
+    public ICollection<RecurringTransaction> RecurringTransactions { get; set; }
+    public User User { get; set; }
 }

@@ -10,7 +10,9 @@ public class DataContext(DbContextOptions options, IUserContextService userConte
     public DbSet<Role> Role => Set<Role>();
     public DbSet<UserRole> UserRole => Set<UserRole>();
     public DbSet<Account> Account => Set<Account>();
-    public DbSet<BudgetTransaction> BudgetTransaction => Set<BudgetTransaction>();
+    public DbSet<RecurringTransaction> RecurringTransaction => Set<RecurringTransaction>();
+
+    public DbSet<Transaction> Transaction => Set<Transaction>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

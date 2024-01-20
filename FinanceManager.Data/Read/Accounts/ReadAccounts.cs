@@ -19,7 +19,7 @@ public sealed class ReadAccounts(DataContext db, IUserContextService userContext
         }
 
         return await db.Account
-            .Include(x => x.BudgetTransactions)
+            .Include(x => x.RecurringTransactions)
             .Where(x => x.User.Id == _userId)
             .ToListAsync();
     }
@@ -32,7 +32,7 @@ public sealed class ReadAccounts(DataContext db, IUserContextService userContext
         }
 
         return await db.Account
-            .Include(x => x.BudgetTransactions)
+            .Include(x => x.RecurringTransactions)
             .FirstOrDefaultAsync(x => x.User.Id == _userId && x.Id == id);
     }
 
