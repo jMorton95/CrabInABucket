@@ -22,7 +22,7 @@ public class RecurringTransaction : BaseModel
     
     public DateTime NextTransactionDate { get; set; }
     
-    public virtual Account RecipientAccountId { get; set; }
+    public virtual Guid RecipientAccountId { get; set; }
     
     public virtual Guid? SenderAccountId { get; set; }
 }
