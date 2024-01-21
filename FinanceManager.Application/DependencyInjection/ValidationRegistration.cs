@@ -16,6 +16,8 @@ public static class ValidationRegistration
         services.AddScoped<IValidator<ChangeAdministratorRoleRequest>, AdministerRoleRequestValidator>();
         services.AddScoped<IValidator<CreateAccountRequest>, CreateAccountRequestValidator>();
         services.AddScoped<IValidator<EditAccountRequest>, EditAccountRequestValidator>();
+        services.AddScoped<IValidator<CreateDepositRequest>, CreateDepositRequestValidator>();
+        services.AddScoped<IValidator<CreateRecurringTransactionRequest>, CreateRecurringTransactionRequestValidator>();
 
         return services;
     }

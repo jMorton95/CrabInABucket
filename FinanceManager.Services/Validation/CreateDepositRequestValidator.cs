@@ -4,10 +4,10 @@ using FluentValidation;
 
 namespace FinanceManager.Services.Validation;
 
-public class DepositRequestValidator : AbstractValidator<DepositRequest>
+public class CreateDepositRequestValidator : AbstractValidator<CreateDepositRequest>
 {
     //TODO: Validate Account exists in database
-    public DepositRequestValidator(IReadAccounts readAccounts)
+    public CreateDepositRequestValidator(IReadAccounts readAccounts)
     {
         RuleFor(x => x.Amount)
             .NotNull()

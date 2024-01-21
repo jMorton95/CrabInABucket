@@ -5,14 +5,13 @@ namespace FinanceManager.Application.DependencyInjection;
 
 public static class HandlerRegistration
 {
-    public static IServiceCollection AddServiceHandlers(this IServiceCollection services)
+    public static void AddServiceHandlers(this IServiceCollection services)
     {
         services.AddScoped<ILoginHandler, LoginHandler>();
         services.AddScoped<ICreateUserHandler, CreateUserHandler>();
         services.AddScoped<IRoleHandler, RoleHandler>();
         services.AddScoped<ICreateAccountHandler, CreateAccountHandler>();
         services.AddScoped<IEditAccountHandler, EditAccountHandler>();
-
-        return services;
+        services.AddScoped<ICreateDepositHandler, CreateDepositHandler>();
     }
 }
