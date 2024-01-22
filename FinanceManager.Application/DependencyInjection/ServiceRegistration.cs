@@ -13,7 +13,7 @@ public static class ServiceRegistration
         services.AddHttpContextAccessor();
         
         services.AddScoped<IPasswordUtilities, PasswordUtilities>();
-        
+        services.AddScoped<IBuildTransactionService, BuildTransactionService>();        
         services.AddScoped<IUserTokenService, UserTokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IUserContextService, UserContextService>();

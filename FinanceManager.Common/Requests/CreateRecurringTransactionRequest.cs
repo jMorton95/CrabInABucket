@@ -2,6 +2,7 @@
 
 public record CreateRecurringTransactionRequest (
     decimal Amount,
+    string TransactionName,
     int TransactionInterval,
     Guid RecipientAccountId,
     bool StartsImmediately = false,

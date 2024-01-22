@@ -11,6 +11,10 @@ public class CreateRecurringTransactionRequestValidator : AbstractValidator<Crea
             .NotEmpty()
             .WithMessage("Amount cannot be empty or zero");
 
+        RuleFor(x => x.TransactionName)
+            .NotEmpty()
+            .WithMessage("Please specify name for this recurring transaction.");
+
         RuleFor(x => x.TransactionInterval)
             .NotEmpty()
             .InclusiveBetween(1, 28)
