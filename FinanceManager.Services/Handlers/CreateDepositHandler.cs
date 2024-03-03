@@ -16,10 +16,10 @@ public class CreateDepositHandler(IWriteTransaction write, IBuildTransactionServ
     public async Task<BasePostResponse> Deposit(CreateDepositRequest req)
     {
         var transaction = service.MapTransaction(
-            req.Amount,
+            amount: req.Amount,
             recurringTransaction: false,
-            req.RecipientAccountId,
-            req.RecipientAccountId
+            recipientAccountId: req.RecipientAccountId,
+            senderAccountId: req.RecipientAccountId
         );
         
         var result = await write.CreateAsync(transaction);

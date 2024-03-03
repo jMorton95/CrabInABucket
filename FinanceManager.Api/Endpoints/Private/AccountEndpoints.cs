@@ -24,7 +24,8 @@ public static class AccountEndpoints
             [FromBody] CreateAccountRequest req,
             IValidator<CreateAccountRequest> validator,
             ICreateAccountHandler handler
-        ) =>
+        ) 
+            =>
         {
             var validationResult = await validator.ValidateAsync(req);
 
@@ -47,12 +48,11 @@ public static class AccountEndpoints
         builder.MapPost("/edit", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
                 [FromBody] EditAccountRequest req,
                 IValidator<EditAccountRequest> validator,
-                IEditAccountHandler handler)
+                IEditAccountHandler handler
+        ) 
             =>
         {
             var validationResult = await validator.ValidateAsync(req);
-            
-            
             
             if (!validationResult.IsValid)
             {
