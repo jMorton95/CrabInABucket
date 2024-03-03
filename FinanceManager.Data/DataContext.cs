@@ -16,8 +16,20 @@ public class DataContext(DbContextOptions options, IUserContextService userConte
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
-        modelBuilder.Entity<Role>().HasIndex(r => r.Name).IsUnique();
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+        
+        modelBuilder.Entity<Role>()
+            .HasIndex(r => r.Name)
+            .IsUnique();
+        
+        modelBuilder.Entity<Friendship>()
+            .HasMany(f => f.UserFriendships)
+            .WithOne(uf => uf.Friendship)
+            .HasForeignKey(uf => uf.FriendshipId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .HasConstraintName("FK_Friendship_Users");
     }
     
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

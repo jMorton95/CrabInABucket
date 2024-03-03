@@ -9,8 +9,12 @@ public class User : BaseModel
 
     [Required]
     public string Password { get; set; }
+
+    public DateTime LastOnline { get; set; }
     
     public IEnumerable<Account> Accounts { get; set; }
     
     public IEnumerable<UserRole> Roles { get; set; }
+    
+    public IEnumerable<UserFriendship> UserFriendships { get; set; }
 }

@@ -9,6 +9,7 @@ public interface IWriteUsers :
     ICreateEntity<User>,
     IEditEntity<EditUserRequest>
 {
+    Task<bool> UpdateLastLogin(User user);
     Task<int> ManageUserAdministratorRole(User user, bool isAdmin);
 }
 
@@ -27,7 +28,7 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
     {
         //db.User.Update(entity);
         return true;
-        //return await db.SaveChangesAsync();
+        //eturn await db.SaveChangesAsync();
     }
 
     private Role CreateAdministratorRole()
@@ -36,6 +37,23 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         db.Role.Add(adminRole);
 
         return adminRole;
+    }
+
+    public async Task<bool> UpdateLastLogin(User user)
+    {
+        user.LastOnline = DateTime.UtcNow;
+
+        try
+        {
+            var result = await db.SaveChangesAsync();
+            return result > 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return false;
+            //TODO: Integrate Logger
+        }
     }
     
     public async Task<int> ManageUserAdministratorRole(User user, bool isAdmin)

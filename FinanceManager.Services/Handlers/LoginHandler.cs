@@ -3,6 +3,7 @@ using FinanceManager.Core.Mappers;
 using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data.Read.Users;
+using FinanceManager.Data.Write.Users;
 using FinanceManager.Services.Generic.Password;
 
 namespace FinanceManager.Services.Handlers;
@@ -12,7 +13,7 @@ public interface ILoginHandler
     Task<LoginResponse?> Login(LoginRequest req);
 }
 
-public class LoginHandler(IReadUsers readUsers, IPasswordHasher passwordHasher, IUserTokenService userTokenService) : ILoginHandler
+public class LoginHandler(IReadUsers readUsers, IWriteUsers writeUsers, IPasswordHasher passwordHasher, IUserTokenService userTokenService) : ILoginHandler
 {
     public async Task<LoginResponse?> Login(LoginRequest req)
     {
@@ -22,9 +23,11 @@ public class LoginHandler(IReadUsers readUsers, IPasswordHasher passwordHasher, 
         {
             return null;
         }
+
+        await writeUsers.UpdateLastLogin(attemptedUser);
         
         var token = userTokenService.CreateTokenWithClaims(await userTokenService.GetUserClaims(attemptedUser));
-
+        
         return new LoginResponse(token, attemptedUser.ToUserResponse());
     }
 }
