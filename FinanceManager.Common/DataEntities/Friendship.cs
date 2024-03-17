@@ -6,7 +6,9 @@ public class Friendship : BaseModel
 {
     public IEnumerable<UserFriendship> UserFriendships { get; set; }
 
-    public bool IsConfirmed { get; set; } = false;
+    public bool IsAccepted { get; set; } = false;
+
+    public bool IsPending { get; set; } = true;
     
     public IEnumerable<Message> Messages { get; set; }
 }

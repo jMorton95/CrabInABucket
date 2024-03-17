@@ -1,3 +1,4 @@
+using FinanceManager.Core.Requests;
 using FinanceManager.Services.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,5 +14,6 @@ public static class HandlerRegistration
         services.AddScoped<ICreateAccountHandler, CreateAccountHandler>();
         services.AddScoped<IEditAccountHandler, EditAccountHandler>();
         services.AddScoped<ICreateDepositHandler, CreateDepositHandler>();
+        services.AddScoped<ICreateFriendshipHandler, CreateFriendshipHandler>();
     }
 }

@@ -11,5 +11,6 @@ public static class EndpointMapping
         app.MapUserEndpoints();
         app.MapAccountEndpoints();
         app.MapTransactionEndpoints();
+        app.MapFriendshipEndpoints();
     }
 }

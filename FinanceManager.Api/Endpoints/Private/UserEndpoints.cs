@@ -54,7 +54,7 @@ public static class UserEndpoints
         })
         .WithName("GetByUsername");
         
-        usersGroup.MapPost("/change-administrator-role", async Task<Results<Ok<BasePostResponse>,ValidationProblem, BadRequest>> (
+        usersGroup.MapPost("/change-administrator-role", async Task<Results<Ok<BasePostResponse>,ValidationProblem, BadRequest<BasePostResponse>>> (
              [FromBody] ChangeAdministratorRoleRequest req,
              IValidator<ChangeAdministratorRoleRequest> validator,
              [FromServices] IRoleHandler handler
@@ -67,8 +67,10 @@ public static class UserEndpoints
             {
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
+
+            var result = await handler.ChangeUserAdminRole(req.UserId, req.IsAdmin);
             
-            return TypedResults.Ok(await handler.ChangeUserAdminRole(req.UserId, req.IsAdmin));
+            return result.Success ? TypedResults.Ok(await handler.ChangeUserAdminRole(req.UserId, req.IsAdmin)) : TypedResults.BadRequest(result);
         });
     }
 }

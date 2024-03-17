@@ -4,15 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data;
 
-public class DataContext(DbContextOptions options, IUserContextService userContextService) : DbContext(options)
+public class DataContext(DbContextOptions<DataContext> options, IUserContextService userContextService) : DbContext(options)
 {
     public DbSet<User> User => Set<User>();
     public DbSet<Role> Role => Set<Role>();
     public DbSet<UserRole> UserRole => Set<UserRole>();
     public DbSet<Account> Account => Set<Account>();
     public DbSet<RecurringTransaction> RecurringTransaction => Set<RecurringTransaction>();
-
     public DbSet<Transaction> Transaction => Set<Transaction>();
+    public DbSet<Friendship> Friendship => Set<Friendship>();
+    public DbSet<UserFriendship> UserFriendship => Set<UserFriendship>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

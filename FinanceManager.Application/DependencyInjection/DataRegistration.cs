@@ -1,8 +1,10 @@
 using FinanceManager.Core.AppConstants;
 using FinanceManager.Data;
+using FinanceManager.Data.Read;
 using FinanceManager.Data.Read.Accounts;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Accounts;
+using FinanceManager.Data.Write.Friendships;
 using FinanceManager.Data.Write.Transactions;
 using FinanceManager.Data.Write.Users;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +33,9 @@ public static class DataRegistration
         services.AddScoped<IWriteTransaction, WriteTransaction>();
 
         services.AddScoped<IWriteRecurringTransaction, WriteRecurringTransaction>();
+
+        services.AddScoped<IReadFriendships, ReadFriendships>();
+        services.AddScoped<IWriteFriendships, WriteFriendships>();
 
         return services;
     }

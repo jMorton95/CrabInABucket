@@ -20,7 +20,7 @@ public static class AccountEndpoints
 
     private static IEndpointRouteBuilder MapCreateAccountEndpoint(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/create", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
+        builder.MapPost("/create", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
             [FromBody] CreateAccountRequest req,
             IValidator<CreateAccountRequest> validator,
             ICreateAccountHandler handler
@@ -36,8 +36,7 @@ public static class AccountEndpoints
 
             var result = await handler.CreateAccount(req);
             
-            
-            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest();
+            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest(result);
         }).WithName("create");
 
         return builder;
@@ -45,7 +44,7 @@ public static class AccountEndpoints
 
     private static IEndpointRouteBuilder MapEditAccountNameEndpoint(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/edit", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
+        builder.MapPost("/edit", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
                 [FromBody] EditAccountRequest req,
                 IValidator<EditAccountRequest> validator,
                 IEditAccountHandler handler
@@ -61,7 +60,7 @@ public static class AccountEndpoints
 
             var result = await handler.ChangeAccountName(req);
 
-            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest();
+            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest(result);
         });
         
         return builder;

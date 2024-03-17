@@ -19,7 +19,7 @@ public static class TransactionEndpoints
 
     private static IEndpointRouteBuilder MapDepositEndpoint(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/deposit", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
+        builder.MapPost("/deposit", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
             [FromBody] CreateDepositRequest req,
             IValidator<CreateDepositRequest> validator,
             ICreateDepositHandler handler
@@ -35,7 +35,7 @@ public static class TransactionEndpoints
 
             var handlerResult = await handler.Deposit(req);
 
-            return handlerResult.Success ? TypedResults.Ok(handlerResult) : TypedResults.BadRequest();
+            return handlerResult.Success ? TypedResults.Ok(handlerResult) : TypedResults.BadRequest(handlerResult);
 
         }).WithName("deposit");
 
@@ -44,7 +44,7 @@ public static class TransactionEndpoints
 
     private static IEndpointRouteBuilder MapRecurringTransactionEndpoint(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/recurring", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest>> (
+        builder.MapPost("/recurring", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
             [FromBody] CreateRecurringTransactionRequest req,
             IValidator<CreateRecurringTransactionRequest> validator,
             ICreateRecurringTransactionHandler handler
@@ -60,7 +60,7 @@ public static class TransactionEndpoints
 
             var handlerResult = await handler.Create(req);
 
-            return handlerResult.Success ? TypedResults.Ok(handlerResult) : TypedResults.BadRequest();
+            return handlerResult.Success ? TypedResults.Ok(handlerResult) : TypedResults.BadRequest(handlerResult);
             
         }).WithName("recurring");
 
