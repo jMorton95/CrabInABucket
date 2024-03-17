@@ -18,6 +18,7 @@ public static class ValidationRegistration
         services.AddScoped<IValidator<CreateDepositRequest>, CreateDepositRequestValidator>();
         services.AddScoped<IValidator<CreateRecurringTransactionRequest>, CreateRecurringTransactionRequestValidator>();
         services.AddScoped<IValidator<CreateFriendshipRequest>, CreateFriendshipRequestValidator>();
+        services.AddScoped<IValidator<FriendshipRequestStatusUpdateRequest>, FriendshipRequestStatusUpdateValidator>();
         
         return services;
     }

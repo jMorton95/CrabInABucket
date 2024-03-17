@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Friendships;
 
-public interface IWriteFriendships : IEditEntity<AcceptFriendshipRequest>
+public interface IWriteFriendships : IEditEntity<FriendshipRequestStatusUpdateRequest>
 {
     Task<bool> CreateAsync(CreateFriendshipRequest request, Guid currentUserId);
 }
@@ -36,7 +36,7 @@ public class WriteFriendships(DataContext db, IUserContextService userContextSer
         }
     }
 
-    public async Task<bool> EditAsync(AcceptFriendshipRequest request)
+    public async Task<bool> EditAsync(FriendshipRequestStatusUpdateRequest request)
     {
         if (_currentUserId is null) return false;
 

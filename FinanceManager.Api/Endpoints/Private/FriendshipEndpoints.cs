@@ -14,12 +14,13 @@ public static class FriendshipEndpoints
         app.MapGroup("api/friendship/")
             .WithTags("friendships")
             .RequireAuthorization()
-            .MapFriendRequestEndpoint();
+            .MapFriendRequestEndpoint()
+            .MapFriendRequestUpdateEndpoint();
     }
 
     private static IEndpointRouteBuilder MapFriendRequestEndpoint(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/request", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
+        builder.MapPost("request", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
                 [FromBody] CreateFriendshipRequest req,
                 IValidator<CreateFriendshipRequest> validator,
                 ICreateFriendshipHandler handler
@@ -37,6 +38,31 @@ public static class FriendshipEndpoints
 
             return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest(result);
         }).WithName("request");
+        
+        return builder;
+    }
+
+    private static IEndpointRouteBuilder MapFriendRequestUpdateEndpoint(this IEndpointRouteBuilder builder)
+    {
+        builder.MapPost("update", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
+                [FromBody] FriendshipRequestStatusUpdateRequest req,
+                IValidator<FriendshipRequestStatusUpdateRequest> validator,
+                IFriendshipRequestStatusHandler handler
+        )
+            =>
+        {
+            var validationResult = await validator.ValidateAsync(req);
+
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }
+
+            var result = await handler.UpdateFriendshipStatus(req);
+
+            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest(result);
+
+        }).WithName("update");
         
         return builder;
     }
