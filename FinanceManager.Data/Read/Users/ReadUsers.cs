@@ -7,6 +7,7 @@ public interface IReadUsers : IGetEntityByIdAsync<User>, IGetAllEntitiesAsync<Us
 {
     Task<bool> CheckUserExistsByEmail(string emailAddress);
     Task<User?> GetUserByEmailAsync(string emailAddress);
+    Task<List<User>> GetUserFriends(Guid userId);
 }
 
 public sealed class ReadUsers(DataContext db) : IReadUsers
@@ -32,4 +33,15 @@ public sealed class ReadUsers(DataContext db) : IReadUsers
             .Include(x => x.Roles)
             .ThenInclude(r => r.Role)
             .FirstOrDefaultAsync(x => x.Username == emailAddress);
+
+    public async Task<List<User>> GetUserFriends(Guid userId)
+    {
+        var users = await db.UserFriendship
+            .Where(uf => uf.Friendship.UserFriendships.Any(f => f.UserId == userId) && uf.UserId != userId)
+            .Select(uf => uf.User)
+            .Distinct()
+            .ToListAsync();
+        
+        return users;
+    }
 }
