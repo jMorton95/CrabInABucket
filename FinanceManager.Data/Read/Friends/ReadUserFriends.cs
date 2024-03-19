@@ -5,13 +5,23 @@ namespace FinanceManager.Data.Read.Friends;
 
 public interface IReadUserFriends
 {
+    Task<bool> CheckUsersAreFriends(Guid requesterId, Guid targetId);
     Task<List<User>> GetUserFriends(Guid userId);
     Task<List<User>> GetRelatedFriends(Guid userId);
-    Task<bool> CheckUsersAreFriends(Guid requesterId, Guid targetId);
+    Task<List<User>> GetRandomFriendSuggestions(Guid userId, int amountOfSuggestions);
 }
 
 public class ReadUserFriends(DataContext db) : IReadUserFriends
 {
+    public async Task<bool> CheckUsersAreFriends(Guid requesterId, Guid targetId)
+    {
+        var userFriendshipStatus = await db.Friendship
+            .AnyAsync(f => f.IsAccepted && 
+                           f.UserFriendships.Any(uf => uf.UserId == requesterId) && 
+                           f.UserFriendships.Any(uf => uf.UserId == targetId));
+        
+        return userFriendshipStatus;
+    }
     public async Task<List<User>> GetUserFriends(Guid userId)
     {
         var users = await db.UserFriendship
@@ -45,13 +55,21 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
         return friendsOfFriends;
     }
 
-    public async Task<bool> CheckUsersAreFriends(Guid requesterId, Guid targetId)
+    public async Task<List<User>> GetRandomFriendSuggestions(Guid userId, int amountOfSuggestions)
     {
-        var userFriendshipStatus = await db.Friendship
-            .AnyAsync(f => f.IsAccepted && 
-                           f.UserFriendships.Any(uf => uf.UserId == requesterId) && 
-                           f.UserFriendships.Any(uf => uf.UserId == targetId));
+        var friendIds = await db.UserFriendship
+            .Where(uf => uf.UserId == userId)
+            .Select(uf => uf.UserId)
+            .ToListAsync();
         
-        return userFriendshipStatus;
+        friendIds.Add(userId);
+        
+        var potentialSuggestions = await db.User
+            .Where(u => !friendIds.Contains(u.Id))
+            .OrderBy(u => Guid.NewGuid())
+            .Take(amountOfSuggestions)
+            .ToListAsync();
+
+        return potentialSuggestions;
     }
 }

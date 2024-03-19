@@ -29,4 +29,13 @@ public class TestHandlers(IReadUserFriends friendships, IUserContextService user
         
         return await friendships.CheckUsersAreFriends(_currentUser.Value, userId);
     }
+
+    public async Task<List<UserResponse>> GetUnrelatedFriends()
+    {
+        if (_currentUser is null) return new List<UserResponse>();
+        
+        var result = await friendships.GetRandomFriendSuggestions(_currentUser.Value, 4);
+
+        return result.Select(x => x.ToUserResponse()).ToList();
+    }
 }

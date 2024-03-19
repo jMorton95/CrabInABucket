@@ -12,7 +12,8 @@ public static class TestEndpoints
         return app.MapGroup("/api/test").WithTags("test")
             .MapTestGetFriendsEndpoint()
             .MapGetRelatedFriendsEndpoint()
-            .MapCheckIfUsersAreFriends();
+            .MapCheckIfUsersAreFriends()
+            .MapGetRandomFriends();
     }
 
     private static IEndpointRouteBuilder MapTestGetFriendsEndpoint(this IEndpointRouteBuilder builder)
@@ -35,6 +36,14 @@ public static class TestEndpoints
     {
         builder.MapPost("/check-friends/{userId}", async Task<Results<Ok<bool>, BadRequest>> 
             (TestHandlers handler, Guid userId) => TypedResults.Ok(await handler.CheckUsersAreFriends(userId)));
+            
+        return builder;
+    }
+    
+    private static IEndpointRouteBuilder MapGetRandomFriends(this IEndpointRouteBuilder builder)
+    {
+        builder.MapPost("/get-random-friends", async Task<Results<Ok<List<UserResponse>>, BadRequest>> 
+            (TestHandlers handler) => TypedResults.Ok(await handler.GetUnrelatedFriends()));
             
         return builder;
     }
