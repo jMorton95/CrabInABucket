@@ -17,6 +17,7 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
     public async Task<bool> CheckUsersAreFriends(Guid requesterId, Guid targetId)
     {
         var userFriendshipStatus = await db.Friendship
+            .AsNoTracking()
             .AnyAsync(f => f.IsAccepted && 
                            f.UserFriendships.Any(uf => uf.UserId == requesterId) && 
                            f.UserFriendships.Any(uf => uf.UserId == targetId));
@@ -26,6 +27,7 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
     public async Task<List<User>> GetUserFriends(Guid userId)
     {
         var users = await db.UserFriendship
+            .AsNoTracking()
             .Where(uf => uf.Friendship.UserFriendships.Any(f => f.UserId == userId) && uf.UserId != userId && uf.Friendship.IsAccepted == true)
             .Select(uf => uf.User)
             .Distinct()
@@ -36,39 +38,50 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
     
     public async Task<List<User>> GetRelatedFriends(Guid userId)
     {
-        var friends = await db.UserFriendship
-            .Where(uf => uf.Friendship.UserFriendships
-                .Any(f => f.UserId == userId) && uf.UserId != userId && uf.Friendship.IsAccepted == true)
-            .Distinct()
-            .ToListAsync();
-        
-        var friendIds = friends
-            .Select(f => f.UserId)
-            .ToList();
-        
-        var friendsOfFriends = await db.UserFriendship
-            .Where(uf => friendIds
-                .Any(id => uf.UserId != id) && uf.UserId != userId)
-            .Select(x => x.User)
+        var userFriendships = await db.Friendship
+            .AsNoTracking()
+            .Where(x => x.UserFriendships
+                .Any(y => y.UserId == userId))
+            .SelectMany(f => f.UserFriendships)
+            .Where(x => x.UserId != userId)
+            .Select(uf => uf.UserId)
             .Distinct()
             .ToListAsync();
 
-        return friendsOfFriends;
+        var friendsOfFriends = await db.Friendship
+            .AsNoTracking()
+            .Where(f => 
+                f.UserFriendships.Any(uf => userFriendships.Contains(uf.UserId))
+                && f.UserFriendships.Any(uf => uf.UserId != userId))
+            .SelectMany(x => x.UserFriendships)
+            .Select(x => x.UserId)
+            .Where(y => y != userId && !userFriendships.Contains(y))
+            .Distinct()
+            .ToListAsync();
+
+        var users = await db.User.Where(u => friendsOfFriends.Contains(u.Id))
+            .ToListAsync();
+        
+        return users;
     }
 
     public async Task<List<User>> GetRandomFriendSuggestions(Guid userId, int amountOfSuggestions)
     {
         var friendIds = await db.UserFriendship
+            .AsNoTracking()
             .Where(uf => uf.UserId == userId)
             .Select(uf => uf.UserId)
+            .Distinct()
             .ToListAsync();
         
         friendIds.Add(userId);
         
         var potentialSuggestions = await db.User
+            .AsNoTracking()
             .Where(u => !friendIds.Contains(u.Id))
             .OrderBy(u => Guid.NewGuid())
             .Take(amountOfSuggestions)
+            .Distinct()
             .ToListAsync();
 
         return potentialSuggestions;
@@ -76,13 +89,13 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
 
     public async Task<List<User>> GetPendingFriendRequests(Guid userId)
     {
-        var pendingUserIds = await db.UserFriendship
+        var pendingUsers = await db.UserFriendship
+            .AsNoTracking()
             .Where(uf => uf.Friendship.IsPending && uf.Friendship.UserFriendships.Any(x => x.UserId == userId) && uf.UserId != userId)
-            .Select(x => x.UserId)
+            .Select(x => x.User)
+            .Distinct()
             .ToListAsync();
-
-        var pendingUsers = await db.User.Where(x => pendingUserIds.Contains(x.Id)).ToListAsync();
-
+        
         return pendingUsers;
     }
 }

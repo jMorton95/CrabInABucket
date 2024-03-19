@@ -21,18 +21,16 @@ public class GetFriendsListHandler(IReadUserFriends db, IUserContextService user
             return new ResultResponse<FriendListResponse>(false, "Error retrieving friends list.");
         }
         
-        var userFriends = db.GetUserFriends(userId);
-        var pendingRequests = db.GetPendingFriendRequests(userId);
-        var relatedFriends = db.GetRelatedFriends(userId);
-        var suggestedFriends = db.GetRandomFriendSuggestions(userId, numberOfSuggestions);
-
-        await Task.WhenAll(userFriends, pendingRequests, relatedFriends, suggestedFriends);
-
+        var userFriends = await db.GetUserFriends(userId);
+        var pendingRequests = await db.GetPendingFriendRequests(userId);
+        var suggestedFriends = await db.GetRelatedFriends(userId);
+        var randomFriends = await db.GetRandomFriendSuggestions(userId, numberOfSuggestions);
+        
         var result = new FriendListResponse (
-            (await userFriends).Select(x => x.ToNamedUserResponse()).ToList(),
-            (await pendingRequests).Select(x => x.ToNamedUserResponse()).ToList(),
-            (await relatedFriends).Select(x => x.ToNamedUserResponse()).ToList(),
-            (await suggestedFriends).Select(x => x.ToNamedUserResponse()).ToList()
+            userFriends.Select(x => x.ToNamedUserResponse()).ToList(),
+            pendingRequests.Select(x => x.ToNamedUserResponse()).ToList(),
+            suggestedFriends.Select(x => x.ToNamedUserResponse()).ToList(),
+            randomFriends.Select(x => x.ToNamedUserResponse()).ToList()
         );
 
         return new ResultResponse<FriendListResponse>(true, "Success", result);
