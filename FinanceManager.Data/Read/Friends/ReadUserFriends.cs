@@ -40,7 +40,8 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
     {
         var users = await db.UserFriendship
             .AsNoTracking()
-            .Where(uf => uf.Friendship.UserFriendships.Any(f => f.UserId == userId) && uf.UserId != userId && uf.Friendship.IsAccepted == true)
+            .Where(uf => uf.Friendship.UserFriendships
+                .Any(f => f.UserId == userId) && uf.UserId != userId && uf.Friendship.IsAccepted == true)
             .Select(uf => uf.User)
             .Distinct()
             .ToListAsync();
@@ -63,7 +64,9 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
             .Distinct()
             .ToListAsync();
 
-        var users = await db.User.Where(u => friendsOfFriends.Contains(u.Id))
+        var users = await db.User
+            .Where(u => friendsOfFriends
+                .Contains(u.Id))
             .ToListAsync();
         
         return users;
@@ -88,7 +91,8 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
     {
         var pendingUsers = await db.UserFriendship
             .AsNoTracking()
-            .Where(uf => uf.Friendship.IsPending && uf.Friendship.UserFriendships.Any(x => x.UserId == userId) && uf.UserId != userId)
+            .Where(uf => uf.Friendship.IsPending && uf.Friendship.UserFriendships
+                .Any(x => x.UserId == userId) && uf.UserId != userId)
             .Select(x => x.User)
             .Distinct()
             .ToListAsync();
