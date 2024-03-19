@@ -75,7 +75,7 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
         
         var potentialSuggestions = await db.User
             .AsNoTracking()
-            .Where(u => !userFriendIds.Contains(u.Id))
+            .Where(u => !userFriendIds.Contains(u.Id) && u.Id != userId)
             .OrderBy(u => Guid.NewGuid())
             .Take(amountOfSuggestions)
             .Distinct()

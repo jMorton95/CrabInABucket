@@ -25,12 +25,15 @@ public class GetFriendsListHandler(IReadUserFriends db, IUserContextService user
         var pendingRequests = await db.GetPendingFriendRequests(userId);
         var suggestedFriends = await db.GetRelatedFriends(userId);
         var randomFriends = await db.GetRandomFriendSuggestions(userId, numberOfSuggestions);
+
+        var suggestedFriendIds = new HashSet<Guid>(suggestedFriends.Select(x => x.Id));
+        var filteredRandomFriends = randomFriends.Where(x => suggestedFriendIds.Contains(x.Id));
         
         var result = new FriendListResponse (
             userFriends.Select(x => x.ToNamedUserResponse()).ToList(),
             pendingRequests.Select(x => x.ToNamedUserResponse()).ToList(),
             suggestedFriends.Select(x => x.ToNamedUserResponse()).ToList(),
-            randomFriends.Select(x => x.ToNamedUserResponse()).ToList()
+            filteredRandomFriends.Select(x => x.ToNamedUserResponse()).ToList()
         );
 
         return new ResultResponse<FriendListResponse>(true, "Success", result);
