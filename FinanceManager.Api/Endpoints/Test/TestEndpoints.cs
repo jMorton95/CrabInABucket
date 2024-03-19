@@ -9,10 +9,13 @@ public static class TestEndpoints
 {
     public static IEndpointRouteBuilder MapTestEndpoints(this IEndpointRouteBuilder app)
     {
-        return app.MapGroup("/api/test").WithTags("test").MapTestGetFriendsEndpoint().MapGetRelatedFriendsEndpoint();
+        return app.MapGroup("/api/test").WithTags("test")
+            .MapTestGetFriendsEndpoint()
+            .MapGetRelatedFriendsEndpoint()
+            .MapCheckIfUsersAreFriends();
     }
 
-    public static IEndpointRouteBuilder MapTestGetFriendsEndpoint(this IEndpointRouteBuilder builder)
+    private static IEndpointRouteBuilder MapTestGetFriendsEndpoint(this IEndpointRouteBuilder builder)
     {
         builder.MapPost("/get-friends/{id}", async Task<Results<Ok<List<User>>, BadRequest>> 
             (TestHandlers handler, Guid id) => TypedResults.Ok(await handler.GetFriendships(id)));
@@ -20,10 +23,18 @@ public static class TestEndpoints
         return builder;
     }
     
-    public static IEndpointRouteBuilder MapGetRelatedFriendsEndpoint(this IEndpointRouteBuilder builder)
+    private static IEndpointRouteBuilder MapGetRelatedFriendsEndpoint(this IEndpointRouteBuilder builder)
     {
         builder.MapPost("/get-related-friends/{id}", async Task<Results<Ok<List<UserResponse>>, BadRequest>> 
             (TestHandlers handler, Guid id) => TypedResults.Ok(await handler.GetRelatedFriends(id)));
+            
+        return builder;
+    }
+    
+    private static IEndpointRouteBuilder MapCheckIfUsersAreFriends(this IEndpointRouteBuilder builder)
+    {
+        builder.MapPost("/check-friends/{userId}", async Task<Results<Ok<bool>, BadRequest>> 
+            (TestHandlers handler, Guid userId) => TypedResults.Ok(await handler.CheckUsersAreFriends(userId)));
             
         return builder;
     }

@@ -7,6 +7,7 @@ public interface IReadUserFriends
 {
     Task<List<User>> GetUserFriends(Guid userId);
     Task<List<User>> GetRelatedFriends(Guid userId);
+    Task<bool> CheckUsersAreFriends(Guid requesterId, Guid targetId);
 }
 
 public class ReadUserFriends(DataContext db) : IReadUserFriends
@@ -42,5 +43,15 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
             .ToListAsync();
 
         return friendsOfFriends;
+    }
+
+    public async Task<bool> CheckUsersAreFriends(Guid requesterId, Guid targetId)
+    {
+        var userFriendshipStatus = await db.Friendship
+            .AnyAsync(f => f.IsAccepted && 
+                           f.UserFriendships.Any(uf => uf.UserId == requesterId) && 
+                           f.UserFriendships.Any(uf => uf.UserId == targetId));
+        
+        return userFriendshipStatus;
     }
 }

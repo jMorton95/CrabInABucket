@@ -1,4 +1,5 @@
-﻿using FinanceManager.Core.Requests;
+﻿using FinanceManager.Core.Middleware.UserContext;
+using FinanceManager.Core.Requests;
 using FinanceManager.Core.Responses;
 using FinanceManager.Data.Write.Friendships;
 

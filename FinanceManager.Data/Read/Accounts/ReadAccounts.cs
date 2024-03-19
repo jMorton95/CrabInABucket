@@ -13,11 +13,6 @@ public sealed class ReadAccounts(DataContext db, IUserContextService userContext
     private readonly Guid? _userId = userContextService.GetCurrentUserId();
     public async Task<IEnumerable<Account>> GetAllAsync()
     {
-        if (_userId == null)
-        {
-            return Enumerable.Empty<Account>();
-        }
-
         return await db.Account
             .Include(x => x.RecurringTransactions)
             .Where(x => x.User.Id == _userId)

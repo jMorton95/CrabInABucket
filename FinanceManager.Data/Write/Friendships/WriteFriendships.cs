@@ -38,8 +38,6 @@ public class WriteFriendships(DataContext db, IUserContextService userContextSer
 
     public async Task<bool> EditAsync(FriendshipRequestStatusUpdateRequest request)
     {
-        if (_currentUserId is null) return false;
-
         var friendship = await db.Friendship.FirstOrDefaultAsync(x => x.Id == request.FriendshipId);
 
         if (friendship is null) return false;
