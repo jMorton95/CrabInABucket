@@ -16,5 +16,6 @@ public static class HandlerRegistration
         services.AddScoped<ICreateDepositHandler, CreateDepositHandler>();
         services.AddScoped<ICreateFriendshipHandler, CreateFriendshipHandler>();
         services.AddScoped<IFriendshipRequestStatusHandler, FriendshipRequestStatusHandler>();
+        services.AddScoped<TestHandlers>();
     }
 }

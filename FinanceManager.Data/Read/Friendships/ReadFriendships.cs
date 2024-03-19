@@ -2,7 +2,7 @@
 using FinanceManager.Core.Middleware.UserContext;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceManager.Data.Read;
+namespace FinanceManager.Data.Read.Friendships;
 
 public interface IReadFriendships : IGetEntityByIdAsync<Friendship>
 {

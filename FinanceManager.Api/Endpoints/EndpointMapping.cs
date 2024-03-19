@@ -1,5 +1,7 @@
 using FinanceManager.Api.Endpoints.Private;
 using FinanceManager.Api.Endpoints.Public;
+using FinanceManager.Api.Endpoints.Test;
+using Microsoft.Extensions.Options;
 
 namespace FinanceManager.Api.Endpoints;
 
@@ -12,5 +14,11 @@ public static class EndpointMapping
         app.MapAccountEndpoints();
         app.MapTransactionEndpoints();
         app.MapFriendshipEndpoints();
+        
+    }
+
+    public static void MapDevelopmentEndpoints(this WebApplication app)
+    {
+        app.MapTestEndpoints();
     }
 }

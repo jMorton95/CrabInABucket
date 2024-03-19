@@ -2,6 +2,8 @@ using FinanceManager.Core.AppConstants;
 using FinanceManager.Data;
 using FinanceManager.Data.Read;
 using FinanceManager.Data.Read.Accounts;
+using FinanceManager.Data.Read.Friends;
+using FinanceManager.Data.Read.Friendships;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Accounts;
 using FinanceManager.Data.Write.Friendships;
@@ -36,6 +38,8 @@ public static class DataRegistration
 
         services.AddScoped<IReadFriendships, ReadFriendships>();
         services.AddScoped<IWriteFriendships, WriteFriendships>();
+
+        services.AddScoped<IReadUserFriends, ReadUserFriends>();
 
         return services;
     }

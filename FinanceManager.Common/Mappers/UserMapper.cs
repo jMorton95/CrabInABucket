@@ -10,6 +10,6 @@ public static class UserMapper
         var userRoles = user.Roles?.Select(x => x.Role!.Name).ToList() ?? new List<string>();
         var userAccounts = user.Accounts?.Select(x => x.Name).ToList() ?? new List<string>();
         
-        return new UserResponse(user.Username, userRoles, userAccounts);
+        return new UserResponse(user.Id, user.Username, userRoles, userAccounts);
     }
 }

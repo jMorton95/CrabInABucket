@@ -32,6 +32,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCustomMiddleware();
+
 app.MapApiEndpoints();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapDevelopmentEndpoints();
+}
 
 app.Run();
