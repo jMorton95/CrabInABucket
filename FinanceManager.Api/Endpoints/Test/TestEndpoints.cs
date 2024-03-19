@@ -27,7 +27,7 @@ public static class TestEndpoints
     
     private static IEndpointRouteBuilder MapGetRelatedFriendsEndpoint(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/get-related-friends/{id}", async Task<Results<Ok<List<UserResponse>>, BadRequest>> 
+        builder.MapPost("/get-related-friends/{id}", async Task<Results<Ok<List<UserResponses>>, BadRequest>> 
             (TestHandlers handler, Guid id) => TypedResults.Ok(await handler.GetRelatedFriends(id)));
             
         return builder;
@@ -43,7 +43,7 @@ public static class TestEndpoints
     
     private static IEndpointRouteBuilder MapGetRandomFriends(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/get-random-friends", async Task<Results<Ok<List<UserResponse>>, BadRequest>> 
+        builder.MapPost("/get-random-friends", async Task<Results<Ok<List<UserResponses>>, BadRequest>> 
             (TestHandlers handler) => TypedResults.Ok(await handler.GetUnrelatedFriends()));
             
         return builder;
@@ -51,7 +51,7 @@ public static class TestEndpoints
     
     private static IEndpointRouteBuilder MapGetPendingRequests(this IEndpointRouteBuilder builder)
     {
-        builder.MapPost("/get-pending", async Task<Results<Ok<List<UserResponse>>, BadRequest>> 
+        builder.MapPost("/get-pending", async Task<Results<Ok<List<UserResponses>>, BadRequest>> 
             (TestHandlers handler) => TypedResults.Ok(await handler.GetPendingRequests()));
             
         return builder;

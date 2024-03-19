@@ -16,7 +16,7 @@ public class TestHandlers(IReadUserFriends friendships, IUserContextService user
         return await friendships.GetUserFriends(userId);
     }
 
-    public async Task<List<UserResponse>> GetRelatedFriends(Guid userId)
+    public async Task<List<UserResponses>> GetRelatedFriends(Guid userId)
     {
         var result = await friendships.GetRelatedFriends(userId);
 
@@ -30,18 +30,18 @@ public class TestHandlers(IReadUserFriends friendships, IUserContextService user
         return await friendships.CheckUsersAreFriends(_currentUser.Value, userId);
     }
 
-    public async Task<List<UserResponse>> GetUnrelatedFriends()
+    public async Task<List<UserResponses>> GetUnrelatedFriends()
     {
-        if (_currentUser is null) return new List<UserResponse>();
+        if (_currentUser is null) return new List<UserResponses>();
         
         var result = await friendships.GetRandomFriendSuggestions(_currentUser.Value, 4);
 
         return result.Select(x => x.ToUserResponse()).ToList();
     }
 
-    public async Task<List<UserResponse>> GetPendingRequests()
+    public async Task<List<UserResponses>> GetPendingRequests()
     {
-        if (_currentUser is null) return new List<UserResponse>();
+        if (_currentUser is null) return new List<UserResponses>();
         
         var result = await friendships.GetPendingFriendRequests(_currentUser.Value);
         
