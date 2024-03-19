@@ -38,4 +38,13 @@ public class TestHandlers(IReadUserFriends friendships, IUserContextService user
 
         return result.Select(x => x.ToUserResponse()).ToList();
     }
+
+    public async Task<List<UserResponse>> GetPendingRequests()
+    {
+        if (_currentUser is null) return new List<UserResponse>();
+        
+        var result = await friendships.GetPendingFriendRequests(_currentUser.Value);
+        
+        return result.Select(x => x.ToUserResponse()).ToList();
+    }
 }

@@ -9,6 +9,7 @@ public interface IReadUserFriends
     Task<List<User>> GetUserFriends(Guid userId);
     Task<List<User>> GetRelatedFriends(Guid userId);
     Task<List<User>> GetRandomFriendSuggestions(Guid userId, int amountOfSuggestions);
+    Task<List<User>> GetPendingFriendRequests(Guid userId);
 }
 
 public class ReadUserFriends(DataContext db) : IReadUserFriends
@@ -71,5 +72,17 @@ public class ReadUserFriends(DataContext db) : IReadUserFriends
             .ToListAsync();
 
         return potentialSuggestions;
+    }
+
+    public async Task<List<User>> GetPendingFriendRequests(Guid userId)
+    {
+        var pendingUserIds = await db.UserFriendship
+            .Where(uf => uf.Friendship.IsPending && uf.Friendship.UserFriendships.Any(x => x.UserId == userId) && uf.UserId != userId)
+            .Select(x => x.UserId)
+            .ToListAsync();
+
+        var pendingUsers = await db.User.Where(x => pendingUserIds.Contains(x.Id)).ToListAsync();
+
+        return pendingUsers;
     }
 }
