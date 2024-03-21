@@ -27,7 +27,7 @@ public class GetFriendsListHandler(IReadUserFriends db, IUserContextService user
         var randomFriends = await db.GetRandomFriendSuggestions(userId, numberOfSuggestions);
 
         var suggestedFriendIds = new HashSet<Guid>(suggestedFriends.Select(x => x.Id));
-        var filteredRandomFriends = randomFriends.Where(x => suggestedFriendIds.Contains(x.Id));
+        var filteredRandomFriends = randomFriends.Where(x => !suggestedFriendIds.Contains(x.Id));
         
         var result = new FriendListResponse (
             userFriends.Select(x => x.ToNamedUserResponse()).ToList(),
