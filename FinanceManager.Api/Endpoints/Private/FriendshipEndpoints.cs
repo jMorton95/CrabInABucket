@@ -1,5 +1,5 @@
-﻿using FinanceManager.Core.Requests;
-using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.Requests;
+using FinanceManager.Common.Responses;
 using FinanceManager.Services.Handlers;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;

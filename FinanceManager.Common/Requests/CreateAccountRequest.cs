@@ -1,3 +1,3 @@
-﻿namespace FinanceManager.Core.Requests;
+﻿namespace FinanceManager.Common.Requests;
 
 public record CreateAccountRequest(string AccountName);

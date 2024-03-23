@@ -1,4 +1,4 @@
-﻿using FinanceManager.Core.Requests;
+﻿using FinanceManager.Common.Requests;
 
 namespace FinanceManager.Data.Write;
 

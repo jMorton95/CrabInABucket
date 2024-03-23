@@ -1,6 +1,6 @@
-﻿using FinanceManager.Core.Mappers;
-using FinanceManager.Core.Requests;
-using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.Mappers;
+using FinanceManager.Common.Requests;
+using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Services.Domain;
 using FinanceManager.Services.Handlers;

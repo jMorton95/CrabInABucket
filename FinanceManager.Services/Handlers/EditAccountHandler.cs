@@ -1,5 +1,5 @@
-﻿using FinanceManager.Core.Requests;
-using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.Requests;
+using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Accounts;
 using FinanceManager.Data.Write.Accounts;
 

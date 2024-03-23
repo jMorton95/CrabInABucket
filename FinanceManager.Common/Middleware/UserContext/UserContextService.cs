@@ -1,7 +1,6 @@
-﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Utilities;
+﻿using FinanceManager.Common.Utilities;
 
-namespace FinanceManager.Core.Middleware.UserContext;
+namespace FinanceManager.Common.Middleware.UserContext;
 public record UserContext(DecodedAccessToken? UserAccessToken);
 
 public interface IUserContextService
@@ -12,7 +11,7 @@ public interface IUserContextService
     bool IsAccessTokenExpired();
 }
 
-public class UserContextService() : IUserContextService
+public class UserContextService : IUserContextService
 {
     public UserContext? CurrentUser { get; private set; } = null;
 

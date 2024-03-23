@@ -1,6 +1,5 @@
-﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Requests;
-using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.Requests;
+using FinanceManager.Common.Responses;
 using FinanceManager.Data.Write.Transactions;
 using FinanceManager.Services.Domain;
 

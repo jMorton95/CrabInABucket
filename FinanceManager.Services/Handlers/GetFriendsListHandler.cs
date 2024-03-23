@@ -1,6 +1,6 @@
-﻿using FinanceManager.Core.Mappers;
-using FinanceManager.Core.Middleware.UserContext;
-using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.Mappers;
+using FinanceManager.Common.Middleware.UserContext;
+using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Friends;
 
 namespace FinanceManager.Services.Handlers;

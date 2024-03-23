@@ -1,4 +1,4 @@
-﻿using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
 

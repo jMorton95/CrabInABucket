@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceManager.Core.DataEntities;
+namespace FinanceManager.Common.DataEntities;
 
-public class RecurringTransaction : BaseModel
+public class RecurringTransaction : Entity
 {
     [Required]
     public decimal Amount { get; set; }

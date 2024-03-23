@@ -1,2 +1,2 @@
-namespace FinanceManager.Core.Responses;
+namespace FinanceManager.Common.Responses;
 public record TokenWithExpiryResponse(string Token, long ExpiryDate);

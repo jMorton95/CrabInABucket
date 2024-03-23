@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceManager.Core.DataEntities;
+namespace FinanceManager.Common.DataEntities;
 
-public class BaseModel
+public interface IEntity
+{
+    Guid Id { get; }
+}
+
+public class Entity : IEntity
 {
     [Required, Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

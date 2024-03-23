@@ -1,9 +1,9 @@
 using System.Security.Claims;
-using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Responses;
-using FinanceManager.Core.Utilities;
+using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Responses;
+using FinanceManager.Common.Utilities;
 
-namespace FinanceManager.Core.Interfaces;
+namespace FinanceManager.Common.Interfaces;
 
 public interface IUserTokenService
 {

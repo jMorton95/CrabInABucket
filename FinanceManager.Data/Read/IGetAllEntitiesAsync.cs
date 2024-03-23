@@ -1,8 +1,8 @@
-﻿using FinanceManager.Core.DataEntities;
+﻿using FinanceManager.Common.DataEntities;
 
 namespace FinanceManager.Data.Read;
 
-public interface IGetAllEntitiesAsync<TEntity> where TEntity : BaseModel
+public interface IGetAllEntitiesAsync<TEntity> where TEntity : Entity
 {
     Task<IEnumerable<TEntity>> GetAllAsync();
 }

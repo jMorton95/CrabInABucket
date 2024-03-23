@@ -5,15 +5,18 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
-        <RootNamespace>FinanceManager.Core</RootNamespace>
+        <RootNamespace>FinanceManager.Common</RootNamespace>
     </PropertyGroup>
     
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.9.0" />
+        <PackageReference Include="FluentValidation" Version="11.9.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.App.Ref" Version="8.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+        <ProjectReference Include="..\FinanceManager.Data\FinanceManager.Data.csproj" />
     </ItemGroup>
     
 </Project>

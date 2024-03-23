@@ -1,6 +1,6 @@
-using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Requests;
-using FinanceManager.Core.Responses;
+using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Requests;
+using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
 using FinanceManager.Services.Generic.Password;

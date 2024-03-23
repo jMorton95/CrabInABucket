@@ -1,0 +1,134 @@
+﻿using System.Text;
+using FinanceManager.Common.AppConstants;
+using FinanceManager.Common.ConfigurationSettings;
+using FinanceManager.Common.Interfaces;
+using FinanceManager.Common.Middleware.UserContext;
+using FinanceManager.Data;
+using FinanceManager.Data.Read.Accounts;
+using FinanceManager.Data.Read.Friends;
+using FinanceManager.Data.Read.Friendships;
+using FinanceManager.Data.Read.Users;
+using FinanceManager.Data.Write.Accounts;
+using FinanceManager.Data.Write.Friendships;
+using FinanceManager.Data.Write.Transactions;
+using FinanceManager.Data.Write.Users;
+using FinanceManager.Services.Domain;
+using FinanceManager.Services.Generic.Password;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
+namespace FinanceManager.Api.Configuration;
+
+public static class ConfigureServices
+{
+    public static void AddServices(this WebApplicationBuilder builder)
+    {
+        builder.ConfigureOptions();
+        builder.AddDatabase();
+        
+        builder.Services.RegisterTransientDependencies();
+        builder.Services.RegisterScopedDependencies();
+        
+        builder.AddJwtAuthentication();
+        builder.ConfigureSwaggerGeneration();
+        
+        builder.Services.AddHttpContextAccessor();
+    }
+
+    private static void ConfigureOptions(this WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingsConstants.JwtSection));
+        builder.Services.Configure<SwaggerSettings>(builder.Configuration.GetSection(SettingsConstants.SwaggerSection));
+    }
+    
+    private static void RegisterTransientDependencies(this IServiceCollection services)
+    {
+        services.AddTransient<IPasswordUtilities, PasswordUtilities>();
+        services.AddTransient<IBuildTransactionService, BuildTransactionService>();        
+        services.AddTransient<IUserTokenService, UserTokenService>();
+        services.AddTransient<IPasswordHasher, PasswordHasher>();
+    }
+
+    private static void RegisterScopedDependencies(this IServiceCollection services)
+    {
+        services.AddScoped<IUserContextService, UserContextService>();
+        services.AddScoped<IReadUsers, ReadUsers>();
+        services.AddScoped<IWriteUsers, WriteUsers>();
+        
+        services.AddScoped<IReadAccounts, ReadAccounts>();
+        services.AddScoped<IWriteAccounts, WriteAccounts>();
+
+        services.AddScoped<IWriteTransaction, WriteTransaction>();
+
+        services.AddScoped<IWriteRecurringTransaction, WriteRecurringTransaction>();
+
+        services.AddScoped<IReadFriendships, ReadFriendships>();
+        services.AddScoped<IWriteFriendships, WriteFriendships>();
+
+        services.AddScoped<IReadUserFriends, ReadUserFriends>();
+    }
+    
+    private static void AddDatabase(this WebApplicationBuilder builder)
+    {
+        var connectionString = builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection);
+        builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
+    }
+    
+    private static void AddJwtAuthentication(this WebApplicationBuilder builder)
+    {
+        var jwtSettings = builder.Configuration.GetSection(SettingsConstants.JwtSection).Get<JwtSettings>();
+        
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSettings?.Issuer,
+                ValidAudience = jwtSettings?.Audience,
+                ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings?.Key ?? ""))
+            };
+        });
+
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy(PolicyConstants.AuthenticatedUser, policy => policy.RequireAuthenticatedUser())
+            .AddPolicy(PolicyConstants.AdminRole, policy => policy.RequireClaim(PolicyConstants.AdminRole));
+    }
+    
+    private static void ConfigureSwaggerGeneration(this WebApplicationBuilder builder)
+    {
+        var swaggerSettings = builder.Configuration.GetSection(SettingsConstants.SwaggerSection).Get<SwaggerSettings>();
+
+        builder.Services.AddEndpointsApiExplorer();
+        
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc(swaggerSettings!.Version, new OpenApiInfo { Title = swaggerSettings.Title, Version = swaggerSettings.Version });
+
+            options.AddSecurityDefinition(swaggerSettings.Scheme, new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = swaggerSettings.Description,
+                Name = swaggerSettings.Name,
+                Type = SecuritySchemeType.Http,
+                Scheme = swaggerSettings.Scheme,
+                BearerFormat = swaggerSettings.BearerFormat
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = swaggerSettings.Scheme }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
+    }
+}

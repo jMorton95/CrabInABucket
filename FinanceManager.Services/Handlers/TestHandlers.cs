@@ -1,7 +1,7 @@
-﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Mappers;
-using FinanceManager.Core.Middleware.UserContext;
-using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Mappers;
+using FinanceManager.Common.Middleware.UserContext;
+using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read;
 using FinanceManager.Data.Read.Friends;
 using FinanceManager.Data.Read.Users;

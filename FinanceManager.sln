@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Api", "Finan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Tests", "FinanceManager.Tests\FinanceManager.Tests.csproj", "{92D99A25-0955-494E-B68F-A5ADEB47C4C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Application", "FinanceManager.Application\FinanceManager.Application.csproj", "{B099B514-B5FB-4A19-83F5-F9BCDB866208}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Services", "FinanceManager.Services\FinanceManager.Services.csproj", "{5E2E884F-DBA8-493E-941B-E481E595EFB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceManager.Data", "FinanceManager.Data\FinanceManager.Data.csproj", "{89A24FD0-5AA8-4800-AB8C-99E648C6EB3F}"
@@ -26,10 +24,6 @@ Global
 		{92D99A25-0955-494E-B68F-A5ADEB47C4C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92D99A25-0955-494E-B68F-A5ADEB47C4C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92D99A25-0955-494E-B68F-A5ADEB47C4C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B099B514-B5FB-4A19-83F5-F9BCDB866208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B099B514-B5FB-4A19-83F5-F9BCDB866208}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B099B514-B5FB-4A19-83F5-F9BCDB866208}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B099B514-B5FB-4A19-83F5-F9BCDB866208}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E2E884F-DBA8-493E-941B-E481E595EFB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5E2E884F-DBA8-493E-941B-E481E595EFB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E2E884F-DBA8-493E-941B-E481E595EFB2}.Release|Any CPU.ActiveCfg = Release|Any CPU

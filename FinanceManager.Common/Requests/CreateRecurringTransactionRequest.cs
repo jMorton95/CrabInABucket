@@ -1,4 +1,4 @@
-﻿namespace FinanceManager.Core.Requests;
+﻿namespace FinanceManager.Common.Requests;
 
 public record CreateRecurringTransactionRequest (
     decimal Amount,

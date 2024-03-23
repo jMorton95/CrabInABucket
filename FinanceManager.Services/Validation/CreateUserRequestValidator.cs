@@ -1,4 +1,4 @@
-using FinanceManager.Core.Requests;
+using FinanceManager.Common.Requests;
 using FluentValidation;
 
 namespace FinanceManager.Services.Validation;

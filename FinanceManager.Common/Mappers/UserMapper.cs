@@ -1,7 +1,7 @@
-using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Responses;
+using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Responses;
 
-namespace FinanceManager.Core.Mappers;
+namespace FinanceManager.Common.Mappers;
 
 public static class UserMapper
 {

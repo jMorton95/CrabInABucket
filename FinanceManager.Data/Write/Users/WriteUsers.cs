@@ -1,6 +1,6 @@
-using FinanceManager.Core.AppConstants;
-using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Requests;
+using FinanceManager.Common.AppConstants;
+using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Users;

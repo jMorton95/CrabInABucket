@@ -1,6 +1,6 @@
-﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Middleware.UserContext;
-using FinanceManager.Core.Requests;
+﻿using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Middleware.UserContext;
+using FinanceManager.Common.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Friendships;

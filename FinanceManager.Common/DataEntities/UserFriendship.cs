@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceManager.Core.DataEntities;
+namespace FinanceManager.Common.DataEntities;
 
-public class UserFriendship : BaseModel
+public class UserFriendship : Entity
 {
     [ForeignKey("UserId")]
     public Guid UserId { get; set; }

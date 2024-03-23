@@ -1,4 +1,4 @@
-﻿using FinanceManager.Core.Requests;
+﻿using FinanceManager.Common.Requests;
 using FinanceManager.Data.Read;
 using FinanceManager.Data.Read.Friendships;
 using FluentValidation;

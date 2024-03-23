@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace FinanceManager.Common.DataEntities;
 
-namespace FinanceManager.Core.DataEntities;
-
-public class Friendship : BaseModel
+public class Friendship : Entity
 {
     public IEnumerable<UserFriendship> UserFriendships { get; set; }
 

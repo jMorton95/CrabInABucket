@@ -1,43 +1,39 @@
-using FinanceManager.Core.AppConstants;
-using FinanceManager.Core.ConfigurationSettings;
-using FinanceManager.Application.DependencyInjection;
-using FinanceManager.Api.Endpoints;
-using FinanceManager.Application.OpenApi;
+global using FluentValidation;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.EntityFrameworkCore;
+global using FinanceManager.Data;
+using FinanceManager.Api.Configuration;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingsConstants.JwtSection));
-builder.Services.Configure<SwaggerSettings>(builder.Configuration.GetSection(SettingsConstants.SwaggerSection));
-
-builder.AddAuth();
-
-builder.ConfigureSwaggerGeneration();
-
-builder.AddPostgresConnection();
-
-builder.Services
-    .AddHttpContextAccessor()
-    .AddRequestValidators()
-    .AddDataAccessServices()
-    .AddAppServices()
-    .AddServiceHandlers();
-
-var app = builder.Build();
-
-
-app.UseConfiguredSwagger();
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseCustomMiddleware();
-
-app.MapApiEndpoints();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.MapDevelopmentEndpoints();
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.AddServices();
+
+    var app = builder.Build();
+
+    app.Configure();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
 }
 
-app.Run();
+
+// app.MapApiEndpoints();
+//
+// if (app.Environment.IsDevelopment())
+// {
+//     app.MapDevelopmentEndpoints();
+// }
+

@@ -1,5 +1,4 @@
-﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Middleware.UserContext;
+﻿using FinanceManager.Common.DataEntities;
 
 namespace FinanceManager.Data.Write.Transactions;
 

@@ -1,5 +1,5 @@
-﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Responses;
+﻿using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Responses;
 using FinanceManager.Services.Handlers;
 using Microsoft.AspNetCore.Http.HttpResults;
 

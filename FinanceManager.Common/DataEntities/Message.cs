@@ -1,6 +1,6 @@
-﻿namespace FinanceManager.Core.DataEntities;
+﻿namespace FinanceManager.Common.DataEntities;
 
-public class Message : BaseModel
+public class Message : Entity
 {
     public User Sender { get; set; }
     

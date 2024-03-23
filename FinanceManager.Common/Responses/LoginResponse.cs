@@ -1,3 +1,3 @@
-namespace FinanceManager.Core.Responses;
+namespace FinanceManager.Common.Responses;
 
 public record LoginResponse(TokenWithExpiryResponse AccessToken, UserResponses User);

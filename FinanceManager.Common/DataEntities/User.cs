@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FinanceManager.Core.DataEntities;
+namespace FinanceManager.Common.DataEntities;
 
-public class User : BaseModel
+public class User : Entity
 {
     [Required, StringLength(50, MinimumLength = 3)]
     public string Username { get; set; }

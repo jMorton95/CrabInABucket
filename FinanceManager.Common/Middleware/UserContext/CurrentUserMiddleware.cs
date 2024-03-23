@@ -1,7 +1,7 @@
-﻿using FinanceManager.Core.Interfaces;
+﻿using FinanceManager.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace FinanceManager.Core.Middleware.UserContext;
+namespace FinanceManager.Common.Middleware.UserContext;
 
 public class CurrentUserMiddleware(RequestDelegate next)
 {

@@ -1,5 +1,5 @@
-﻿using FinanceManager.Core.DataEntities;
-using FinanceManager.Core.Middleware.UserContext;
+﻿using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Middleware.UserContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data;
@@ -39,7 +39,7 @@ public class DataContext(DbContextOptions<DataContext> options, IUserContextServ
         
         foreach (var entry in ChangeTracker.Entries())
         {
-            if (entry.Entity is not BaseModel entity ) continue;
+            if (entry.Entity is not Entity entity ) continue;
 
             if (userId != null) entity.EditedBy = userId;
             entity.UpdatedDate = DateTime.UtcNow;

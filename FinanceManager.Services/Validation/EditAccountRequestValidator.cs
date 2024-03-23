@@ -1,4 +1,4 @@
-﻿using FinanceManager.Core.Requests;
+﻿using FinanceManager.Common.Requests;
 using FinanceManager.Data.Read.Accounts;
 using FluentValidation;
 
