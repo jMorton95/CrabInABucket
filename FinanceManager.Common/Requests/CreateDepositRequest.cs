@@ -1,3 +1,3 @@
 ﻿namespace FinanceManager.Common.Requests;
 
-public record CreateDepositRequest(Guid RecipientAccountId, decimal Amount);
+public record CreateDepositRequest(Guid RequesterId, Guid RecipientAccountId, decimal Amount);

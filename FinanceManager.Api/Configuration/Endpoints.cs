@@ -1,4 +1,5 @@
 ﻿using FinanceManager.Api.Features;
+using FinanceManager.Api.Features.Accounts;
 using FinanceManager.Api.Features.Auth;
 using FinanceManager.Common.RouteHandlers.Filters;
 
@@ -20,7 +21,8 @@ public static class Endpoints
 
         endpoints.MapGroup("/account")
             .WithTags("Account")
-            .MapEndpoint<>();
+            .MapEndpoint<Create>()
+            .MapEndpoint<Edit>();
 
         if (app.Environment.IsDevelopment())
         {
