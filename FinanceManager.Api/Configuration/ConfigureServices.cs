@@ -26,6 +26,8 @@ public static class ConfigureServices
     {
         builder.ConfigureOptions();
         builder.AddDatabase();
+
+        builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         
         builder.Services.RegisterTransientDependencies();
         builder.Services.RegisterScopedDependencies();

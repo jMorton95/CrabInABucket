@@ -16,10 +16,11 @@ public class Login : IEndpoint
         .WithSummary("Login with Username & Password")
         .WithRequestValidation<Request>();
 
-    public record Request(string Username, string Password);
-    public record Response(TokenWithExpiryResponse AccessToken, UserResponses User);
+    private record Request(string Username, string Password);
 
-    public class RequestValidator : AbstractValidator<Request>
+    private record Response(TokenWithExpiryResponse AccessToken, UserResponses User);
+
+    private class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {

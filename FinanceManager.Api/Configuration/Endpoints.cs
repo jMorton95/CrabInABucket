@@ -15,7 +15,12 @@ public static class Endpoints
         endpoints.MapGroup("/auth")
             .WithTags("Authentication")
             .AllowAnonymous()
-            .MapEndpoint<Login>();
+            .MapEndpoint<Login>()
+            .MapEndpoint<Register>();
+
+        endpoints.MapGroup("/account")
+            .WithTags("Account")
+            .MapEndpoint<>();
 
         if (app.Environment.IsDevelopment())
         {
