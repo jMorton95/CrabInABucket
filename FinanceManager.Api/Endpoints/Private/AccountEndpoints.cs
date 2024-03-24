@@ -14,33 +14,10 @@ public static class AccountEndpoints
         app.MapGroup("/api/account/")
             .WithTags("Account")
             .RequireAuthorization()
-            .MapCreateAccountEndpoint()
             .MapEditAccountNameEndpoint();
     }
 
-    private static IEndpointRouteBuilder MapCreateAccountEndpoint(this IEndpointRouteBuilder builder)
-    {
-        builder.MapPost("/create", async Task<Results<Ok<BasePostResponse>, ValidationProblem, BadRequest<BasePostResponse>>> (
-            [FromBody] CreateAccountRequest req,
-            IValidator<CreateAccountRequest> validator,
-            ICreateAccountHandler handler
-        ) 
-            =>
-        {
-            var validationResult = await validator.ValidateAsync(req);
-
-            if (!validationResult.IsValid)
-            {
-                return TypedResults.ValidationProblem(validationResult.ToDictionary());
-            }
-
-            var result = await handler.CreateAccount(req);
-            
-            return result.Success ? TypedResults.Ok(result) : TypedResults.BadRequest(result);
-        }).WithName("create");
-
-        return builder;
-    }
+   
 
     private static IEndpointRouteBuilder MapEditAccountNameEndpoint(this IEndpointRouteBuilder builder)
     {

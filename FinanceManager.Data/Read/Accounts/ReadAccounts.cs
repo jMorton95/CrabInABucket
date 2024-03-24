@@ -4,37 +4,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Accounts;
 
-public interface IReadAccounts : IGetAllEntitiesAsync<Account>, IGetEntityByIdAsync<Account>
+public interface IReadAccounts : IGetAllOwnedEntitiesAsync<Account>, IGetOwnedEntityByIdAsync<Account>
 {
-    Task<bool?> DoesUserAccountExist(string accountName);
+    Task<bool> DoesUserAccountExist(string accountName, Guid userId);
 };
-public sealed class ReadAccounts(DataContext db, IUserContextService userContextService) : IReadAccounts
+public sealed class ReadAccounts(DataContext db) : IReadAccounts
 {
-    private readonly Guid? _userId = userContextService.GetCurrentUserId();
-    public async Task<IEnumerable<Account>> GetAllAsync()
-    {
-        return await db.Account
+    public async Task<IEnumerable<Account>> GetAllOwnedEntitiesAsync(Guid userId)
+        => await db.Account
             .Include(x => x.RecurringTransactions)
-            .Where(x => x.User.Id == _userId)
+            .Where(x => x.User.Id == userId)
             .ToListAsync();
-    }
+    
 
-    public async Task<Account?> GetByIdAsync(Guid id)
-    {
-        if (_userId == null)
-        {
-            return null;
-        }
-
-        return await db.Account
+    public async Task<Account?> GetOwnedEntityByIdAsync(Guid id, Guid userId)
+        => await db.Account
             .Include(x => x.RecurringTransactions)
-            .FirstOrDefaultAsync(x => x.User.Id == _userId && x.Id == id);
-    }
+            .FirstOrDefaultAsync(x => x.User.Id == userId && x.Id == id);
+    
 
-    public async Task<bool?> DoesUserAccountExist(string accountName)
-    {
-        if (_userId == null) return null;
-        
-        return await db.Account.AnyAsync(x => x.User.Id == _userId && x.Name == accountName);
-    }
+    public async Task<bool> DoesUserAccountExist(string accountName, Guid userId)
+        => await db.Account
+            .AnyAsync(x => x.User.Id == userId && x.Name == accountName);
 }
