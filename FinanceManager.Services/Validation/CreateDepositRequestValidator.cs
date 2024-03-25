@@ -21,7 +21,7 @@ public class CreateDepositRequestValidator : AbstractValidator<CreateDepositRequ
         RuleFor(x => x.RecipientAccountId)
             .NotNull()
             .WithMessage("Please supply an account to deposit to.")
-            .MustAsync(async (request, x, token) => await readAccounts.GetOwnedEntityByIdAsync(request.RequesterId, x) != null)
+            .MustAsync(async (request, x, _) => await readAccounts.GetOwnedEntityByIdAsync(request.RequesterId, x) != null)
             .WithMessage("The account you tried to deposit to does not exist.");
     }
 }

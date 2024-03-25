@@ -1,6 +1,7 @@
 ﻿using FinanceManager.Api.Features;
 using FinanceManager.Api.Features.Accounts;
 using FinanceManager.Api.Features.Auth;
+using FinanceManager.Api.Features.Friendships;
 using FinanceManager.Common.RouteHandlers.Filters;
 
 namespace FinanceManager.Api.Configuration;
@@ -24,9 +25,15 @@ public static class Endpoints
             .MapEndpoint<Create>()
             .MapEndpoint<Edit>();
 
+        endpoints.MapGroup("/friendships")
+            .WithTags("Friendships")
+            .MapEndpoint<RequestFriendship>()
+            .MapEndpoint<>()
+            .MapEndpoint<>();
+
         if (app.Environment.IsDevelopment())
         {
-            endpoints.MapGroup("/dev")
+            endpoints.MapGroup("/test")
                 .AllowAnonymous()
                 .WithTags("Development");
         }

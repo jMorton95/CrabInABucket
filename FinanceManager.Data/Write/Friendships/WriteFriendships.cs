@@ -5,23 +5,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Friendships;
 
-public interface IWriteFriendships : IEditEntity<FriendshipRequestStatusUpdateRequest>
+public interface IWriteFriendships
 {
-    Task<bool> CreateAsync(CreateFriendshipRequest request, Guid currentUserId);
+    Task<bool> CreateAsync(Guid userId, Guid targetUserId);
+    Task<bool> EditAsync(Guid friendshipId, bool accepted);
 }
 
-public class WriteFriendships(DataContext db, IUserContextService userContextService) : IWriteFriendships
+public class WriteFriendships(DataContext db) : IWriteFriendships
 {
-    private readonly Guid? _currentUserId = userContextService.GetCurrentUserId();
-    
-    public async Task<bool> CreateAsync(CreateFriendshipRequest request, Guid currentUserId)
+    public async Task<bool> CreateAsync(Guid userId, Guid targetUserId)
     {
         var friendship = new Friendship();
+        
         await db.AddAsync(friendship);
+
+        List<Guid> userFriendshipIds = [userId, targetUserId];
         
         await db.AddRangeAsync(
-            new List<Guid> { currentUserId, request.TargetUserId }
-                .Select(x => new UserFriendship { UserId = x, Friendship = friendship}
+            userFriendshipIds.Select(x => new UserFriendship { UserId = x, Friendship = friendship}
             ));
 
         try
@@ -36,14 +37,14 @@ public class WriteFriendships(DataContext db, IUserContextService userContextSer
         }
     }
 
-    public async Task<bool> EditAsync(FriendshipRequestStatusUpdateRequest request)
+    public async Task<bool> EditAsync(Guid friendshipId, bool accepted)
     {
-        var friendship = await db.Friendship.FirstOrDefaultAsync(x => x.Id == request.FriendshipId);
+        var friendship = await db.Friendship.FirstOrDefaultAsync(x => x.Id == friendshipId);
 
         if (friendship is null) return false;
         
         friendship.IsPending = false;
-        friendship.IsAccepted = request.Accepted;
+        friendship.IsAccepted = accepted;
 
         try
         {
