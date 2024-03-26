@@ -1,4 +1,5 @@
 ﻿using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Middleware.UserContext;
 using FinanceManager.Common.RouteHandlers.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,16 @@ public class ValidationFilterBuilder<TRequest>(RouteHandlerBuilder builder)
         builder
             .AddEndpointFilter(new EnsureEntityExistsFilter<TRequest, TEntity>(entityId))
             .ProducesProblem(StatusCodes.Status404NotFound);
+
+        return this;
+    }
+
+    public ValidationFilterBuilder<TRequest> EnsureRequestedUserIsCurrentUser<TEntity>(Func<TRequest, Guid?> requestedUserId) where TEntity : class, IEntity
+    {
+        builder
+            .AddEndpointFilter(new EnsureRequestedUserIsCurrentUserFilter<TRequest, TEntity>(requestedUserId))
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status403Forbidden);
 
         return this;
     }
