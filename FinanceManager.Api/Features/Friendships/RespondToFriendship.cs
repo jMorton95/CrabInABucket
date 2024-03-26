@@ -13,7 +13,7 @@ public class RespondToFriendship : IEndpoint
         .WithRequestValidation<Request>()
         .EnsureEntityExists<User>(x => x.ResponderId)
         .EnsureEntityExists<Friendship>(x => x.FriendshipId)
-        .EnsureRequestedUserIsCurrentUser<User>(x => x.ResponderId);
+        .SelfOrAdminResource<User>(x => x.ResponderId);
 
     private record Request(Guid FriendshipId, Guid ResponderId, bool Accepted);
 

@@ -47,7 +47,7 @@ public static class ConfigureServices
     private static void RegisterTransientDependencies(this IServiceCollection services)
     {
         services.AddTransient<IPasswordUtilities, PasswordUtilities>();
-        services.AddTransient<IBuildTransactionService, BuildTransactionService>();        
+        services.AddTransient<ITransactionBuilder, TransactionBuilder>();        
         services.AddTransient<IUserTokenService, UserTokenService>();
         services.AddTransient<IPasswordHasher, PasswordHasher>();
     }

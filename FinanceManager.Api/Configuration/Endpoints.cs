@@ -28,8 +28,10 @@ public static class Endpoints
         endpoints.MapGroup("/friendships")
             .WithTags("Friendships")
             .MapEndpoint<RequestFriendship>()
-            .MapEndpoint<>()
-            .MapEndpoint<>();
+            .MapEndpoint<RespondToFriendship>();
+
+        endpoints.MapGroup("/transaction")
+            .WithTags("Transactions");
 
         if (app.Environment.IsDevelopment())
         {

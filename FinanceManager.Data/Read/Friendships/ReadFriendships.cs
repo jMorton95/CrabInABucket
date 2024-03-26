@@ -6,7 +6,7 @@ namespace FinanceManager.Data.Read.Friendships;
 
 public interface IReadFriendships : IGetEntityByIdAsync<Friendship>
 {
-    Task<bool> DoesFriendshipExist(Guid targetUserId);
+    Task<bool> AreUsersFriends(Guid targetUserId);
 }
 
 public class ReadFriendships(DataContext db, IUserContextService userContextService) : IReadFriendships
@@ -20,7 +20,7 @@ public class ReadFriendships(DataContext db, IUserContextService userContextServ
         return result;
     }
 
-    public async Task<bool> DoesFriendshipExist(Guid targetUserId)
+    public async Task<bool> AreUsersFriends(Guid targetUserId)
     {
         if (_currentUserId is null) return false;
         

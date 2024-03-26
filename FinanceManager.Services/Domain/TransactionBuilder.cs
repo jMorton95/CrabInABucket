@@ -2,9 +2,9 @@
 
 namespace FinanceManager.Services.Domain;
 
-public interface IBuildTransactionService
+public interface ITransactionBuilder
 {
-    Transaction MapTransaction (
+    Transaction Build (
         decimal amount,
         bool recurringTransaction,
         Guid recipientAccountId,
@@ -12,9 +12,9 @@ public interface IBuildTransactionService
     );
 }
 
-public class BuildTransactionService() : IBuildTransactionService
+public class TransactionBuilder() : ITransactionBuilder
 {
-    public Transaction MapTransaction(decimal amount, bool recurringTransaction, Guid recipientAccountId, Guid? senderAccountId = null)
+    public Transaction Build(decimal amount, bool recurringTransaction, Guid recipientAccountId, Guid? senderAccountId = null)
     {
         return new Transaction {
             Amount = amount,

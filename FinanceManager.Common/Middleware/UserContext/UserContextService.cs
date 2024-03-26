@@ -1,4 +1,5 @@
-﻿using FinanceManager.Common.Utilities;
+﻿using FinanceManager.Common.AppConstants;
+using FinanceManager.Common.Utilities;
 
 namespace FinanceManager.Common.Middleware.UserContext;
 public record UserContext(DecodedAccessToken? UserAccessToken);
@@ -9,6 +10,8 @@ public interface IUserContextService
     void SetCurrentUser(UserContext user);
     Guid? GetCurrentUserId();
     bool IsAccessTokenExpired();
+
+    bool IsUserAdmin();
 }
 
 public class UserContextService : IUserContextService
@@ -18,6 +21,11 @@ public class UserContextService : IUserContextService
     public void SetCurrentUser(UserContext user)
     {
         CurrentUser = user;
+        
+        if (IsAccessTokenExpired())
+        {
+            CurrentUser = null;
+        }
     }
 
     public Guid? GetCurrentUserId()
@@ -28,5 +36,10 @@ public class UserContextService : IUserContextService
     public bool IsAccessTokenExpired()
     {
         return CurrentUser != null && DateTime.UtcNow > CurrentUser.UserAccessToken?.ExpiryDate;
+    }
+
+    public bool IsUserAdmin()
+    {
+        return CurrentUser?.UserAccessToken?.Roles?.Contains(PolicyConstants.AdminRole) ?? false;
     }
 }

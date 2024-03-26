@@ -25,12 +25,12 @@ public class RequestFriendship : IEndpoint
         {
             RuleFor(x => x.UserId)
                 .NotEmpty()
-                .WithMessage("Error occurred providing your User Id to request.");
+                .WithMessage("Error occurred providing your User Id.");
             
             RuleFor(x => x.TargetUserId)
                 .NotEmpty()
                 .WithMessage("You must provide a valid person to request friendship.")
-                .MustAsync(async (x, _) => await readFriendships.DoesFriendshipExist(x) != true)
+                .MustAsync(async (x, _) => await readFriendships.AreUsersFriends(x) != true)
                 .WithMessage("You've already requested to be friends with that person.");
         }
     }

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FinanceManager.Common.RouteHandlers.Filters;
 
-public class EnsureRequestedUserIsCurrentUserFilter<TRequest, TEntity>(Func<TRequest, Guid?> requestedUserId) : IEndpointFilter 
+public class SelfOrAdminResourceFilter<TRequest, TEntity>(Func<TRequest, Guid?> requestedUserId) : IEndpointFilter 
     where TEntity : class, IEntity
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
@@ -26,7 +26,7 @@ public class EnsureRequestedUserIsCurrentUserFilter<TRequest, TEntity>(Func<TReq
 
         var db = context.HttpContext.RequestServices.GetRequiredService<DataContext>();
 
-        var user = await db.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id, ct);
+        var user = await db.User.FirstOrDefaultAsync(x => x.Id == id, ct);
         
         if (user is null)
         {
@@ -38,7 +38,7 @@ public class EnsureRequestedUserIsCurrentUserFilter<TRequest, TEntity>(Func<TReq
             );
         }
         
-        if (user.Id != currentUserId)
+        if (user.Id != currentUserId || currentUserService.IsUserAdmin())
         {
             return TypedResults.Problem
             (

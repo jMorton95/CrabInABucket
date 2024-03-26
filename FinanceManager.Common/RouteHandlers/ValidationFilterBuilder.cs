@@ -17,10 +17,10 @@ public class ValidationFilterBuilder<TRequest>(RouteHandlerBuilder builder)
         return this;
     }
 
-    public ValidationFilterBuilder<TRequest> EnsureRequestedUserIsCurrentUser<TEntity>(Func<TRequest, Guid?> requestedUserId) where TEntity : class, IEntity
+    public ValidationFilterBuilder<TRequest> SelfOrAdminResource<TEntity>(Func<TRequest, Guid?> requestedUserId) where TEntity : class, IEntity
     {
         builder
-            .AddEndpointFilter(new EnsureRequestedUserIsCurrentUserFilter<TRequest, TEntity>(requestedUserId))
+            .AddEndpointFilter(new SelfOrAdminResourceFilter<TRequest, TEntity>(requestedUserId))
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden);
 
