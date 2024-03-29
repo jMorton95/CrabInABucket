@@ -1,9 +1,9 @@
-﻿using FinanceManager.Common.Interfaces;
-using FinanceManager.Common.Mappers;
+﻿using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Responses;
 using FinanceManager.Common.RouteHandlers;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
+using FinanceManager.Services.Domain;
 using FinanceManager.Services.Generic.Password;
 using Microsoft.AspNetCore.Identity;
 

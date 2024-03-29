@@ -1,9 +1,7 @@
 ﻿using System.Text;
 using FinanceManager.Common.AppConstants;
 using FinanceManager.Common.ConfigurationSettings;
-using FinanceManager.Common.Interfaces;
 using FinanceManager.Common.Middleware.UserContext;
-using FinanceManager.Data;
 using FinanceManager.Data.Read.Accounts;
 using FinanceManager.Data.Read.Friends;
 using FinanceManager.Data.Read.Friendships;
@@ -47,7 +45,7 @@ public static class ConfigureServices
     private static void RegisterTransientDependencies(this IServiceCollection services)
     {
         services.AddTransient<IPasswordUtilities, PasswordUtilities>();
-        services.AddTransient<ITransactionBuilder, TransactionBuilder>();        
+        services.AddTransient<ITransactionMapper, TransactionMapper>();        
         services.AddTransient<IUserTokenService, UserTokenService>();
         services.AddTransient<IPasswordHasher, PasswordHasher>();
     }

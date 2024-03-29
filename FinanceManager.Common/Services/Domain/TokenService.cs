@@ -3,27 +3,30 @@ using System.Security.Claims;
 using System.Text;
 using FinanceManager.Common.ConfigurationSettings;
 using FinanceManager.Common.DataEntities;
-using FinanceManager.Common.Interfaces;
 using FinanceManager.Common.Responses;
 using FinanceManager.Common.Utilities;
-using FinanceManager.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FinanceManager.Services.Domain;
 
-public class UserTokenService(IOptions<JwtSettings> jwtOptions, DataContext db) : IUserTokenService
+public interface IUserTokenService
+{
+    Task<List<Claim>> GetUserClaims(User user);
+    TokenWithExpiryResponse CreateTokenWithClaims(IEnumerable<Claim> claims);
+    DecodedAccessToken? DecodeAccessToken(string accessToken);
+}
+
+public class UserTokenService(IOptions<JwtSettings> jwtOptions) : IUserTokenService
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
     public async Task<List<Claim>> GetUserClaims(User user)
     {
-        var userRoles = new List<Role>();
+        var userRoles = new List<string>();
 
         if (user.Roles.Any())
         {
-            var roleIds = user.Roles.Select(r => r.Role!.Id).ToList();
-            userRoles = await db.Role.Where(role => roleIds.Contains(role.Id)).ToListAsync();
+            userRoles = user.Roles.Select(x => x.Role.Name).ToList();
         }
         
         var claims = new List<Claim>
@@ -32,7 +35,7 @@ public class UserTokenService(IOptions<JwtSettings> jwtOptions, DataContext db) 
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
         
-        claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
+        claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
         
         return claims;
     }

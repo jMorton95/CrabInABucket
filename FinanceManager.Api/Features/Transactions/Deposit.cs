@@ -40,11 +40,11 @@ public class Deposit : IEndpoint
 
     private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler (
         Request request,
-        ITransactionBuilder transactionBuilder,
-        IWriteTransaction writeTransaction
+        IWriteTransaction writeTransaction,
+        ITransactionMapper transactionMapper
     )
     {
-        var transaction = transactionBuilder.Build(
+        var transaction = transactionMapper.BuildTransaction(
             amount: request.Amount,
             recurringTransaction: false,
             recipientAccountId: request.RecipientAccountId,

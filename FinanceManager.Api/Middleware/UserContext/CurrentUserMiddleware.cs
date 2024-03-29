@@ -1,5 +1,4 @@
-﻿using FinanceManager.Common.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using FinanceManager.Services.Domain;
 
 namespace FinanceManager.Common.Middleware.UserContext;
 

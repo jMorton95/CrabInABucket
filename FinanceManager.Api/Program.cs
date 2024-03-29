@@ -28,12 +28,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-
-
-// app.MapApiEndpoints();
-//
-// if (app.Environment.IsDevelopment())
-// {
-//     app.MapDevelopmentEndpoints();
-// }
-

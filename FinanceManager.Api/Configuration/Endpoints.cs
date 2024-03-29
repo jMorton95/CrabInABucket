@@ -2,6 +2,7 @@
 using FinanceManager.Api.Features.Accounts;
 using FinanceManager.Api.Features.Auth;
 using FinanceManager.Api.Features.Friendships;
+using FinanceManager.Api.Features.Transactions;
 using FinanceManager.Common.RouteHandlers.Filters;
 
 namespace FinanceManager.Api.Configuration;
@@ -31,7 +32,9 @@ public static class Endpoints
             .MapEndpoint<RespondToFriendship>();
 
         endpoints.MapGroup("/transaction")
-            .WithTags("Transactions");
+            .WithTags("Transactions")
+            .MapEndpoint<Deposit>()
+            .MapEndpoint<Recurring>();
 
         if (app.Environment.IsDevelopment())
         {
