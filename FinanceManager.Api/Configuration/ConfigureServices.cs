@@ -15,6 +15,7 @@ using FinanceManager.Services.Generic.Password;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace FinanceManager.Api.Configuration;
 
@@ -22,6 +23,8 @@ public static class ConfigureServices
 {
     public static void AddServices(this WebApplicationBuilder builder)
     {
+        builder.AddSerilog();
+        
         builder.ConfigureOptions();
         builder.AddDatabase();
 
@@ -34,6 +37,14 @@ public static class ConfigureServices
         builder.ConfigureSwaggerGeneration();
         
         builder.Services.AddHttpContextAccessor();
+    }
+    
+    private static void AddSerilog(this WebApplicationBuilder builder)
+    {
+        builder.Host.UseSerilog((context, configuration) =>
+        {
+            configuration.ReadFrom.Configuration(context.Configuration);
+        });
     }
 
     private static void ConfigureOptions(this WebApplicationBuilder builder)
@@ -131,4 +142,6 @@ public static class ConfigureServices
             });
         });
     }
+    
+   
 }
