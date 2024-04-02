@@ -1,6 +1,5 @@
 using FinanceManager.Common.Constants;
 using FinanceManager.Common.Entities;
-using FinanceManager.Common.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Write.Users;

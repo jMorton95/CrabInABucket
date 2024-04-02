@@ -1,7 +1,6 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Constants;
 using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
 
 namespace FinanceManager.Api.Features.Users;
@@ -16,7 +15,7 @@ public class GetByEmail : IEndpoint
 
     private record Request(string Email);
 
-    private record Response(UserResponse User);
+    private record Response(UserProfile User);
 
     private class RequestValidator : AbstractValidator<Request>
     {

@@ -1,6 +1,5 @@
 ﻿using FinanceManager.Common.Entities;
 using Microsoft.EntityFrameworkCore;
-using FinanceManager.Common.Mappers;
 
 namespace FinanceManager.Data.Read.Accounts;
 

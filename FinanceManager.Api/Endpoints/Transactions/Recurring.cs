@@ -1,7 +1,7 @@
 ﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Responses;
 using FinanceManager.Data.Write.Transactions;
 
 namespace FinanceManager.Api.Features.Transactions;
@@ -24,7 +24,7 @@ public class Recurring : IEndpoint
         bool StartsImmediately
     );
 
-    private record Response(bool Success, string Message) : BasePostResponse(Success, Message);
+    private record Response(bool Success, string Message): IPostResponse;
 
     private class RequestValidator : AbstractValidator<Request>
     {

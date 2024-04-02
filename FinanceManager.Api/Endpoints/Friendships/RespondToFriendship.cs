@@ -1,6 +1,6 @@
 ﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
-using FinanceManager.Common.Responses;
 using FinanceManager.Data.Write.Friendships;
 
 namespace FinanceManager.Api.Features.Friendships;
@@ -17,7 +17,7 @@ public class RespondToFriendship : IEndpoint
 
     private record Request(Guid FriendshipId, Guid ResponderId, bool Accepted);
 
-    private record Response(bool Success, string Message) : BasePostResponse(Success, Message);
+    private record Response(bool Success, string Message): IPostResponse;
 
     private class RequestValidator : AbstractValidator<Request>
     {

@@ -4,7 +4,6 @@ using FinanceManager.Common.Responses;
 using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
-using Microsoft.AspNetCore.Identity;
 
 namespace FinanceManager.Api.Features.Auth;
 
@@ -17,7 +16,7 @@ public class Login : IEndpoint
 
     private record Request(string Username, string Password);
 
-    private record Response(TokenWithExpiryResponse AccessToken, UserResponse User);
+    private record Response(TokenWithExpiry AccessToken, UserProfile User);
 
     private class RequestValidator : AbstractValidator<Request>
     {

@@ -1,6 +1,5 @@
 ﻿using FinanceManager.Common.Constants;
 using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
 
 namespace FinanceManager.Api.Features.Users;
@@ -12,7 +11,7 @@ public class GetAll : IEndpoint
         .RequireAuthorization(PolicyConstants.AdminRole)
         .WithDescription("Allows an Administrator to see a list of all users of the system");
     
-    private record Response(List<UserResponse> Users);
+    private record Response(List<UserProfile> Users);
     
     private static async Task<Results<Ok<Response>, NotFound>> Handler(IReadUsers readUsers)
     {

@@ -1,5 +1,4 @@
-﻿using FinanceManager.Api.Features;
-using FinanceManager.Api.Middleware.UserContext;
+﻿using FinanceManager.Api.Middleware.UserContext;
 using FinanceManager.Common.Constants;
 using FinanceManager.Common.Settings;
 using Serilog;

@@ -1,7 +1,7 @@
 ﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Responses;
 using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
@@ -17,8 +17,8 @@ public class Register : IEndpoint
 
     private record Request(string Username, string Password, string PasswordConfirmation);
 
-    private record Response(NamedUserResponse? UserResponse, bool Success, string Message)
-        : BasePostResponse(Success, Message);
+    private record Response(NamedUser? UserResponse, bool Success, string Message)
+       : IPostResponse;
 
     private class RequestValidator : AbstractValidator<Request>
     {

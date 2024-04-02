@@ -1,7 +1,7 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Constants;
+using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
-using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
 
@@ -18,7 +18,7 @@ public class ChangeAdminRole : IEndpoint
 
     private record Request(Guid UserId, bool IsAdmin);
 
-    private record Response(bool Success, string Message) : BasePostResponse(Success, Message);
+    private record Response(bool Success, string Message) : IPostResponse;
 
     private class RequestValidator : AbstractValidator<Request>
     {
@@ -48,7 +48,7 @@ public class ChangeAdminRole : IEndpoint
         }
 
         var response = new Response(roleChangeResult, "Success");
-
+        
         return TypedResults.Ok(response);
     }
 }

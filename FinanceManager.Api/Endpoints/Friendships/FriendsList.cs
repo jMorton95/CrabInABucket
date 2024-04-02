@@ -1,7 +1,6 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Friends;
 
 namespace FinanceManager.Api.Features.Friendships;
@@ -19,10 +18,10 @@ public class FriendsList : IEndpoint
 
     private record Response
     (
-        List<NamedUserResponse> Friends,
-        List<NamedUserResponse> PendingFriends,
-        List<NamedUserResponse> SuggestedFriends,
-        List<NamedUserResponse> RandomSuggestions
+        List<NamedUser> Friends,
+        List<NamedUser> PendingFriends,
+        List<NamedUser> SuggestedFriends,
+        List<NamedUser> RandomSuggestions
     );
 
     private class RequestValidator : AbstractValidator<Request>

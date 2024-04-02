@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using FinanceManager.Common.Entities;
+﻿using FinanceManager.Common.Entities;
 
 namespace FinanceManager.Data.Read;
 

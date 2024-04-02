@@ -1,8 +1,6 @@
-﻿using FinanceManager.Common.Requests;
+﻿namespace FinanceManager.Data.Write;
 
-namespace FinanceManager.Data.Write;
-
-public interface IEditEntity<in TEditRequest> where TEditRequest : BaseEditRequest
+public interface IEditEntity<in TEditRequest>
 {
     Task<bool> EditAsync(TEditRequest request);
 }

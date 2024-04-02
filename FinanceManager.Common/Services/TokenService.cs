@@ -13,7 +13,7 @@ namespace FinanceManager.Common.Services;
 public interface IUserTokenService
 {
     Task<List<Claim>> GetUserClaims(User user);
-    TokenWithExpiryResponse CreateTokenWithClaims(IEnumerable<Claim> claims);
+    TokenWithExpiry CreateTokenWithClaims(IEnumerable<Claim> claims);
     DecodedAccessToken? DecodeAccessToken(string accessToken);
 }
 
@@ -40,7 +40,7 @@ public class UserTokenService(IOptions<JwtSettings> jwtOptions) : IUserTokenServ
         return claims;
     }
     
-    public TokenWithExpiryResponse CreateTokenWithClaims(IEnumerable<Claim> claims)
+    public TokenWithExpiry CreateTokenWithClaims(IEnumerable<Claim> claims)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -58,7 +58,7 @@ public class UserTokenService(IOptions<JwtSettings> jwtOptions) : IUserTokenServ
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         
-        return new TokenWithExpiryResponse(jwt, expiresUnixTimestamp);
+        return new TokenWithExpiry(jwt, expiresUnixTimestamp);
     }
 
     public DecodedAccessToken? DecodeAccessToken(string accessToken)

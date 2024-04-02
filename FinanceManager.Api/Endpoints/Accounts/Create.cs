@@ -1,6 +1,6 @@
 ﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
-using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Accounts;
 using FinanceManager.Data.Write.Accounts;
 
@@ -15,7 +15,7 @@ public class Create : IEndpoint
 
     private record Request(Guid UserId, string AccountName);
 
-    private record Response(bool Success, string Message) : BasePostResponse(Success, Message);
+    private record Response(bool Success, string Message): IPostResponse;
 
     private class RequestValidator : AbstractValidator<Request>
     {
