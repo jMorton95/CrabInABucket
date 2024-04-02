@@ -30,7 +30,8 @@ public static class Endpoints
         endpoints.MapGroup("/friendships")
             .WithTags("Friendships")
             .MapEndpoint<RequestFriendship>()
-            .MapEndpoint<RespondToFriendship>();
+            .MapEndpoint<RespondToFriendship>()
+            .MapEndpoint<FriendsList>();
 
         endpoints.MapGroup("/transaction")
             .WithTags("Transactions")
@@ -39,7 +40,9 @@ public static class Endpoints
 
         endpoints.MapGroup("/users")
             .WithTags("Users")
-            .MapEndpoint<GetAll>();
+            .MapEndpoint<GetAll>()
+            .MapEndpoint<GetByEmail>()
+            .MapEndpoint<ChangeAdminRole>();
 
         if (app.Environment.IsDevelopment())
         {

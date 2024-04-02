@@ -6,11 +6,10 @@ using Microsoft.EntityFrameworkCore;
 namespace FinanceManager.Data.Write.Users;
 
 public interface IWriteUsers :
-    ICreateEntity<User>,
-    IEditEntity<EditUserRequest>
+    ICreateEntity<User>
 {
     Task<bool> UpdateLastLogin(User user);
-    Task<int> ManageUserAdministratorRole(User user, bool isAdmin);
+    Task<bool> ManageUserAdministratorRole(User user, bool isAdmin);
 }
 
 public sealed class WriteUsers(DataContext db) : IWriteUsers
@@ -23,14 +22,7 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         
         return saveResult > 0;
     }
-
-    public async Task<bool> EditAsync(EditUserRequest req)
-    {
-        //db.User.Update(entity);
-        return true;
-        //eturn await db.SaveChangesAsync();
-    }
-
+    
     private Role CreateAdministratorRole()
     {
         var adminRole = new Role() { Name = PolicyConstants.AdminRole };
@@ -56,7 +48,7 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         }
     }
     
-    public async Task<int> ManageUserAdministratorRole(User user, bool isAdmin)
+    public async Task<bool> ManageUserAdministratorRole(User user, bool isAdmin)
     {
         var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole) ?? CreateAdministratorRole();
 
@@ -68,7 +60,9 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         {
             user.Roles = user.Roles.Where(x => x.Role?.Id == adminRole.Id);    
         }
-        
-        return await db.SaveChangesAsync();
+
+        var result = await db.SaveChangesAsync();
+
+        return result > 0;
     }
 }
