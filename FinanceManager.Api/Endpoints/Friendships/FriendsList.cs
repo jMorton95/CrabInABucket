@@ -8,13 +8,13 @@ namespace FinanceManager.Api.Features.Friendships;
 public class FriendsList : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) => app
-        .MapGet("friendslist", Handler)
+        .MapGet("friends-list/{UserId}/{NumberOfSuggestions}", Handler)
         .WithDescription("Provides a list of a users friends, pending requests, recommended friends and random suggestions")
         .WithRequestValidation<Request>()
         .EnsureEntityExists<User>(x => x.UserId)
         .SelfOrAdminResource<User>(x => x.UserId);
     
-    private record Request(Guid UserId, int NumberOfSuggestions);
+    public record Request(Guid UserId, int NumberOfSuggestions);
 
     private record Response
     (
@@ -24,7 +24,7 @@ public class FriendsList : IEndpoint
         List<NamedUser> RandomSuggestions
     );
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -38,7 +38,7 @@ public class FriendsList : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, NotFound>> Handler(Request request, IReadUserFriends readUserFriends)
+    private static async Task<Results<Ok<Response>, ValidationError, NotFound>> Handler([AsParameters] Request request, IReadUserFriends readUserFriends)
     {
         var userFriends = await readUserFriends.GetUserFriends(request.UserId);
         var pendingRequests = await readUserFriends.GetPendingFriendRequests(request.UserId);

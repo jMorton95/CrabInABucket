@@ -13,11 +13,11 @@ public class Create : IEndpoint
         .WithSummary("Create a new account for a user")
         .WithRequestValidation<Request>();
 
-    private record Request(Guid UserId, string AccountName);
+    public record Request(Guid UserId, string AccountName);
 
     private record Response(bool Success, string Message): IPostResponse;
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -32,7 +32,7 @@ public class Create : IEndpoint
         }
     }
     
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler (
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler (
         Request request,
         IReadAccounts readAccounts,
         IWriteAccounts writeAccounts

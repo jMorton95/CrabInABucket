@@ -15,12 +15,12 @@ public class Register : IEndpoint
         .WithSummary("Register a new user")
         .WithRequestValidation<Request>();
 
-    private record Request(string Username, string Password, string PasswordConfirmation);
+    public record Request(string Username, string Password, string PasswordConfirmation);
 
     private record Response(NamedUser? UserResponse, bool Success, string Message)
        : IPostResponse;
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator(IReadUsers readUsers)
         {
@@ -44,7 +44,7 @@ public class Register : IEndpoint
         }
     }
     
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler(
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler(
         Request request,
         IReadUsers read,
         IWriteUsers write,

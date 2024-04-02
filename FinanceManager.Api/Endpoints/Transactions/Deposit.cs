@@ -16,11 +16,11 @@ public class Deposit : IEndpoint
         .EnsureEntityExists<User>(x => x.RequesterId)
         .SelfOrAdminResource<User>(x => x.RequesterId);
 
-    private record Request(Guid RequesterId, Guid RecipientAccountId, decimal Amount);
+    public record Request(Guid RequesterId, Guid RecipientAccountId, decimal Amount);
 
     private record Response(bool Success, string Message): IPostResponse;
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -38,7 +38,7 @@ public class Deposit : IEndpoint
     }
 
     
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler (
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler (
         Request request,
         IWriteTransaction writeTransaction,
         ITransactionMapper transactionMapper

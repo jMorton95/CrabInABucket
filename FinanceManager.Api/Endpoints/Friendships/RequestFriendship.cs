@@ -15,11 +15,11 @@ public class RequestFriendship : IEndpoint
         .EnsureEntityExists<User>(x => x.UserId)
         .EnsureEntityExists<User>(x => x.TargetUserId);
 
-    private record Request(Guid UserId, Guid TargetUserId);
+    public record Request(Guid UserId, Guid TargetUserId);
 
     private record Response(bool Success, string Message): IPostResponse;
     
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator(IReadFriendships readFriendships)
         {
@@ -35,7 +35,7 @@ public class RequestFriendship : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler(Request request, IWriteFriendships write)
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler(Request request, IWriteFriendships write)
     {
         var createResult = await write.CreateAsync(request.UserId, request.TargetUserId);
 

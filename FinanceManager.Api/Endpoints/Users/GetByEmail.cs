@@ -13,11 +13,11 @@ public class GetByEmail : IEndpoint
         .WithDescription("Search for a user by email address")
         .WithRequestValidation<Request>();
 
-    private record Request(string Email);
+    public record Request(string Email);
 
     private record Response(UserProfile User);
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -28,7 +28,7 @@ public class GetByEmail : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, NotFound>> Handler([AsParameters] Request request, IReadUsers readUsers)
+    private static async Task<Results<Ok<Response>, ValidationError, NotFound>> Handler([AsParameters] Request request, IReadUsers readUsers)
     {
         var user = await readUsers.GetUserByEmailAsync(request.Email);
 

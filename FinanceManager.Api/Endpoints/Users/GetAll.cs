@@ -13,7 +13,7 @@ public class GetAll : IEndpoint
     
     private record Response(List<UserProfile> Users);
     
-    private static async Task<Results<Ok<Response>, NotFound>> Handler(IReadUsers readUsers)
+    private static async Task<Results<Ok<Response>, ValidationError, NotFound>> Handler(IReadUsers readUsers)
     {
         var users = await readUsers.GetAllAsync();
         

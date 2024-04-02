@@ -23,6 +23,7 @@ public static class ConfigureServices
     public static void AddServices(this WebApplicationBuilder builder)
     {
         builder.AddSerilog();
+        builder.AddSwaggerGeneration();
         
         builder.ConfigureOptions();
         builder.AddDatabase();
@@ -33,7 +34,6 @@ public static class ConfigureServices
         builder.Services.RegisterScopedDependencies();
         
         builder.AddJwtAuthentication();
-        builder.AddSwaggerGeneration();
         
         builder.Services.AddHttpContextAccessor();
     }

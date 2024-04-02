@@ -12,11 +12,11 @@ public class Edit : IEndpoint
         .WithSummary("Edits a user's account")
         .WithRequestValidation<Request>();
 
-    private record Request(Guid Id, string AccountName);
+    public record Request(Guid Id, string AccountName);
 
     private record Response(bool Success, string Message): IPostResponse;
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator(IReadAccounts readAccounts)
         {
@@ -36,7 +36,7 @@ public class Edit : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler (
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler (
         Request request,
         IWriteAccounts writeAccounts
     )

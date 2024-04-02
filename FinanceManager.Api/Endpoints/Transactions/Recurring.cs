@@ -14,7 +14,7 @@ public class Recurring : IEndpoint
         .EnsureEntityExists<User>(x => x.RecipientAccountId)
         .SelfOrAdminResource<User>(x => x.SenderAccountId);
 
-    private record Request(
+    public record Request(
         decimal Amount,
         string TransactionName,
         int TransactionInterval,
@@ -26,7 +26,7 @@ public class Recurring : IEndpoint
 
     private record Response(bool Success, string Message): IPostResponse;
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -63,7 +63,7 @@ public class Recurring : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler(
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler(
         Request request,
         IWriteTransaction writeTransaction,
         IWriteRecurringTransaction writeRecurringTransaction,

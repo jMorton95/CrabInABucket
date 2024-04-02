@@ -16,11 +16,11 @@ public class ChangeAdminRole : IEndpoint
         .WithRequestValidation<Request>()
         .EnsureEntityExists<User>(x => x.UserId);
 
-    private record Request(Guid UserId, bool IsAdmin);
+    public record Request(Guid UserId, bool IsAdmin);
 
     private record Response(bool Success, string Message) : IPostResponse;
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -32,7 +32,7 @@ public class ChangeAdminRole : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler(
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler(
         Request request,
         IReadUsers readUsers,
         IWriteUsers writeUsers

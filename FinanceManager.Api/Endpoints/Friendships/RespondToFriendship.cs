@@ -15,11 +15,11 @@ public class RespondToFriendship : IEndpoint
         .EnsureEntityExists<Friendship>(x => x.FriendshipId)
         .SelfOrAdminResource<User>(x => x.ResponderId);
 
-    private record Request(Guid FriendshipId, Guid ResponderId, bool Accepted);
+    public record Request(Guid FriendshipId, Guid ResponderId, bool Accepted);
 
     private record Response(bool Success, string Message): IPostResponse;
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -37,7 +37,7 @@ public class RespondToFriendship : IEndpoint
         }
     }
     
-    private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler(Request request, IWriteFriendships writeFriendships)
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler(Request request, IWriteFriendships writeFriendships)
     {
         var result = await writeFriendships.EditAsync(request.FriendshipId, request.Accepted);
         

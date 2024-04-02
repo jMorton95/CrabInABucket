@@ -14,11 +14,11 @@ public class Login : IEndpoint
         .WithSummary("Login with Username & Password")
         .WithRequestValidation<Request>();
 
-    private record Request(string Username, string Password);
+    public record Request(string Username, string Password);
 
     private record Response(TokenWithExpiry AccessToken, UserProfile User);
 
-    private class RequestValidator : AbstractValidator<Request>
+    public class RequestValidator : AbstractValidator<Request>
     {
         public RequestValidator()
         {
@@ -33,7 +33,7 @@ public class Login : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, UnauthorizedHttpResult>> Handler(
+    private static async Task<Results<Ok<Response>, ValidationError, UnauthorizedHttpResult>> Handler(
         Request request,
         IReadUsers readUsers,
         IPasswordHasher passwordHasher,
