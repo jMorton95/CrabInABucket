@@ -32,14 +32,14 @@ public class DataContext(DbContextOptions<DataContext> options, IUserContextServ
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("FK_Friendship_Users");
     }
-    
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         var userId = userContextService.CurrentUser?.UserAccessToken?.UserId;
-        
+
         foreach (var entry in ChangeTracker.Entries())
         {
-            if (entry.Entity is not Entity entity ) continue;
+            if (entry.Entity is not Entity entity) continue;
 
             if (userId != null) entity.EditedBy = userId;
             entity.UpdatedDate = DateTime.UtcNow;
@@ -49,15 +49,13 @@ public class DataContext(DbContextOptions<DataContext> options, IUserContextServ
                 case { State: EntityState.Added }:
                     if (userId != null) entity.CreatedBy = userId;
                     break;
-                
+
                 case { State: EntityState.Modified }:
                     entity.RowVersion += 1;
                     break;
             }
         }
-        
+
         return base.SaveChangesAsync(cancellationToken);
     }
-
-
 }

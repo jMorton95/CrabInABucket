@@ -34,7 +34,7 @@ public static class ConfigureServices
         builder.Services.RegisterScopedDependencies();
         
         builder.AddJwtAuthentication();
-        builder.ConfigureSwaggerGeneration();
+        builder.AddSwaggerGeneration();
         
         builder.Services.AddHttpContextAccessor();
     }
@@ -110,7 +110,7 @@ public static class ConfigureServices
             .AddPolicy(PolicyConstants.AdminRole, policy => policy.RequireClaim(PolicyConstants.AdminRole));
     }
     
-    private static void ConfigureSwaggerGeneration(this WebApplicationBuilder builder)
+    private static void AddSwaggerGeneration(this WebApplicationBuilder builder)
     {
         var swaggerSettings = builder.Configuration.GetSection(SettingsConstants.SwaggerSection).Get<SwaggerSettings>();
 
@@ -118,6 +118,8 @@ public static class ConfigureServices
         
         builder.Services.AddSwaggerGen(options =>
         {
+            options.CustomSchemaIds(type => type.FullName?.Replace('+', '.'));
+            
             options.SwaggerDoc(swaggerSettings!.Version, new OpenApiInfo { Title = swaggerSettings.Title, Version = swaggerSettings.Version });
 
             options.AddSecurityDefinition(swaggerSettings.Scheme, new OpenApiSecurityScheme
