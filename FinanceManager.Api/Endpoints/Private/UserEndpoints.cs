@@ -3,8 +3,6 @@ using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Requests;
 using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
-using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceManager.Api.Endpoints.Private;
@@ -15,7 +13,7 @@ public static class UserEndpoints
     {
         var usersGroup = app.MapGroup("/api/user/").WithTags("User");//.RequireAuthorization(RoleConstants.AdminRole);
         
-        usersGroup.MapGet("/getAll", async Task<Results<Ok<List<UserResponses>>, NoContent>>
+        usersGroup.MapGet("/getAll", async Task<Results<Ok<List<UserResponse>>, NoContent>>
             ([FromServices] IReadUsers query) =>
         {
             var users = await query.GetAllAsync();
@@ -26,7 +24,7 @@ public static class UserEndpoints
         })
         .WithName("GetAll");
        
-        usersGroup.MapGet("/getByEmail", async Task<Results<Ok<UserResponses>, ValidationProblem, NoContent>> (
+        usersGroup.MapGet("/getByEmail", async Task<Results<Ok<UserResponse>, ValidationProblem, NoContent>> (
                 string username,
                 IValidator<GetUserRequest> validator,
                 [FromServices] IReadUsers query

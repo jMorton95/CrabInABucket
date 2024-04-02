@@ -17,7 +17,7 @@ public class Login : IEndpoint
 
     private record Request(string Username, string Password);
 
-    private record Response(TokenWithExpiryResponse AccessToken, UserResponses User);
+    private record Response(TokenWithExpiryResponse AccessToken, UserResponse User);
 
     private class RequestValidator : AbstractValidator<Request>
     {

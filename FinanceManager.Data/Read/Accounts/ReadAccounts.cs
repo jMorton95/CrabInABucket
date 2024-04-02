@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Common.Entities;
 using Microsoft.EntityFrameworkCore;
+using FinanceManager.Common.Mappers;
 
 namespace FinanceManager.Data.Read.Accounts;
 
@@ -9,7 +10,7 @@ public interface IReadAccounts : IGetAllOwnedEntitiesAsync<Account>, IGetOwnedEn
 };
 public sealed class ReadAccounts(DataContext db) : IReadAccounts
 {
-    public async Task<IEnumerable<Account>> GetAllOwnedEntitiesAsync(Guid userId)
+    public async Task<List<Account>> GetAllOwnedEntitiesAsync(Guid userId)
         => await db.Account
             .Include(x => x.RecurringTransactions)
             .Where(x => x.User.Id == userId)

@@ -5,10 +5,10 @@ namespace FinanceManager.Data.Read;
 
 public interface IGetAllEntitiesAsync<TEntity> where TEntity : Entity
 {
-    Task<IEnumerable<TEntity>> GetAllAsync();
+    Task<List<TEntity>> GetAllAsync();
 }
 
 public interface IGetAllOwnedEntitiesAsync<TEntity> where TEntity : Entity
 {
-    Task<IEnumerable<TEntity>> GetAllOwnedEntitiesAsync(Guid userId);
+    Task<List<TEntity>> GetAllOwnedEntitiesAsync(Guid userId);
 }

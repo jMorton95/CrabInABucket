@@ -7,12 +7,11 @@ public interface IReadUsers : IGetEntityByIdAsync<User>, IGetAllEntitiesAsync<Us
 {
     Task<bool> CheckUserExistsByEmail(string emailAddress);
     Task<User?> GetUserByEmailAsync(string emailAddress);
-  
 }
 
 public sealed class ReadUsers(DataContext db) : IReadUsers
 {
-    public async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<List<User>> GetAllAsync()
         => await db.User
             .Include(x => x.Roles)
             .ThenInclude(r => r.Role)

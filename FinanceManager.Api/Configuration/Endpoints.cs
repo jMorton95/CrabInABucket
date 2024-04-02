@@ -3,6 +3,7 @@ using FinanceManager.Api.Features.Accounts;
 using FinanceManager.Api.Features.Auth;
 using FinanceManager.Api.Features.Friendships;
 using FinanceManager.Api.Features.Transactions;
+using FinanceManager.Api.Features.Users;
 using FinanceManager.Api.RouteHandlers.Filters;
 
 namespace FinanceManager.Api.Configuration;
@@ -35,6 +36,10 @@ public static class Endpoints
             .WithTags("Transactions")
             .MapEndpoint<Deposit>()
             .MapEndpoint<Recurring>();
+
+        endpoints.MapGroup("/users")
+            .WithTags("Users")
+            .MapEndpoint<GetAll>();
 
         if (app.Environment.IsDevelopment())
         {

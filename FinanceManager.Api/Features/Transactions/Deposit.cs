@@ -23,7 +23,7 @@ public class Deposit : IEndpoint
 
     private class RequestValidator : AbstractValidator<Request>
     {
-        public RequestValidator(IReadUsers readUsers)
+        public RequestValidator()
         {
             RuleFor(x => x.RequesterId)
                 .NotEmpty();
