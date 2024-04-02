@@ -14,24 +14,17 @@ public class GetAll : IEndpoint
     
     private record Response(List<UserResponse> Users);
     
-    private static async Task<Results<Ok<List<Response>>, NotFound>> Handler(IReadUsers readUsers)
+    private static async Task<Results<Ok<Response>, NotFound>> Handler(IReadUsers readUsers)
     {
         var users = await readUsers.GetAllAsync();
-
+        
         if (users is not { Count: > 0 })
         {
             return TypedResults.NotFound();
         } 
         
-        var userResponses = users.Select(x => x.ToUserResponse()).ToList();
-
-        if (userResponses is not { Count: > 0 })
-        {
-            return TypedResults.NotFound();
-        }
-
-        var response = new Response(userResponses);
+        var response = new Response(users.Select(x => x.ToUserResponse()).ToList());
         
-        return response != null ? TypedResults.Ok(response) : TypedResults.NotFound();
+        return TypedResults.Ok(response);
     }
 }

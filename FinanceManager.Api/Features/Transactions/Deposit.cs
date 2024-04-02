@@ -2,7 +2,6 @@
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Responses;
-using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Transactions;
 
 namespace FinanceManager.Api.Features.Transactions;
@@ -38,6 +37,7 @@ public class Deposit : IEndpoint
         }
     }
 
+    
     private static async Task<Results<Ok<Response>, BadRequest<Response>>> Handler (
         Request request,
         IWriteTransaction writeTransaction,
