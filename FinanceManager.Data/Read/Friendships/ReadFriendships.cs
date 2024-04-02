@@ -1,5 +1,5 @@
-﻿using FinanceManager.Common.DataEntities;
-using FinanceManager.Common.Middleware.UserContext;
+﻿using FinanceManager.Common.Entities;
+using FinanceManager.Common.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Friendships;

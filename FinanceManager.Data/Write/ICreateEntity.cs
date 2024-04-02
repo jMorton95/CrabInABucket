@@ -1,4 +1,4 @@
-﻿using FinanceManager.Common.DataEntities;
+﻿using FinanceManager.Common.Entities;
 
 namespace FinanceManager.Data.Write;
 

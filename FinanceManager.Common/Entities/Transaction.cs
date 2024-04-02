@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceManager.Common.DataEntities;
+namespace FinanceManager.Common.Entities;
 
 public class Transaction : Entity
 {

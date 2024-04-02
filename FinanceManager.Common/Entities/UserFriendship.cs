@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FinanceManager.Common.DataEntities;
+namespace FinanceManager.Common.Entities;
 
 public class UserFriendship : Entity
 {

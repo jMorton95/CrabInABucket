@@ -1,5 +1,5 @@
-using FinanceManager.Common.AppConstants;
-using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Constants;
+using FinanceManager.Common.Entities;
 using FinanceManager.Common.Requests;
 using Microsoft.EntityFrameworkCore;
 

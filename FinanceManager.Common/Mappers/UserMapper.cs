@@ -1,4 +1,4 @@
-using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Entities;
 using FinanceManager.Common.Responses;
 
 namespace FinanceManager.Common.Mappers;

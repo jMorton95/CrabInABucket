@@ -1,11 +1,6 @@
-﻿using FinanceManager.Common.DataEntities;
-using FinanceManager.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using FinanceManager.Common.Entities;
 
-namespace FinanceManager.Common.RouteHandlers.Filters;
+namespace FinanceManager.Api.RouteHandlers.Filters;
 
 public class EnsureEntityExistsFilter<TRequest, TEntity>(Func<TRequest, Guid?> entityId) : IEndpointFilter 
     where TEntity : class, IEntity

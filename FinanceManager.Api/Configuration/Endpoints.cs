@@ -3,7 +3,7 @@ using FinanceManager.Api.Features.Accounts;
 using FinanceManager.Api.Features.Auth;
 using FinanceManager.Api.Features.Friendships;
 using FinanceManager.Api.Features.Transactions;
-using FinanceManager.Common.RouteHandlers.Filters;
+using FinanceManager.Api.RouteHandlers.Filters;
 
 namespace FinanceManager.Api.Configuration;
 

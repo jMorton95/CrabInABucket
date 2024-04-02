@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FinanceManager.Common.DataEntities;
+namespace FinanceManager.Common.Entities;
 
 public class Role : Entity
 {

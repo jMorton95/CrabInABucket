@@ -1,9 +1,8 @@
-﻿using FinanceManager.Common.Mappers;
+﻿using FinanceManager.Api.Handlers;
+using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Requests;
 using FinanceManager.Common.Responses;
 using FinanceManager.Data.Read.Users;
-using FinanceManager.Services.Domain;
-using FinanceManager.Services.Handlers;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

@@ -1,11 +1,7 @@
-﻿using FinanceManager.Common.DataEntities;
-using FinanceManager.Common.Middleware.UserContext;
-using FinanceManager.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using FinanceManager.Common.Entities;
+using FinanceManager.Common.Services;
 
-namespace FinanceManager.Common.RouteHandlers.Filters;
+namespace FinanceManager.Api.RouteHandlers.Filters;
 
 public class SelfOrAdminResourceFilter<TRequest, TEntity>(Func<TRequest, Guid?> requestedUserId) : IEndpointFilter 
     where TEntity : class, IEntity

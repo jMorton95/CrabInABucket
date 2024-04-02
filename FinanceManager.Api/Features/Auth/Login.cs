@@ -1,10 +1,9 @@
-﻿using FinanceManager.Common.Mappers;
+﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Responses;
-using FinanceManager.Common.RouteHandlers;
+using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
-using FinanceManager.Services.Domain;
-using FinanceManager.Services.Generic.Password;
 using Microsoft.AspNetCore.Identity;
 
 namespace FinanceManager.Api.Features.Auth;

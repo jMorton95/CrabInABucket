@@ -1,10 +1,7 @@
-﻿using FinanceManager.Common.DataEntities;
-using FinanceManager.Common.Middleware.UserContext;
-using FinanceManager.Common.RouteHandlers.Filters;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using FinanceManager.Api.RouteHandlers.Filters;
+using FinanceManager.Common.Entities;
 
-namespace FinanceManager.Common.RouteHandlers;
+namespace FinanceManager.Api.RouteHandlers;
 
 public class ValidationFilterBuilder<TRequest>(RouteHandlerBuilder builder)
 {

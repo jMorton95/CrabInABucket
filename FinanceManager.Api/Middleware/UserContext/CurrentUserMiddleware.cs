@@ -1,6 +1,6 @@
-﻿using FinanceManager.Services.Domain;
+﻿using FinanceManager.Common.Services;
 
-namespace FinanceManager.Common.Middleware.UserContext;
+namespace FinanceManager.Api.Middleware.UserContext;
 
 public class CurrentUserMiddleware(RequestDelegate next)
 {
@@ -14,7 +14,7 @@ public class CurrentUserMiddleware(RequestDelegate next)
             try
             {
                 var decodedToken = userTokenService.DecodeAccessToken(token);
-                var user = new UserContext(decodedToken);
+                var user = new Common.Services.UserContext(decodedToken);
 
                 userContextService.SetCurrentUser(user);
             }

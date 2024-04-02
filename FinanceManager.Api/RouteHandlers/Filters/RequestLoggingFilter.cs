@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-
-namespace FinanceManager.Common.RouteHandlers.Filters;
+﻿namespace FinanceManager.Api.RouteHandlers.Filters;
 
 public class RequestLoggingFilter(ILogger<RequestLoggingFilter> logger) : IEndpointFilter
 {

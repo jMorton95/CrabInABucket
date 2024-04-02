@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace FinanceManager.Services.Generic.Password;
+namespace FinanceManager.Common.Services;
 
 public interface IPasswordHasher
 {

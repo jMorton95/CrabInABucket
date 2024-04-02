@@ -1,7 +1,7 @@
 ﻿using FinanceManager.Api.Features;
-using FinanceManager.Common.AppConstants;
-using FinanceManager.Common.ConfigurationSettings;
-using FinanceManager.Common.Middleware.UserContext;
+using FinanceManager.Api.Middleware.UserContext;
+using FinanceManager.Common.Constants;
+using FinanceManager.Common.Settings;
 using Serilog;
 
 namespace FinanceManager.Api.Configuration;

@@ -1,6 +1,6 @@
-﻿using FinanceManager.Common.DataEntities;
+﻿using FinanceManager.Common.Entities;
 
-namespace FinanceManager.Services.Domain;
+namespace FinanceManager.Common.Mappers;
 
 public interface ITransactionMapper
 {

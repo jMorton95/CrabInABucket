@@ -1,5 +1,4 @@
-﻿using FinanceManager.Common.DataEntities;
-using FinanceManager.Common.Middleware.UserContext;
+﻿using FinanceManager.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Accounts;

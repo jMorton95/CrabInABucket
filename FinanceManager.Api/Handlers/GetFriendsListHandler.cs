@@ -1,9 +1,9 @@
 ﻿using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Middleware.UserContext;
 using FinanceManager.Common.Responses;
+using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Friends;
 
-namespace FinanceManager.Services.Handlers;
+namespace FinanceManager.Api.Handlers;
 
 public interface IGetFriendsListHandler
 {

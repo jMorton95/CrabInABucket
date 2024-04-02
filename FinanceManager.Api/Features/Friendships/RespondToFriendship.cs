@@ -1,6 +1,6 @@
-﻿using FinanceManager.Common.DataEntities;
+﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Entities;
 using FinanceManager.Common.Responses;
-using FinanceManager.Common.RouteHandlers;
 using FinanceManager.Data.Write.Friendships;
 
 namespace FinanceManager.Api.Features.Friendships;

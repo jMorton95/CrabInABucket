@@ -1,14 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FinanceManager.Common.ConfigurationSettings;
-using FinanceManager.Common.DataEntities;
+using FinanceManager.Common.Entities;
 using FinanceManager.Common.Responses;
+using FinanceManager.Common.Settings;
 using FinanceManager.Common.Utilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FinanceManager.Services.Domain;
+namespace FinanceManager.Common.Services;
 
 public interface IUserTokenService
 {

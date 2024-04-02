@@ -1,4 +1,4 @@
-﻿namespace FinanceManager.Common.DataEntities;
+﻿namespace FinanceManager.Common.Entities;
 
 public class Message : Entity
 {

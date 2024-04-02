@@ -1,10 +1,10 @@
-﻿using FinanceManager.Common.DataEntities;
+﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Responses;
-using FinanceManager.Common.RouteHandlers;
+using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
-using FinanceManager.Services.Generic.Password;
 
 namespace FinanceManager.Api.Features.Auth;
 

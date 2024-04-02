@@ -1,4 +1,4 @@
-namespace FinanceManager.Common.AppConstants;
+namespace FinanceManager.Common.Constants;
 
 public static class PolicyConstants
 {

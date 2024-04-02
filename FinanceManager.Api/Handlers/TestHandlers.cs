@@ -1,12 +1,10 @@
-﻿using FinanceManager.Common.DataEntities;
+﻿using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Middleware.UserContext;
 using FinanceManager.Common.Responses;
-using FinanceManager.Data.Read;
+using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Friends;
-using FinanceManager.Data.Read.Users;
 
-namespace FinanceManager.Services.Handlers;
+namespace FinanceManager.Api.Handlers;
 
 public class TestHandlers(IReadUserFriends friendships, IUserContextService userContextService)
 {

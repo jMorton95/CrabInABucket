@@ -2,7 +2,7 @@
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
 
-namespace FinanceManager.Services.Handlers;
+namespace FinanceManager.Api.Handlers;
 
 public interface IRoleHandler
 {

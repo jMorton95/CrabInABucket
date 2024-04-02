@@ -1,7 +1,7 @@
-﻿using FinanceManager.Common.AppConstants;
+﻿using FinanceManager.Common.Constants;
 using FinanceManager.Common.Utilities;
 
-namespace FinanceManager.Common.Middleware.UserContext;
+namespace FinanceManager.Common.Services;
 public record UserContext(DecodedAccessToken? UserAccessToken);
 
 public interface IUserContextService
