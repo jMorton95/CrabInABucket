@@ -2,17 +2,11 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
-using Testcontainers.PostgreSql;
 
 namespace FinanceManager.Tests.Integration;
 
-public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
-        .WithImage("postgres:latest")
-        .WithExposedPort("7004")
-        .Build();
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices((_, services) =>
@@ -28,17 +22,18 @@ public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>,
                 services.Remove(descriptor);
             }
             
-            services.AddDbContext<DataContext>(options => options.UseNpgsql(_dbContainer.GetConnectionString()));
-        });
-    }
-    
-    public Task InitializeAsync()
-    {
-        return _dbContainer.StartAsync();
-    }
+            services.AddDbContext<DataContext>(options => 
+                options.UseNpgsql(
+                    SharedContainerFixture.DatabaseContainer.GetConnectionString())
+                );
 
-    public new Task DisposeAsync()
-    {
-        return _dbContainer.StopAsync();
+            var serviceProvider = services.BuildServiceProvider();
+
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var dbContextInstance = scope.ServiceProvider.GetRequiredService<DataContext>();
+                dbContextInstance.Database.MigrateAsync();
+            }
+        });
     }
 }
