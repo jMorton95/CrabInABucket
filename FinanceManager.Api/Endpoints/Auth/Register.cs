@@ -5,8 +5,6 @@ using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
-using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FinanceManager.Api.Endpoints.Auth;
 

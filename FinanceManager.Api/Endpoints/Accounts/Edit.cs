@@ -2,8 +2,6 @@
 using FinanceManager.Common.Contracts;
 using FinanceManager.Data.Read.Accounts;
 using FinanceManager.Data.Write.Accounts;
-using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FinanceManager.Api.Endpoints.Accounts;
 

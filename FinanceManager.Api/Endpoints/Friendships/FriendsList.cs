@@ -1,8 +1,6 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Data.Read.Friends;
-using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FinanceManager.Api.Endpoints.Friendships;
 

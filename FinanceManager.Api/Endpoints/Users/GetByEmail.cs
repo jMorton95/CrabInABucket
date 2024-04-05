@@ -2,8 +2,6 @@
 using FinanceManager.Common.Constants;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Data.Read.Users;
-using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FinanceManager.Api.Endpoints.Users;
 
