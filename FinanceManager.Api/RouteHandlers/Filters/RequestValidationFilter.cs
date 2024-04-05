@@ -1,4 +1,6 @@
-﻿namespace FinanceManager.Api.RouteHandlers.Filters;
+﻿using FluentValidation;
+
+namespace FinanceManager.Api.RouteHandlers.Filters;
 
 public class RequestValidationFilter<TRequest>(ILogger<RequestValidationFilter<TRequest>> logger, IValidator<TRequest>? validator = null) : IEndpointFilter
 {

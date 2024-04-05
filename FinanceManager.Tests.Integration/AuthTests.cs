@@ -23,12 +23,17 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
 
     public static List<object[]> InvalidLogins =>
     [
+        [new Login.Request("invalid-email", "ValidPass123!"), "Username"],
+        [new Login.Request("", "ValidPass123!"), "Username"],
+        [new Login.Request("valid@email.com", ""), "Password"],
+        [new Login.Request("valid@email.com", "Short1"), "Password"],
+        [new Login.Request("valid@email.com", new string('a', 21)), "Password"]
     ];
 
     public static List<object[]> ExistingUser => [[new Register.Request(TestConstants.Username, TestConstants.Password, TestConstants.Password), "Username"]];
     
     [Theory, MemberData(nameof(InvalidRegistrations))]
-    public async Task TestRegistrationValidation(Register.Request request, string validationParameterError)
+    public async Task TestRegistrationValidation(Register.Request request, string erroredValidationProperty)
     {
         var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
@@ -37,13 +42,13 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
         var problemResult = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
         
         Assert.NotNull(problemResult?.Errors);
-        Assert.Contains(problemResult.Errors, (error) => error.Key == validationParameterError);
+        Assert.Contains(problemResult.Errors, (error) => error.Key == erroredValidationProperty);
     }
 
     [Theory, MemberData(nameof(ExistingUser))]
-    public async Task TestExistingUserValidation(Register.Request request, string validationParameterError)
+    public async Task TestExistingUserValidation(Register.Request request, string erroredValidationProperty)
     {
-        var existingUser = new User() { Username = request.Username, Password = request.Password };
+        var existingUser = new User { Username = request.Username, Password = request.Password };
         DataContext.User.Add(existingUser);
         await DataContext.SaveChangesAsync();
         
@@ -54,13 +59,25 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
         var problemResult = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
         
         Assert.NotNull(problemResult?.Errors);
-        Assert.Contains(problemResult.Errors, (error) => error.Key == validationParameterError);
+        Assert.Contains(problemResult.Errors, (error) => error.Key == erroredValidationProperty);
     }
 
+    [Theory, MemberData(nameof(InvalidLogins))]
+    public async Task TestLoginValidation(Login.Request request, string erroredValidationProperty)
+    {
+        var response = await HttpClient.PostAsJsonAsync("/api/auth/login", request);
+        
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var problemResults = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
+
+        Assert.NotNull(problemResults);
+        Assert.Contains(problemResults.Errors, error => error.Key == erroredValidationProperty);
+    }
+    
     [Fact]
     public async Task TestSuccessfulRegistration()
     {
-        await AuthContext.ConfigureAuthenticationContext();
         var uniqueEmail = $"{Guid.NewGuid()}@email.com";
         var request = new Register.Request(uniqueEmail, "ValidPass1", "ValidPass1");
         

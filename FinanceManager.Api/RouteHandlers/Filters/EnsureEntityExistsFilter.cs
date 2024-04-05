@@ -1,4 +1,6 @@
 ﻿using FinanceManager.Common.Entities;
+using FinanceManager.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Api.RouteHandlers.Filters;
 
