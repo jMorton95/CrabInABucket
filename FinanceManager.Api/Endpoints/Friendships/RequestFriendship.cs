@@ -12,8 +12,8 @@ public class RequestFriendship : IEndpoint
         .MapPost("/request", Handler)
         .WithDescription("Creates a friendship entity, in a pending state, between two users.")
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<User>(x => x.UserId)
-        .EnsureEntityExists<User>(x => x.TargetUserId);
+        .EnsureEntityExists<Common.Entities.User>(x => x.UserId)
+        .EnsureEntityExists<Common.Entities.User>(x => x.TargetUserId);
 
     public record Request(Guid UserId, Guid TargetUserId);
 

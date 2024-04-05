@@ -15,7 +15,7 @@ public class Create : IEndpoint
 
     public record Request(Guid UserId, string AccountName);
 
-    private record Response(bool Success, string Message): IPostResponse;
+    public record Response(bool Success, string Message): IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
     {
@@ -32,7 +32,7 @@ public class Create : IEndpoint
         }
     }
     
-    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler (
+    public static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler (
         Request request,
         IReadAccounts readAccounts,
         IWriteAccounts writeAccounts

@@ -11,8 +11,8 @@ public class FriendsList : IEndpoint
         .MapGet("friends-list/{UserId}/{NumberOfSuggestions}", Handler)
         .WithDescription("Provides a list of a users friends, pending requests, recommended friends and random suggestions")
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<User>(x => x.UserId)
-        .SelfOrAdminResource<User>(x => x.UserId);
+        .EnsureEntityExists<Common.Entities.User>(x => x.UserId)
+        .SelfOrAdminResource<Common.Entities.User>(x => x.UserId);
     
     public record Request(Guid UserId, int NumberOfSuggestions);
 
@@ -48,7 +48,7 @@ public class FriendsList : IEndpoint
         var suggestedFriendIds = new HashSet<Guid>(suggestedFriends.Select(x => x.Id));
         var filteredRandomFriends = randomFriends.Where(x => !suggestedFriendIds.Contains(x.Id));
         
-        List<List<User>> allRefs = [userFriends, pendingRequests, suggestedFriends, randomFriends];
+        List<List<Common.Entities.User>> allRefs = [userFriends, pendingRequests, suggestedFriends, randomFriends];
 
         if (allRefs.TrueForAll(x => x.Count == 0))
         {

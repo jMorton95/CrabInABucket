@@ -53,7 +53,7 @@ public class Register : IEndpoint
     {
         var password = passwordHasher.HashPassword(request.Password);
         
-        var createResult = await write.CreateAsync(new User { Username = request.Username, Password = password });
+        var createResult = await write.CreateAsync(new Common.Entities.User { Username = request.Username, Password = password });
 
         if (!createResult)
         {

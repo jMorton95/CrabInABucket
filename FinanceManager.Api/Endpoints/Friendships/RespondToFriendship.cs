@@ -11,9 +11,9 @@ public class RespondToFriendship : IEndpoint
         .MapPost("/respond", Handler)
         .WithDescription("Respond to a friendship request")
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<User>(x => x.ResponderId)
+        .EnsureEntityExists<Common.Entities.User>(x => x.ResponderId)
         .EnsureEntityExists<Friendship>(x => x.FriendshipId)
-        .SelfOrAdminResource<User>(x => x.ResponderId);
+        .SelfOrAdminResource<Common.Entities.User>(x => x.ResponderId);
 
     public record Request(Guid FriendshipId, Guid ResponderId, bool Accepted);
 

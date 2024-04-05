@@ -1,13 +1,12 @@
 ﻿using FinanceManager.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace FinanceManager.Tests.Integration;
 
 public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
 {
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureServices((_, services) =>
         {
@@ -22,9 +21,10 @@ public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
             }
             
+            var connstring = SharedContainerFixture.DatabaseContainer.GetConnectionString();
             services.AddDbContext<DataContext>(options => 
-                options.UseNpgsql(
-                    SharedContainerFixture.DatabaseContainer.GetConnectionString())
+                options.UseNpgsql(connstring
+                    )
                 );
 
             var serviceProvider = services.BuildServiceProvider();
@@ -32,8 +32,10 @@ public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
             using (var scope = serviceProvider.CreateScope())
             {
                 var dbContextInstance = scope.ServiceProvider.GetRequiredService<DataContext>();
-                dbContextInstance.Database.MigrateAsync();
+                dbContextInstance.Database.Migrate();
             }
         });
+
+        return base.CreateHost(builder);
     }
 }

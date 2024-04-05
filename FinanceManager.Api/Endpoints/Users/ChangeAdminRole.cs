@@ -14,7 +14,7 @@ public class ChangeAdminRole : IEndpoint
         .RequireAuthorization(PolicyConstants.AdminRole)
         .WithDescription("Add or remove Administrator privileges to a specified User")
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<User>(x => x.UserId);
+        .EnsureEntityExists<Common.Entities.User>(x => x.UserId);
 
     public record Request(Guid UserId, bool IsAdmin);
 

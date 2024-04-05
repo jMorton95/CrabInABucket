@@ -11,8 +11,8 @@ public class Recurring : IEndpoint
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPost("/recurring", Handler)
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<User>(x => x.RecipientAccountId)
-        .SelfOrAdminResource<User>(x => x.SenderAccountId);
+        .EnsureEntityExists<Common.Entities.User>(x => x.RecipientAccountId)
+        .SelfOrAdminResource<Common.Entities.User>(x => x.SenderAccountId);
 
     public record Request(
         decimal Amount,
