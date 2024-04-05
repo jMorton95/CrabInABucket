@@ -3,8 +3,10 @@ using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
 using FinanceManager.Data.Read.Accounts;
 using FinanceManager.Data.Write.Accounts;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Accounts;
+namespace FinanceManager.Api.Endpoints.Accounts;
 
 public class Create : IEndpoint
 {

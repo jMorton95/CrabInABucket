@@ -1,9 +1,9 @@
-﻿using FinanceManager.Api.Features;
-using FinanceManager.Api.Features.Accounts;
-using FinanceManager.Api.Features.Auth;
-using FinanceManager.Api.Features.Friendships;
-using FinanceManager.Api.Features.Transactions;
-using FinanceManager.Api.Features.Users;
+﻿using FinanceManager.Api.Endpoints;
+using FinanceManager.Api.Endpoints.Accounts;
+using FinanceManager.Api.Endpoints.Auth;
+using FinanceManager.Api.Endpoints.Friendships;
+using FinanceManager.Api.Endpoints.Transactions;
+using FinanceManager.Api.Endpoints.Users;
 using FinanceManager.Api.RouteHandlers.Filters;
 
 namespace FinanceManager.Api.Configuration;

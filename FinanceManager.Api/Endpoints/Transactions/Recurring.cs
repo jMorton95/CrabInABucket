@@ -1,10 +1,11 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Contracts;
-using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Data.Write.Transactions;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Transactions;
+namespace FinanceManager.Api.Endpoints.Transactions;
 
 public class Recurring : IEndpoint
 {

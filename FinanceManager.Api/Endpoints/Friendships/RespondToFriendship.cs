@@ -2,8 +2,10 @@
 using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
 using FinanceManager.Data.Write.Friendships;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Friendships;
+namespace FinanceManager.Api.Endpoints.Friendships;
 
 public class RespondToFriendship : IEndpoint
 {

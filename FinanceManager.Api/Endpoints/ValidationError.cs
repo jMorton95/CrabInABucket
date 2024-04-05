@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Http.Metadata;
 
-namespace FinanceManager.Api.Features;
+namespace FinanceManager.Api.Endpoints;
 
 public record ValidationError(string Property, string Message) : IResult, IEndpointMetadataProvider
 {

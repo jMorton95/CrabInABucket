@@ -1,7 +1,3 @@
-global using FluentValidation;
-global using Microsoft.AspNetCore.Http.HttpResults;
-global using Microsoft.EntityFrameworkCore;
-global using FinanceManager.Data;
 using FinanceManager.Api.Configuration;
 using Serilog;
 
@@ -31,4 +27,7 @@ finally
 }
 
 
-public partial class Program { }
+namespace FinanceManager.Api
+{
+    public partial class Program { }
+}

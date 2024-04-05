@@ -1,6 +1,8 @@
 ﻿using System.Net;
-using FinanceManager.Api.Features.Auth;
+using FinanceManager.Api.Endpoints.Auth;
 using FinanceManager.Common.Entities;
+using FinanceManager.Tests.Integration.Setup;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Tests.Integration;
 
@@ -19,12 +21,16 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
         [new Register.Request("valid@email.com", "ValidPass123!", "DifferentPass123!"), "PasswordConfirmation"]
     ];
 
-    public static List<object[]> ExistingUser => [[new Register.Request("existing@email.com", "ValidPass123!", "ValidPass123!"), "Username"]];
+    public static List<object[]> InvalidLogins =>
+    [
+    ];
+
+    public static List<object[]> ExistingUser => [[new Register.Request(TestConstants.Username, TestConstants.Password, TestConstants.Password), "Username"]];
     
     [Theory, MemberData(nameof(InvalidRegistrations))]
     public async Task TestRegistrationValidation(Register.Request request, string validationParameterError)
     {
-        var response = await _httpClient.PostAsJsonAsync("/api/auth/register", request);
+        var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         
@@ -38,10 +44,10 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
     public async Task TestExistingUserValidation(Register.Request request, string validationParameterError)
     {
         var existingUser = new User() { Username = request.Username, Password = request.Password };
-        _dataContext.User.Add(existingUser);
-        await _dataContext.SaveChangesAsync();
+        DataContext.User.Add(existingUser);
+        await DataContext.SaveChangesAsync();
         
-        var response = await _httpClient.PostAsJsonAsync("/api/auth/register", request);
+        var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         
@@ -49,5 +55,32 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
         
         Assert.NotNull(problemResult?.Errors);
         Assert.Contains(problemResult.Errors, (error) => error.Key == validationParameterError);
+    }
+
+    [Fact]
+    public async Task TestSuccessfulRegistration()
+    {
+        await AuthContext.ConfigureAuthenticationContext();
+        var uniqueEmail = $"{Guid.NewGuid()}@email.com";
+        var request = new Register.Request(uniqueEmail, "ValidPass1", "ValidPass1");
+        
+        var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        
+        var userResult = await response.Content.ReadFromJsonAsync<Register.Response>();
+
+        Assert.NotNull(userResult);
+
+        var dbUser = await DataContext.User.SingleOrDefaultAsync(x => x.Username == userResult.UserResponse.Username);
+        
+        Assert.NotNull(dbUser);
+        Assert.NotEmpty(dbUser.Password);
+        
+        if (dbUser != null)
+        {
+            DataContext.Remove(dbUser);
+            await DataContext.SaveChangesAsync();
+        }
     }
 }

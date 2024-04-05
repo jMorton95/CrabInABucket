@@ -1,4 +1,4 @@
-﻿namespace FinanceManager.Api.Features;
+﻿namespace FinanceManager.Api.Endpoints;
 
 public interface IEndpoint
 {

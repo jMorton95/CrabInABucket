@@ -1,9 +1,10 @@
 ﻿using FinanceManager.Api.RouteHandlers;
-using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Data.Read.Friends;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Friendships;
+namespace FinanceManager.Api.Endpoints.Friendships;
 
 public class FriendsList : IEndpoint
 {

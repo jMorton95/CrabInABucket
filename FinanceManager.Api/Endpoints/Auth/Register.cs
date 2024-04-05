@@ -5,8 +5,10 @@ using FinanceManager.Common.Mappers;
 using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Auth;
+namespace FinanceManager.Api.Endpoints.Auth;
 
 public class Register : IEndpoint
 {
@@ -17,7 +19,7 @@ public class Register : IEndpoint
 
     public record Request(string Username, string Password, string PasswordConfirmation);
 
-    private record Response(NamedUser? UserResponse, bool Success, string Message)
+    public record Response(NamedUser? UserResponse, bool Success, string Message)
        : IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
@@ -53,7 +55,7 @@ public class Register : IEndpoint
     {
         var password = passwordHasher.HashPassword(request.Password);
         
-        var createResult = await write.CreateAsync(new Common.Entities.User { Username = request.Username, Password = password });
+        var createResult = await write.CreateAsync(new User { Username = request.Username, Password = password });
 
         if (!createResult)
         {

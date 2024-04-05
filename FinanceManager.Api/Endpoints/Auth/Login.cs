@@ -1,11 +1,13 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Mappers;
-using FinanceManager.Common.Responses;
+using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Auth;
+namespace FinanceManager.Api.Endpoints.Auth;
 
 public class Login : IEndpoint
 {
@@ -16,7 +18,7 @@ public class Login : IEndpoint
 
     public record Request(string Username, string Password);
 
-    private record Response(TokenWithExpiry AccessToken, UserProfile User);
+    public record Response(TokenWithExpiry AccessToken, UserProfile User);
 
     public class RequestValidator : AbstractValidator<Request>
     {

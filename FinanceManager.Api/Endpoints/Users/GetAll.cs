@@ -1,8 +1,9 @@
 ﻿using FinanceManager.Common.Constants;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Data.Read.Users;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Users;
+namespace FinanceManager.Api.Endpoints.Users;
 
 public class GetAll : IEndpoint
 {

@@ -1,5 +1,5 @@
 ﻿using FinanceManager.Common.Constants;
-using FinanceManager.Common.Utilities;
+using FinanceManager.Common.Models;
 
 namespace FinanceManager.Common.Services;
 public record UserContext(DecodedAccessToken? UserAccessToken);

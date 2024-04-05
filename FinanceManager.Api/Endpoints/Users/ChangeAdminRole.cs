@@ -1,11 +1,12 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Constants;
 using FinanceManager.Common.Contracts;
-using FinanceManager.Common.Entities;
 using FinanceManager.Data.Read.Users;
 using FinanceManager.Data.Write.Users;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace FinanceManager.Api.Features.Users;
+namespace FinanceManager.Api.Endpoints.Users;
 
 public class ChangeAdminRole : IEndpoint
 {

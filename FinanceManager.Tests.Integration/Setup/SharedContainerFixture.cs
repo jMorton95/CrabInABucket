@@ -1,6 +1,6 @@
 ﻿using Testcontainers.PostgreSql;
 
-namespace FinanceManager.Tests.Integration;
+namespace FinanceManager.Tests.Integration.Setup;
 
 public class SharedContainerFixture : IAsyncLifetime
 {

@@ -1,8 +1,9 @@
-﻿using FinanceManager.Data;
+﻿using FinanceManager.Api;
+using FinanceManager.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceManager.Tests.Integration;
+namespace FinanceManager.Tests.Integration.Setup;
 
 public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
 {
@@ -21,11 +22,8 @@ public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
             }
             
-            var connstring = SharedContainerFixture.DatabaseContainer.GetConnectionString();
             services.AddDbContext<DataContext>(options => 
-                options.UseNpgsql(connstring
-                    )
-                );
+                options.UseNpgsql(SharedContainerFixture.DatabaseContainer.GetConnectionString()));
 
             var serviceProvider = services.BuildServiceProvider();
 
