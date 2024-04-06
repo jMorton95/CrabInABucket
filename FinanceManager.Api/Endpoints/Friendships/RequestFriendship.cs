@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Contracts;
+using FinanceManager.Common.Entities;
 using FinanceManager.Data.Read.Friendships;
 using FinanceManager.Data.Write.Friendships;
 
@@ -11,8 +12,8 @@ public class RequestFriendship : IEndpoint
         .MapPost("/request", Handler)
         .WithDescription("Creates a friendship entity, in a pending state, between two users.")
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<Common.Entities.User>(x => x.UserId)
-        .EnsureEntityExists<Common.Entities.User>(x => x.TargetUserId);
+        .EnsureEntityExists<User>(x => x.UserId)
+        .EnsureEntityExists<User>(x => x.TargetUserId);
 
     public record Request(Guid UserId, Guid TargetUserId);
 

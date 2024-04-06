@@ -7,9 +7,11 @@ namespace FinanceManager.Api.Configuration;
 
 public static class ConfigureApp
 {
-    public static void Configure(this WebApplication app)
+    public static async Task Configure(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
+
+        await app.EnsureDatabaseCreated();
         
         app.UseConfiguredSwagger();
         app.UseHttpsRedirection();
@@ -25,7 +27,7 @@ public static class ConfigureApp
     private static void UseConfiguredSwagger(this WebApplication app)
     {
         var swaggerSettings = app.Configuration.GetSection(SettingsConstants.SwaggerSection).Get<SwaggerSettings>();
-
+        
         if (!app.Environment.IsDevelopment())
         {
             return;
@@ -33,5 +35,17 @@ public static class ConfigureApp
         
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint($"/swagger/{swaggerSettings!.Version}/swagger.json", $"{swaggerSettings.Title} {swaggerSettings.Version}"));
+    }
+
+    private static async Task EnsureDatabaseCreated(this WebApplication app)
+    {
+        string[] developmentEnvironments = ["Development", "Staging", "Test"];
+        var dbContext = app.Services.GetRequiredService<DataContext>();
+        await dbContext.Database.MigrateAsync();
+
+        if (developmentEnvironments.Contains(app.Environment.EnvironmentName))
+        {
+            //Seed Data in Dev / Staging / Test Environments
+        }
     }
 }

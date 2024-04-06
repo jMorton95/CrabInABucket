@@ -11,7 +11,7 @@ public class RequestValidationFilter<TRequest>(ILogger<RequestValidationFilter<T
             logger.LogInformation("{Request}: No validator configured.", requestName);
             return await next(context);
         }
-
+        
         logger.LogInformation("{Request}: Validating...", requestName);
         
         var request = context.Arguments.OfType<TRequest>().First();
