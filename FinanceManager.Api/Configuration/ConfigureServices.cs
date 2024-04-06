@@ -50,6 +50,7 @@ public static class ConfigureServices
     {
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingsConstants.JwtSection));
         builder.Services.Configure<SwaggerSettings>(builder.Configuration.GetSection(SettingsConstants.SwaggerSection));
+        builder.Services.Configure<SuperAdminSettings>(builder.Configuration.GetSection(SettingsConstants.SuperAdminSection));
     }
     
     private static void RegisterTransientDependencies(this IServiceCollection services)

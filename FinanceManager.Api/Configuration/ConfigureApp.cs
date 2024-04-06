@@ -1,6 +1,9 @@
 ﻿using FinanceManager.Api.Middleware.UserContext;
 using FinanceManager.Common.Constants;
+using FinanceManager.Common.Services;
 using FinanceManager.Common.Settings;
+using FinanceManager.Data.Seeding;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace FinanceManager.Api.Configuration;
@@ -46,6 +49,13 @@ public static class ConfigureApp
         if (developmentEnvironments.Contains(app.Environment.EnvironmentName))
         {
             //Seed Data in Dev / Staging / Test Environments
+        }
+
+        if (app.Environment.IsProduction())
+        {
+            var settings = app.Services.GetRequiredService<IOptions<SuperAdminSettings>>();
+            var passwordHasher = app.Services.GetRequiredService<PasswordHasher>();
+            await dbContext.InsertProductionData(settings.Value, passwordHasher);
         }
     }
 }
