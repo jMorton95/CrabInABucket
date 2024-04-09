@@ -1,4 +1,4 @@
-﻿namespace FinanceManager.Tests.Integration.Setup;
+﻿namespace FinanceManager.Common.Constants;
 
 public static class TestConstants
 {

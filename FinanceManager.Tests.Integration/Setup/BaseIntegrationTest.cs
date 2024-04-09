@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using FinanceManager.Api.Endpoints.Auth;
+using FinanceManager.Common.Constants;
 using FinanceManager.Common.Models;
 using FinanceManager.Data;
 

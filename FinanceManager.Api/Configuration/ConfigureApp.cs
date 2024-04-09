@@ -13,6 +13,7 @@ public static class ConfigureApp
     public static async Task Configure(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
+        await app.EnsureDatabaseCreated();
         
         app.UseConfiguredSwagger();
         app.UseHttpsRedirection();
@@ -24,7 +25,6 @@ public static class ConfigureApp
 
         app.MapEndpoints();
         
-        await app.EnsureDatabaseCreated();
     }
     
     private static void UseConfiguredSwagger(this WebApplication app)
@@ -43,8 +43,11 @@ public static class ConfigureApp
     private static async Task EnsureDatabaseCreated(this WebApplication app)
     {
         string[] developmentEnvironments = ["Development", "Staging", "Test"];
-        var dbContext = app.Services.GetRequiredService<DataContext>();
-        var passwordHasher = app.Services.GetRequiredService<PasswordHasher>();
+
+        using var scope = app.Services.CreateScope();
+      
+        var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+        var passwordHasher = app.Services.GetRequiredService<IPasswordHasher>();
 
         await dbContext.Database.MigrateAsync();
         

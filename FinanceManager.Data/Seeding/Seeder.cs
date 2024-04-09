@@ -2,31 +2,13 @@
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Services;
 using FinanceManager.Common.Settings;
-using FinanceManager.Tests.Integration.Setup;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Seeding;
 
 public static class Seeder
 {
-    private static async Task<Role?> EnsureAdminRoleCreated(this DataContext dataContext)
-    {
-        var adminRole = await dataContext.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole);
-        
-        if (adminRole != null)
-        {
-            return adminRole;
-        }
-        
-        adminRole = new Role { Name = PolicyConstants.AdminRole };
-        dataContext.Add(adminRole);
-        
-        await dataContext.SaveChangesAsync();
-        
-        return await dataContext.Role.FirstOrDefaultAsync(x => x.Name == adminRole.Name);
-    }
-    
-    public static async Task InsertTestData(this DataContext dataContext, PasswordHasher passwordHasher)
+    public static async Task InsertTestData(this DataContext dataContext, IPasswordHasher passwordHasher)
     {
         var testUser = await dataContext.User.FirstOrDefaultAsync(x => x.Username == TestConstants.Username);
 
@@ -43,10 +25,13 @@ public static class Seeder
             dataContext.Add(newSuperAdmin);
         }
 
-        await dataContext.SaveChangesAsync();
+        if (dataContext.ChangeTracker.HasChanges())
+        {
+            await dataContext.SaveChangesAsync();
+        }
     }
 
-    public static async Task InsertProductionData(this DataContext dataContext, SuperAdminSettings settings, PasswordHasher passwordHasher)
+    public static async Task InsertProductionData(this DataContext dataContext, SuperAdminSettings settings, IPasswordHasher passwordHasher)
     {
         var isSuperAdminCreated = await dataContext.User.AnyAsync(x => x.Username == settings.Email);
 
@@ -64,6 +49,28 @@ public static class Seeder
         };
 
         dataContext.Add(newSuperAdmin);
+        
+        if (dataContext.ChangeTracker.HasChanges())
+        {
+            await dataContext.SaveChangesAsync();
+        }
+    }
+    
+    private static async Task<Role?> EnsureAdminRoleCreated(this DataContext dataContext)
+    {
+        var adminRole = await dataContext.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole);
+        
+        if (adminRole != null)
+        {
+            return adminRole;
+        }
+        
+        adminRole = new Role { Name = PolicyConstants.AdminRole };
+        
+        dataContext.Add(adminRole);
+        
         await dataContext.SaveChangesAsync();
+        
+        return await dataContext.Role.FirstOrDefaultAsync(x => x.Name == adminRole.Name);
     }
 }
