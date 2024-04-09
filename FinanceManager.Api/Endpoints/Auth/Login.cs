@@ -50,7 +50,7 @@ public class Login : IEndpoint
 
         await writeUsers.UpdateLastLogin(attemptedUser);
         
-        var token = userTokenService.CreateTokenWithClaims(await userTokenService.GetUserClaims(attemptedUser));
+        var token = userTokenService.CreateTokenWithClaims(userTokenService.GetUserClaims(attemptedUser));
         
         var response = new Response(token, attemptedUser.ToUserResponse());
         

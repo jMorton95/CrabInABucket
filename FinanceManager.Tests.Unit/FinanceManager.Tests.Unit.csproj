@@ -24,6 +24,9 @@
         </PackageReference>
     </ItemGroup>
 
-
+    <ItemGroup>
+        <ProjectReference Include="..\FinanceManager.Common\FinanceManager.Common.csproj" />
+        <ProjectReference Include="..\FinanceManager.Data\FinanceManager.Data.csproj" />
+    </ItemGroup>
 
 </Project>

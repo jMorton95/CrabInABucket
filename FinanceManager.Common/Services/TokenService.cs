@@ -11,7 +11,7 @@ namespace FinanceManager.Common.Services;
 
 public interface IUserTokenService
 {
-    Task<List<Claim>> GetUserClaims(User user);
+    List<Claim> GetUserClaims(User user);
     TokenWithExpiry CreateTokenWithClaims(IEnumerable<Claim> claims);
     DecodedAccessToken? DecodeAccessToken(string accessToken);
 }
@@ -19,7 +19,7 @@ public interface IUserTokenService
 public class UserTokenService(IOptions<JwtSettings> jwtOptions) : IUserTokenService
 {
     private readonly JwtSettings _jwtSettings = jwtOptions.Value;
-    public async Task<List<Claim>> GetUserClaims(User user)
+    public List<Claim> GetUserClaims(User user)
     {
         var userRoles = new List<string>();
 
