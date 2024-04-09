@@ -17,7 +17,7 @@ public class RequestFriendship : IEndpoint
 
     public record Request(Guid UserId, Guid TargetUserId);
 
-    private record Response(bool Success, string Message): IPostResponse;
+    public record Response(bool Success, string Message): IPostResponse;
     
     public class RequestValidator : AbstractValidator<Request>
     {

@@ -9,7 +9,7 @@ namespace FinanceManager.Tests.Integration.Setup;
 public abstract class BaseIntegrationTest :
     IClassFixture<IntegrationTestApplicationFactory>,
     IClassFixture<SharedContainerFixture>,
-    IDisposable
+    IAsyncLifetime
 {
     private readonly IServiceScope _scope;
     protected readonly DataContext DataContext;
@@ -22,13 +22,6 @@ public abstract class BaseIntegrationTest :
         DataContext = _scope.ServiceProvider.GetRequiredService<DataContext>();
         HttpClient = factory.CreateClient();
         AuthContext = new TestAuthContext(HttpClient);
-    }
-    
-    public void Dispose()
-    {
-        _scope.Dispose();
-        DataContext.Dispose();
-        HttpClient.Dispose();
     }
     
     protected class TestAuthContext(HttpClient client)
@@ -56,6 +49,18 @@ public abstract class BaseIntegrationTest :
             
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CurrentToken?.Token);
         }
+    }
+
+    public Task InitializeAsync()
+    {
+        return AuthContext.ConfigureAuthenticationContext();
+    }
+
+    public Task DisposeAsync()
+    {
+        _scope.Dispose();
+        HttpClient.Dispose();
+        return DataContext.DisposeAsync().AsTask();
     }
 }
 

@@ -11,7 +11,7 @@ public class GetAll : IEndpoint
         .RequireAuthorization(PolicyConstants.AdminRole)
         .WithDescription("Allows an Administrator to see a list of all users of the system");
     
-    private record Response(List<UserProfile> Users);
+    public record Response(List<UserProfile> Users);
     
     private static async Task<Results<Ok<Response>, ValidationError, NotFound>> Handler(IReadUsers readUsers)
     {

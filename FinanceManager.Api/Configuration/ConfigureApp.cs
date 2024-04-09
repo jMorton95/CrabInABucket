@@ -24,7 +24,6 @@ public static class ConfigureApp
         app.UseMiddleware<CurrentUserMiddleware>();
 
         app.MapEndpoints();
-        
     }
     
     private static void UseConfiguredSwagger(this WebApplication app)

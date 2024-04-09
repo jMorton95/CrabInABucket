@@ -14,7 +14,7 @@ public class Edit : IEndpoint
 
     public record Request(Guid Id, string AccountName);
 
-    private record Response(bool Success, string Message): IPostResponse;
+    public record Response(bool Success, string Message): IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
     {

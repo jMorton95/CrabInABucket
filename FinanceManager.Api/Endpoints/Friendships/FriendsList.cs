@@ -15,7 +15,7 @@ public class FriendsList : IEndpoint
     
     public record Request(Guid UserId, int NumberOfSuggestions);
 
-    private record Response
+    public record Response
     (
         List<NamedUser> Friends,
         List<NamedUser> PendingFriends,

@@ -17,7 +17,7 @@ public class RespondToFriendship : IEndpoint
 
     public record Request(Guid FriendshipId, Guid ResponderId, bool Accepted);
 
-    private record Response(bool Success, string Message): IPostResponse;
+    public record Response(bool Success, string Message): IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
     {

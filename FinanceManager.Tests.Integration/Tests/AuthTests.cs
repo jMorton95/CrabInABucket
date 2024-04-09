@@ -1,14 +1,14 @@
 ﻿using System.Net;
 using FinanceManager.Api.Endpoints.Auth;
 using FinanceManager.Common.Constants;
-using FinanceManager.Common.Entities;
 using FinanceManager.Tests.Integration.Setup;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceManager.Tests.Integration;
+namespace FinanceManager.Tests.Integration.Tests;
 
 public class AuthTests(IntegrationTestApplicationFactory factory, SharedContainerFixture _) : BaseIntegrationTest(factory)
 {
+
     public static List<object[]> InvalidRegistrations =>
     [
         [new Register.Request("invalid-email", "ValidPass123!", "ValidPass123!"), "Username"],
@@ -91,10 +91,7 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
         Assert.NotNull(dbUser);
         Assert.NotEmpty(dbUser.Password);
         
-        if (dbUser != null)
-        {
-            DataContext.Remove(dbUser);
-            await DataContext.SaveChangesAsync();
-        }
+        DataContext.Remove(dbUser);
+        await DataContext.SaveChangesAsync();
     }
 }

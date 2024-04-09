@@ -15,7 +15,7 @@ public class GetByEmail : IEndpoint
 
     public record Request(string Email);
 
-    private record Response(UserProfile User);
+    public record Response(UserProfile User);
 
     public class RequestValidator : AbstractValidator<Request>
     {

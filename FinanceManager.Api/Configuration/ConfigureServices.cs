@@ -107,7 +107,7 @@ public static class ConfigureServices
 
         builder.Services.AddAuthorizationBuilder()
             .AddPolicy(PolicyConstants.AuthenticatedUser, policy => policy.RequireAuthenticatedUser())
-            .AddPolicy(PolicyConstants.AdminRole, policy => policy.RequireClaim(PolicyConstants.AdminRole));
+            .AddPolicy(PolicyConstants.AdminRole, policy => policy.RequireRole(PolicyConstants.AdminRole));
     }
     
     private static void AddSwaggerGeneration(this WebApplicationBuilder builder)

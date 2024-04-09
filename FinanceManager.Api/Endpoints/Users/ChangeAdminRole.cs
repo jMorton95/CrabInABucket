@@ -17,7 +17,7 @@ public class ChangeAdminRole : IEndpoint
 
     public record Request(Guid UserId, bool IsAdmin);
 
-    private record Response(bool Success, string Message) : IPostResponse;
+    public record Response(bool Success, string Message) : IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
     {

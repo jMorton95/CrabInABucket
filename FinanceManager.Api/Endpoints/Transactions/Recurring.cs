@@ -23,7 +23,7 @@ public class Recurring : IEndpoint
         bool StartsImmediately
     );
 
-    private record Response(bool Success, string Message): IPostResponse;
+    public record Response(bool Success, string Message): IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
     {

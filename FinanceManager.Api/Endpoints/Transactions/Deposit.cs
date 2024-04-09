@@ -18,7 +18,7 @@ public class Deposit : IEndpoint
 
     public record Request(Guid RequesterId, Guid RecipientAccountId, decimal Amount);
 
-    private record Response(bool Success, string Message): IPostResponse;
+    public record Response(bool Success, string Message): IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
     {
