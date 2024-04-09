@@ -25,22 +25,19 @@ public class ChangeAdminRole : IEndpoint
         public RequestValidator()
         {
             RuleFor(x => x.UserId)
-                .NotEmpty();
+                .NotNull();
 
             RuleFor(x => x.IsAdmin)
-                .NotEmpty();
+                .NotNull();
         }
     }
 
     private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler(
         Request request,
-        IReadUsers readUsers,
         IWriteUsers writeUsers
     )
-    {
-        var user = await readUsers.GetByIdAsync(request.UserId)!;
-
-        var roleChangeResult = await writeUsers.ManageUserAdministratorRole(user, request.IsAdmin);
+    { 
+        var roleChangeResult = await writeUsers.ManageUserAdministratorRole(request.UserId, request.IsAdmin);
 
         if (!roleChangeResult)
         {

@@ -11,16 +11,17 @@ public class UserTests(IntegrationTestApplicationFactory factory, SharedContaine
     public static List<object[]> GetUserByEmailValidationErrorData =
     [
         [new GetByEmail.Request("plainaddress")],
-        [new GetByEmail.Request("@missingusername.com")],
-        // [new GetByEmail.Request("email@domain@domain.com")],
-        // [new GetByEmail.Request("email@-domain.com")],
-        // [new GetByEmail.Request("email@111.222.333.44444")],
-        // [new GetByEmail.Request("email@domain..com")]
+        [new GetByEmail.Request("@missingusername.com")]
     ];
 
     public static List<object[]> TestGetUserByEmailValid = [
         [new GetByEmail.Request(TestConstants.Username)],
         [new GetByEmail.Request("does-not-exist@email.com")]
+    ];
+
+    public static List<object[]> TestChangeUserAdminRoleMissing = [
+        [new ChangeAdminRole.Request(Guid.NewGuid(), true)],
+        [new ChangeAdminRole.Request(Guid.Empty, true)],
     ];
     
     [Fact]
@@ -74,5 +75,67 @@ public class UserTests(IntegrationTestApplicationFactory factory, SharedContaine
 
         Assert.NotNull(userResult);
         Assert.Equal(userResult.User.Username, request.Email);
+    }
+
+    [Theory, MemberData(nameof(TestChangeUserAdminRoleMissing))]
+    public async Task TestChangeUserAdminRoleUserMissing(ChangeAdminRole.Request request)
+    {
+        var response = await HttpClient.PostAsJsonAsync("/api/users/change-admin-role", request);
+        var user = await DataContext.User.FirstOrDefaultAsync(x => x.Id == request.UserId);
+        
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Null(user);
+    }
+
+    [Fact]
+    public async Task TestAddUserAdminRole()
+    {
+        var userCount = await DataContext.User.CountAsync();
+        var index = new Random().Next(0, userCount);
+        var userToBecomeAdmin = await DataContext.User.ElementAtAsync(index);
+
+        var response = await HttpClient.PostAsJsonAsync(
+            "/api/users/change-admin-role",
+            new ChangeAdminRole.Request(userToBecomeAdmin.Id, true)
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ChangeAdminRole.Response>();
+        
+        var user = await DataContext.User
+            .Include(x => x.Roles)
+            .ThenInclude(y => y.Role)
+            .FirstAsync(x => x.Id == userToBecomeAdmin.Id);
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(responseBody);
+        Assert.True(responseBody.Success);
+        Assert.NotNull(user);
+        Assert.Contains(user.Roles, role => role?.Role?.Name == PolicyConstants.AdminRole);
+    }
+    
+    [Fact]
+    public async Task TestRemoveUserAdminRole()
+    {
+        var userCount = await DataContext.User.CountAsync();
+        var index = new Random().Next(0, userCount - 1);
+        var userToRemoveAdmin = await DataContext.User.ElementAtAsync(index);
+
+        var response = await HttpClient.PostAsJsonAsync(
+            "/api/users/change-admin-role",
+            new ChangeAdminRole.Request(userToRemoveAdmin.Id, false)
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ChangeAdminRole.Response>();
+        
+        var user = await DataContext.User
+            .Include(x => x.Roles)
+            .ThenInclude(y => y.Role)
+            .FirstAsync(x => x.Id == userToRemoveAdmin.Id);
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(responseBody);
+        Assert.True(responseBody.Success);
+        Assert.NotNull(user);
+        Assert.DoesNotContain(user.Roles, role => role?.Role?.Name == PolicyConstants.AdminRole);
     }
 }

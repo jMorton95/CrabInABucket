@@ -8,7 +8,7 @@ public interface IWriteUsers :
     ICreateEntity<User>
 {
     Task<bool> UpdateLastLogin(User user);
-    Task<bool> ManageUserAdministratorRole(User user, bool isAdmin);
+    Task<bool> ManageUserAdministratorRole(Guid userId, bool isAdmin);
 }
 
 public sealed class WriteUsers(DataContext db) : IWriteUsers
@@ -47,8 +47,13 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         }
     }
     
-    public async Task<bool> ManageUserAdministratorRole(User user, bool isAdmin)
+    public async Task<bool> ManageUserAdministratorRole(Guid userId, bool isAdmin)
     {
+        var user = await db.User
+            .Include(x => x.Roles)
+                .ThenInclude(y => y.Role)
+            .FirstAsync(x => x.Id == userId);
+        
         var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole) ?? CreateAdministratorRole();
 
         if (isAdmin)
@@ -57,11 +62,10 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         }
         else
         {
-            user.Roles = user.Roles.Where(x => x.Role?.Id == adminRole.Id);    
+            user.Roles = user.Roles.Where(x => x.Role.Id != adminRole.Id).ToList();
         }
-
+        
         var result = await db.SaveChangesAsync();
-
         return result > 0;
     }
 }
