@@ -49,10 +49,6 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
     [Theory, MemberData(nameof(ExistingUser))]
     public async Task TestExistingUserValidation(Register.Request request, string erroredValidationProperty)
     {
-        var existingUser = new User { Username = request.Username, Password = request.Password };
-        DataContext.User.Add(existingUser);
-        await DataContext.SaveChangesAsync();
-        
         var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
