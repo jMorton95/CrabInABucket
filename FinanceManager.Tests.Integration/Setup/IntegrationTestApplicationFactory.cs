@@ -23,7 +23,7 @@ public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
             }
             
             services.AddDbContext<DataContext>(options => 
-                options.UseNpgsql(SharedContainerFixture.DatabaseContainer.GetConnectionString()));
+                options.UseNpgsql(SharedContainerFixture.DatabaseContainer?.GetConnectionString()));
 
             var serviceProvider = services.BuildServiceProvider();
 

@@ -15,7 +15,6 @@ public class SharedContainerFixture : IAsyncLifetime
         
         DatabaseContainer = new PostgreSqlBuilder()
             .WithImage("postgres:latest")
-            .WithExposedPort("7004")
             .Build();
 
         await DatabaseContainer.StartAsync();

@@ -13,8 +13,6 @@ public static class ConfigureApp
     public static async Task Configure(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
-
-        await app.EnsureDatabaseCreated();
         
         app.UseConfiguredSwagger();
         app.UseHttpsRedirection();
@@ -25,6 +23,8 @@ public static class ConfigureApp
         app.UseMiddleware<CurrentUserMiddleware>();
 
         app.MapEndpoints();
+        
+        await app.EnsureDatabaseCreated();
     }
     
     private static void UseConfiguredSwagger(this WebApplication app)
@@ -44,17 +44,19 @@ public static class ConfigureApp
     {
         string[] developmentEnvironments = ["Development", "Staging", "Test"];
         var dbContext = app.Services.GetRequiredService<DataContext>();
-        await dbContext.Database.MigrateAsync();
+        var passwordHasher = app.Services.GetRequiredService<PasswordHasher>();
 
+        await dbContext.Database.MigrateAsync();
+        
         if (developmentEnvironments.Contains(app.Environment.EnvironmentName))
         {
-            //Seed Data in Dev / Staging / Test Environments
+            await dbContext.InsertTestData(passwordHasher);
         }
 
         if (app.Environment.IsProduction())
         {
             var settings = app.Services.GetRequiredService<IOptions<SuperAdminSettings>>();
-            var passwordHasher = app.Services.GetRequiredService<PasswordHasher>();
+            
             await dbContext.InsertProductionData(settings.Value, passwordHasher);
         }
     }
