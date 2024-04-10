@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Tests.Integration.Tests;
 
-public class AuthTests(IntegrationTestApplicationFactory factory, SharedContainerFixture _) : BaseIntegrationTest(factory)
+[Collection("Integration Test Collection")]
+public class AuthTests(IntegrationTestContext context)
 {
-
     public static List<object[]> InvalidRegistrations =>
     [
         [new Register.Request("invalid-email", "ValidPass123!", "ValidPass123!"), "Username"],
@@ -36,7 +36,7 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
     [Theory, MemberData(nameof(InvalidRegistrations))]
     public async Task TestRegistrationValidation(Register.Request request, string erroredValidationProperty)
     {
-        var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
+        var response = await context.HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         
@@ -49,7 +49,7 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
     [Theory, MemberData(nameof(ExistingUser))]
     public async Task TestExistingUserValidation(Register.Request request, string erroredValidationProperty)
     {
-        var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
+        var response = await context.HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         
@@ -62,7 +62,7 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
     [Theory, MemberData(nameof(InvalidLogins))]
     public async Task TestLoginValidation(Login.Request request, string erroredValidationProperty)
     {
-        var response = await HttpClient.PostAsJsonAsync("/api/auth/login", request);
+        var response = await context.HttpClient.PostAsJsonAsync("/api/auth/login", request);
         
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -78,7 +78,7 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
         var uniqueEmail = $"{Guid.NewGuid()}@email.com";
         var request = new Register.Request(uniqueEmail, "ValidPass1", "ValidPass1");
         
-        var response = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
+        var response = await context.HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         
@@ -86,12 +86,12 @@ public class AuthTests(IntegrationTestApplicationFactory factory, SharedContaine
 
         Assert.NotNull(userResult);
 
-        var dbUser = await DataContext.User.SingleOrDefaultAsync(x => x.Username == userResult.UserResponse.Username);
+        var dbUser = await context.Db.User.SingleOrDefaultAsync(x => x.Username == userResult.UserResponse.Username);
         
         Assert.NotNull(dbUser);
         Assert.NotEmpty(dbUser.Password);
         
-        DataContext.Remove(dbUser);
-        await DataContext.SaveChangesAsync();
+        context.Db.Remove(dbUser);
+        await context.Db.SaveChangesAsync();
     }
 }

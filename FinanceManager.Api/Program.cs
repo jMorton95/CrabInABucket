@@ -33,5 +33,5 @@ finally
 
 namespace FinanceManager.Api
 {
-    public partial class Program { }
+    public class Program { }
 }

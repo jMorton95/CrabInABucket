@@ -6,43 +6,44 @@ using FinanceManager.Data;
 
 namespace FinanceManager.Tests.Integration.Setup;
 
-public abstract class BaseIntegrationTest :
-    IClassFixture<IntegrationTestApplicationFactory>,
-    IClassFixture<SharedContainerFixture>,
-    IAsyncLifetime
+[CollectionDefinition("Integration Test Collection")]
+public class IntegrationTestCollection : ICollectionFixture<IntegrationTestContext>;
+
+public class IntegrationTestContext : IAsyncLifetime
 {
-    private readonly IServiceScope _scope;
-    protected readonly DataContext DataContext;
-    protected readonly HttpClient HttpClient;
-    protected readonly TestAuthContext AuthContext;
+    private IServiceScope scope { get; }
+    public DataContext Db { get; }
+    public HttpClient HttpClient { get; }
+    public TestAuthContext AuthContext { get; }
     
-    protected BaseIntegrationTest(IntegrationTestApplicationFactory factory)
+    public IntegrationTestContext()
     {
-        _scope = factory.Services.CreateScope();
-        DataContext = _scope.ServiceProvider.GetRequiredService<DataContext>();
+        var factory = new IntegrationTestApplicationFactory();
+        scope = factory.Services.CreateScope();
+        Db = scope.ServiceProvider.GetRequiredService<DataContext>();
         HttpClient = factory.CreateClient();
         AuthContext = new TestAuthContext(HttpClient);
     }
     
-    protected class TestAuthContext(HttpClient client)
+    public class TestAuthContext(HttpClient client)
     {
         private TokenWithExpiry? CurrentToken { get; set; }
-
+    
         public async Task ConfigureAuthenticationContext()
         {
             if (CurrentToken is not null && new DateTime(CurrentToken.ExpiryDate) <= DateTime.UtcNow)
             {
                 return;
             }
-
+    
             var request = new Login.Request(TestConstants.Username, TestConstants.Password);
             var loginResponse = await client.PostAsJsonAsync("/api/auth/login", request);
-
+    
             if (loginResponse is not { IsSuccessStatusCode: true })
             {
                 throw new Exception("Error configuring test authentication method.");
             }
-
+    
             var content = await loginResponse.Content.ReadFromJsonAsync<Login.Response>();
             
             CurrentToken = content?.AccessToken;
@@ -58,9 +59,9 @@ public abstract class BaseIntegrationTest :
 
     public Task DisposeAsync()
     {
-        _scope.Dispose();
+        scope.Dispose();
         HttpClient.Dispose();
-        return DataContext.DisposeAsync().AsTask();
+        return Db.DisposeAsync().AsTask();
     }
 }
 

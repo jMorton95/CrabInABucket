@@ -6,19 +6,16 @@ public class SharedContainerFixture : IAsyncLifetime
 {
     public static PostgreSqlContainer? DatabaseContainer { get; private set; }
 
-    public async Task InitializeAsync()
+    static SharedContainerFixture()
     {
-        if (DatabaseContainer != null)
-        {
-            return;
-        }
-        
         DatabaseContainer = new PostgreSqlBuilder()
             .WithImage("postgres:latest")
             .Build();
 
-        await DatabaseContainer.StartAsync();
+        DatabaseContainer.StartAsync().GetAwaiter().GetResult();
     }
+
+    public async Task InitializeAsync() => await Task.CompletedTask;
 
     public async Task DisposeAsync()
     {
@@ -26,8 +23,7 @@ public class SharedContainerFixture : IAsyncLifetime
         {
             return;
         }
-
+        
         await DatabaseContainer.StopAsync();
-        DatabaseContainer = null;
     }
 }
