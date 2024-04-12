@@ -30,5 +30,6 @@
     <ItemGroup>
         <ProjectReference Include="..\FinanceManager.Common\FinanceManager.Common.csproj" />
         <ProjectReference Include="..\FinanceManager.Data\FinanceManager.Data.csproj" />
+        <ProjectReference Include="..\FinanceManager.Simulation\FinanceManager.Simulation.csproj" />
     </ItemGroup>
 </Project>

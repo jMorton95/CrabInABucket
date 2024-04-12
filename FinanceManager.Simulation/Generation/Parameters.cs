@@ -1,6 +1,6 @@
 ﻿namespace FinanceManager.Simulation.Generation;
 
-public record Range(decimal Min, decimal Max);
+public record Range(int Min, int Max);
 
 public record Users(Range Count, decimal StartingBalanceBias);
 

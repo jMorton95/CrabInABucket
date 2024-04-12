@@ -11,6 +11,7 @@ using FinanceManager.Data.Write.Accounts;
 using FinanceManager.Data.Write.Friendships;
 using FinanceManager.Data.Write.Transactions;
 using FinanceManager.Data.Write.Users;
+using FinanceManager.Simulation.Generation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -30,8 +31,8 @@ public static class ConfigureServices
 
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         
-        builder.Services.RegisterTransientDependencies();
-        builder.Services.RegisterScopedDependencies();
+        builder.RegisterTransientDependencies();
+        builder.RegisterScopedDependencies();
         
         builder.AddJwtAuthentication();
         
@@ -53,16 +54,20 @@ public static class ConfigureServices
         builder.Services.Configure<SuperAdminSettings>(builder.Configuration.GetSection(SettingsConstants.SuperAdminSection));
     }
     
-    private static void RegisterTransientDependencies(this IServiceCollection services)
+    private static void RegisterTransientDependencies(this WebApplicationBuilder builder)
     {
+        var services = builder.Services;
+        
         services.AddTransient<IPasswordUtilities, PasswordUtilities>();
         services.AddTransient<ITransactionMapper, TransactionMapper>();        
         services.AddTransient<IUserTokenService, UserTokenService>();
         services.AddTransient<IPasswordHasher, PasswordHasher>();
     }
 
-    private static void RegisterScopedDependencies(this IServiceCollection services)
+    private static void RegisterScopedDependencies(this WebApplicationBuilder builder)
     {
+        var services = builder.Services;
+        
         services.AddScoped<IUserContextService, UserContextService>();
         services.AddScoped<IReadUsers, ReadUsers>();
         services.AddScoped<IWriteUsers, WriteUsers>();
@@ -78,6 +83,11 @@ public static class ConfigureServices
         services.AddScoped<IWriteFriendships, WriteFriendships>();
 
         services.AddScoped<IReadUserFriends, ReadUserFriends>();
+
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddScoped<ISimulator, Simulator>();
+        }
     }
     
     private static void AddDatabase(this WebApplicationBuilder builder)
