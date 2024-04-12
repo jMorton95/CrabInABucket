@@ -1,4 +1,5 @@
-﻿using FinanceManager.Common.Constants;
+﻿using System.Reflection;
+using FinanceManager.Common.Constants;
 using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Models;
@@ -22,7 +23,7 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
 
         for (var i = numberOfUsersToSimulate; i > 0; i--)
         {
-            var userName = Faker.Internet.Email(Faker.Name.FullName());
+            var userName = Faker.Internet.Email(Faker.Name.First());
 
             User user = new() { Username = userName, Password = dummyPassword, WasSimulated = true};
 
@@ -45,15 +46,27 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
     //     
     // }
 
-    public async Task<bool> RunSimulation(SimulationParameters simulationParameters)
+    public async Task<bool> RunSimulation(SimulationParameters simulationParameters, Settings settings)
     {
         var simUsersResult = await CreateUsers(simulationParameters);
 
-        return new List<int>([simUsersResult.Count]).TrueForAll(x => x > 0);
+        List<int> results = [simUsersResult.Count];
+
+        if (!results.TrueForAll(x => x > 0))
+        {
+            return false;
+        }
+        
+        settings.HasBeenSimulated = true;
+        db.Settings.Update(settings);
+        
+        return await db.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> RemoveSimulatedData()
     {
+        await db.User.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        
         return await Task.FromResult(true);
     }
 
@@ -63,7 +76,7 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
 
         return settings switch
         {
-            { HasBeenSimulated: false, ShouldSimulate: true } => await RunSimulation(simulationParameters),
+            { HasBeenSimulated: false, ShouldSimulate: true } => await RunSimulation(simulationParameters, settings),
             { HasBeenSimulated: true, ShouldSimulate: false } => await RemoveSimulatedData(),
             _ => false
         };
