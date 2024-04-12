@@ -26,4 +26,6 @@ public class Entity : IEntity
     public Guid? CreatedBy { get; set; }
     
     public Guid? EditedBy { get; set; }
+
+    public bool WasSimulated { get; set; } = false;
 }

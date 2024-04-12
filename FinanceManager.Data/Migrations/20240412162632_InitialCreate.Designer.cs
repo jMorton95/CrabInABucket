@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinanceManager.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240317165629_FriendRequestPending")]
-    partial class FriendRequestPending
+    [Migration("20240412162632_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace FinanceManager.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Account", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,6 +56,9 @@ namespace FinanceManager.Data.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
@@ -63,7 +66,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("Account");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Friendship", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Friendship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,12 +93,15 @@ namespace FinanceManager.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("Friendship");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Message", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,6 +135,9 @@ namespace FinanceManager.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FriendshipId");
@@ -140,7 +149,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("Message");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.RecurringTransaction", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.RecurringTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -186,6 +195,9 @@ namespace FinanceManager.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
@@ -193,7 +205,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("RecurringTransaction");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Role", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -218,6 +230,9 @@ namespace FinanceManager.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -226,7 +241,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Transaction", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -259,12 +274,15 @@ namespace FinanceManager.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("Transaction");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.User", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,6 +315,9 @@ namespace FinanceManager.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Username")
@@ -305,7 +326,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.UserFriendship", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.UserFriendship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -332,6 +353,9 @@ namespace FinanceManager.Data.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FriendshipId");
@@ -341,7 +365,7 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("UserFriendship");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.UserRole", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.UserRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -368,6 +392,9 @@ namespace FinanceManager.Data.Migrations
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("WasSimulated")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
@@ -377,9 +404,9 @@ namespace FinanceManager.Data.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Account", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Account", b =>
                 {
-                    b.HasOne("FinanceManager.Core.DataEntities.User", "User")
+                    b.HasOne("FinanceManager.Common.Entities.User", "User")
                         .WithMany("Accounts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -388,19 +415,19 @@ namespace FinanceManager.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Message", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Message", b =>
                 {
-                    b.HasOne("FinanceManager.Core.DataEntities.Friendship", null)
+                    b.HasOne("FinanceManager.Common.Entities.Friendship", null)
                         .WithMany("Messages")
                         .HasForeignKey("FriendshipId");
 
-                    b.HasOne("FinanceManager.Core.DataEntities.User", "Recipient")
+                    b.HasOne("FinanceManager.Common.Entities.User", "Recipient")
                         .WithMany()
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FinanceManager.Core.DataEntities.User", "Sender")
+                    b.HasOne("FinanceManager.Common.Entities.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -411,38 +438,40 @@ namespace FinanceManager.Data.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.RecurringTransaction", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.RecurringTransaction", b =>
                 {
-                    b.HasOne("FinanceManager.Core.DataEntities.Account", null)
+                    b.HasOne("FinanceManager.Common.Entities.Account", null)
                         .WithMany("RecurringTransactions")
                         .HasForeignKey("AccountId");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.UserFriendship", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.UserFriendship", b =>
                 {
-                    b.HasOne("FinanceManager.Core.DataEntities.Friendship", "Friendship")
+                    b.HasOne("FinanceManager.Common.Entities.Friendship", "Friendship")
                         .WithMany("UserFriendships")
                         .HasForeignKey("FriendshipId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Friendship_Users");
 
-                    b.HasOne("FinanceManager.Core.DataEntities.User", null)
+                    b.HasOne("FinanceManager.Common.Entities.User", "User")
                         .WithMany("UserFriendships")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Friendship");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.UserRole", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.UserRole", b =>
                 {
-                    b.HasOne("FinanceManager.Core.DataEntities.Role", "Role")
+                    b.HasOne("FinanceManager.Common.Entities.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId");
 
-                    b.HasOne("FinanceManager.Core.DataEntities.User", "User")
+                    b.HasOne("FinanceManager.Common.Entities.User", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId");
 
@@ -451,19 +480,19 @@ namespace FinanceManager.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Account", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Account", b =>
                 {
                     b.Navigation("RecurringTransactions");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.Friendship", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.Friendship", b =>
                 {
                     b.Navigation("Messages");
 
                     b.Navigation("UserFriendships");
                 });
 
-            modelBuilder.Entity("FinanceManager.Core.DataEntities.User", b =>
+            modelBuilder.Entity("FinanceManager.Common.Entities.User", b =>
                 {
                     b.Navigation("Accounts");
 

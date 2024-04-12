@@ -18,14 +18,14 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
     
     private async Task<List<User>> CreateUsers(Parameters parameters)
     {
-        var numberOfUsersToSeed = GetNumberFromRange(parameters.Users.Count);
+        var numberOfUsersToSimulate = GetNumberFromRange(parameters.Users.Count);
         var dummyPassword = passwordHasher.HashPassword(TestConstants.Password);
 
-        for (var i = numberOfUsersToSeed; i > 0; i--)
+        for (var i = numberOfUsersToSimulate; i > 0; i--)
         {
             var userName = Faker.Internet.Email(Faker.Name.FullName());
 
-            User user = new() { Username = userName, Password = dummyPassword};
+            User user = new() { Username = userName, Password = dummyPassword, WasSimulated = true};
 
             await db.AddAsync(user);
         }
@@ -34,7 +34,8 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
 
         var seededUsers = await db.User
             .OrderByDescending(x => x.Id)
-            .Take(numberOfUsersToSeed)
+            .Where(y => y.WasSimulated)
+            .Take(numberOfUsersToSimulate)
             .ToListAsync();
         
         return seededUsers;
