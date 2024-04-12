@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using FinanceManager.Common.Constants;
+using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Mappers;
+using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Common.Settings;
 using FinanceManager.Data.Read.Accounts;
@@ -52,6 +54,7 @@ public static class ConfigureServices
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(SettingsConstants.JwtSection));
         builder.Services.Configure<SwaggerSettings>(builder.Configuration.GetSection(SettingsConstants.SwaggerSection));
         builder.Services.Configure<SuperAdminSettings>(builder.Configuration.GetSection(SettingsConstants.SuperAdminSection));
+        builder.Services.Configure<SimulationParameters>(builder.Configuration.GetSection(SettingsConstants.SimulationParameters));
     }
     
     private static void RegisterTransientDependencies(this WebApplicationBuilder builder)
@@ -83,11 +86,9 @@ public static class ConfigureServices
         services.AddScoped<IWriteFriendships, WriteFriendships>();
 
         services.AddScoped<IReadUserFriends, ReadUserFriends>();
-
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Services.AddScoped<ISimulator, Simulator>();
-        }
+        
+        services.AddScoped<ISimulator, Simulator>();
+        
     }
     
     private static void AddDatabase(this WebApplicationBuilder builder)

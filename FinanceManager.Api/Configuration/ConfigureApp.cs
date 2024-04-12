@@ -1,5 +1,7 @@
 ﻿using FinanceManager.Api.Middleware.UserContext;
 using FinanceManager.Common.Constants;
+using FinanceManager.Common.Contracts;
+using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Common.Settings;
 using FinanceManager.Data.Seeding;
@@ -61,5 +63,9 @@ public static class ConfigureApp
             
             await dbContext.InsertProductionData(settings.Value, passwordHasher);
         }
+
+        var simulationParameters = app.Services.GetRequiredService<IOptions<SimulationParameters>>().Value;
+
+        var simulationResult = await Seeder.ApplySimulations(dbContext, scope.ServiceProvider.GetRequiredService<ISimulator>(), simulationParameters);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace FinanceManager.Simulation.Generation;
+﻿namespace FinanceManager.Common.Models;
 
 public record Range(int Min, int Max);
 
@@ -8,7 +8,8 @@ public record Friendships(Range FriendsPerUserRange);
 
 public record Accounts(Range Count, decimal MaxStartingBalance);
 
-public record Parameters (
+public record SimulationParameters(
+    bool ShouldSimulate,
     int Duration,
     int MaxStartingBalance,
     Users Users,

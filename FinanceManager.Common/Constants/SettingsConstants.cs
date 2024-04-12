@@ -6,4 +6,5 @@ public static class SettingsConstants
     public const string JwtSection = "JWT";
     public const string SwaggerSection = "Swagger";
     public const string SuperAdminSection = "SuperAdminSettings";
+    public const string SimulationParameters = "SimulationParameters";
 }

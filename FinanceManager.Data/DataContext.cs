@@ -14,6 +14,7 @@ public class DataContext(DbContextOptions<DataContext> options, IUserContextServ
     public DbSet<Transaction> Transaction => Set<Transaction>();
     public DbSet<Friendship> Friendship => Set<Friendship>();
     public DbSet<UserFriendship> UserFriendship => Set<UserFriendship>();
+    public DbSet<Settings> Settings => Set<Settings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
