@@ -63,9 +63,12 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
         return await db.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> RemoveSimulatedData()
+    public async Task<bool> RemoveSimulatedData(Settings settings)
     {
         await db.User.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        
+        settings.HasBeenSimulated = false;
+        db.Settings.Update(settings);
         
         return await Task.FromResult(true);
     }
@@ -77,7 +80,7 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
         return settings switch
         {
             { HasBeenSimulated: false, ShouldSimulate: true } => await RunSimulation(simulationParameters, settings),
-            { HasBeenSimulated: true, ShouldSimulate: false } => await RemoveSimulatedData(),
+            { HasBeenSimulated: true, ShouldSimulate: false } => await RemoveSimulatedData(settings),
             _ => false
         };
     }
