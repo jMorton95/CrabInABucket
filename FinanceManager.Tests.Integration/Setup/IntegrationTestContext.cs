@@ -11,7 +11,7 @@ public class IntegrationTestCollection : ICollectionFixture<IntegrationTestConte
 
 public class IntegrationTestContext : IAsyncLifetime
 {
-    private IServiceScope scope { get; }
+    private IServiceScope Scope { get; }
     public DataContext Db { get; }
     public HttpClient HttpClient { get; }
     public TestAuthContext AuthContext { get; }
@@ -19,8 +19,8 @@ public class IntegrationTestContext : IAsyncLifetime
     public IntegrationTestContext()
     {
         var factory = new IntegrationTestApplicationFactory();
-        scope = factory.Services.CreateScope();
-        Db = scope.ServiceProvider.GetRequiredService<DataContext>();
+        Scope = factory.Services.CreateScope();
+        Db = Scope.ServiceProvider.GetRequiredService<DataContext>();
         HttpClient = factory.CreateClient();
         AuthContext = new TestAuthContext(HttpClient);
     }
@@ -59,7 +59,7 @@ public class IntegrationTestContext : IAsyncLifetime
 
     public Task DisposeAsync()
     {
-        scope.Dispose();
+        Scope.Dispose();
         HttpClient.Dispose();
         return Db.DisposeAsync().AsTask();
     }
