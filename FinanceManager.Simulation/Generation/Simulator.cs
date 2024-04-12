@@ -4,6 +4,7 @@ using FinanceManager.Common.Entities;
 using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Data;
+using FinanceManager.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 using Range = FinanceManager.Common.Models.Range;
 
@@ -49,5 +50,22 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
         var simUsersResult = await CreateUsers(simulationParameters);
 
         return new List<int>([simUsersResult.Count]).TrueForAll(x => x > 0);
+    }
+
+    public async Task<bool> RemoveSimulatedData()
+    {
+        return await Task.FromResult(true);
+    }
+
+    public async Task<bool> SimulateFromConfiguration(SimulationParameters simulationParameters)
+    {
+        var settings = await db.ConfigureSettingsTable(simulationParameters.ShouldSimulate);
+
+        return settings switch
+        {
+            { HasBeenSimulated: false, ShouldSimulate: true } => await RunSimulation(simulationParameters),
+            { HasBeenSimulated: true, ShouldSimulate: false } => await RemoveSimulatedData(),
+            _ => false
+        };
     }
 }

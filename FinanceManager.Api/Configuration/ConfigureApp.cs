@@ -65,7 +65,8 @@ public static class ConfigureApp
         }
 
         var simulationParameters = app.Services.GetRequiredService<IOptions<SimulationParameters>>().Value;
-
-        var simulationResult = await Seeder.ApplySimulations(dbContext, scope.ServiceProvider.GetRequiredService<ISimulator>(), simulationParameters);
+        var simulator = scope.ServiceProvider.GetRequiredService<ISimulator>();
+        
+        var simulationResult = await simulator.SimulateFromConfiguration(simulationParameters);
     }
 }

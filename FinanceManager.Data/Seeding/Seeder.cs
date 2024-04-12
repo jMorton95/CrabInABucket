@@ -1,7 +1,5 @@
 ﻿using FinanceManager.Common.Constants;
-using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
-using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Common.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -57,13 +55,6 @@ public static class Seeder
             await dataContext.SaveChangesAsync();
         }
     }
-
-    public static async Task<bool> ApplySimulations(DataContext dataContext, ISimulator simulator, SimulationParameters parameters)
-    {
-        var settings = await dataContext.ConfigureSettingsTable(parameters.ShouldSimulate);
-        
-        return await Task.FromResult(true);
-    }
     
     private static async Task<Role?> EnsureAdminRoleCreated(this DataContext dataContext)
     {
@@ -83,12 +74,17 @@ public static class Seeder
         return await dataContext.Role.FirstOrDefaultAsync(x => x.Name == adminRole.Name);
     }
 
-    private static async Task<Settings> ConfigureSettingsTable(this DataContext dataContext, bool shouldSimulate)
+    public static async Task<Settings> ConfigureSettingsTable(this DataContext dataContext, bool shouldSimulate)
     {
-        var settings = await dataContext.Settings.FirstOrDefaultAsync();
+        var settings = await dataContext.Settings.OrderBy(x => x.Id).FirstOrDefaultAsync();
 
         if (settings != null)
         {
+            if (settings.ShouldSimulate == shouldSimulate)
+            {
+                return settings;
+            }
+            
             settings.ShouldSimulate = shouldSimulate;
             dataContext.Update(settings);
         }
@@ -97,6 +93,11 @@ public static class Seeder
             dataContext.Add(new Settings{ ShouldSimulate = shouldSimulate });
         }
 
-        return await dataContext.Settings.FirstAsync();
+        if (dataContext.ChangeTracker.HasChanges())
+        {
+            await dataContext.SaveChangesAsync();
+        }
+        
+        return await dataContext.Settings.OrderBy(x => x.Id).FirstAsync();
     }
 }

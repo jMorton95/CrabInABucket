@@ -8,11 +8,12 @@ public record Friendships(Range FriendsPerUserRange);
 
 public record Accounts(Range Count, decimal MaxStartingBalance);
 
-public record SimulationParameters(
-    bool ShouldSimulate,
-    int Duration,
-    int MaxStartingBalance,
-    Users Users,
-    Friendships Friendships,
-    Accounts Accounts
-);
+public class SimulationParameters
+{
+    public bool ShouldSimulate { get; init; }
+    public int Duration { get; init; }
+    public int MaxStartingBalance { get; init; }
+    public Users Users { get; init; }
+    public Friendships Friendships { get; init; }
+    public Accounts Accounts { get; init; } 
+}
