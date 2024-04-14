@@ -1,7 +1,7 @@
 ﻿using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Models;
 
-namespace FinanceManager.Simulation.Generation;
+namespace FinanceManager.Simulation;
 
 
 

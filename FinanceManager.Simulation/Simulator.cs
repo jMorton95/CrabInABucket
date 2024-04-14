@@ -7,23 +7,25 @@ using FinanceManager.Data;
 using FinanceManager.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceManager.Simulation.Generation;
+namespace FinanceManager.Simulation;
 
-public class Simulator(DataContext db, IPasswordHasher passwordHasher, ISimulationPlanBuilder simulationPlanBuilder) : ISimulator
+public class Simulator(SimulationParameters simulationParameters, DataContext db, IPasswordHasher passwordHasher, ISimulationPlanBuilder simulationPlanBuilder) : ISimulator
 {
-    private async Task<List<User>> CreateUsers(int numberOfUsersPerTick)
+    private readonly SimulationPlan _simulationPlan = await simulationPlanBuilder.CreateSimulationPlan(simulationParameters);
+    private async Task<List<User>> CreateUsers(int numberOfUsersPerTick, DateTime tickDate)
     {
         var dummyPassword = passwordHasher.HashPassword(TestConstants.Password);
 
-        for (var i = numberOfUsersPerTick; i > 0; i--)
+        var usersToSeed = Enumerable.Range(1, numberOfUsersPerTick).Select(x =>
         {
             var userName = Faker.Internet.Email(Faker.Name.First());
 
-            User user = new() { Username = userName, Password = dummyPassword, WasSimulated = true};
+            User user = new() { Username = userName, Password = dummyPassword, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
 
-            await db.AddAsync(user);
-        }
+            return user;
+        });
 
+        await db.AddRangeAsync(usersToSeed);
         await db.SaveChangesAsync();
 
         var seededUsers = await db.User
@@ -35,42 +37,42 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher, ISimulati
         return seededUsers;
     }
 
-    // private async Task<bool> BuildUserAccounts()
+    // private async Task<bool> BuildUserAccounts(IEnumerable<User> users, DateTime tickDate)
     // {
     //     
     // }
 
-    private async Task<bool> ProcessSimulationTick(SimulationParameters simulationParameters, SimulationPlan simulationPlan, int tickNumber)
+    private async Task<bool> ProcessSimulationTick(int tickNumber)
     {
-        var simUsersResult = await CreateUsers(simulationPlan.UsersPerTick);
+        var tickDate = DateTime.UtcNow.AddMonths(tickNumber);
+        
+        var simUsersResult = await CreateUsers(_simulationPlan.UsersPerTick, tickDate);
         
         List<int> results = [simUsersResult.Count];
 
-        if (!results.TrueForAll(x => x > 0))
-        {
-            return false;
-        }
+        return results.TrueForAll(x => x > 0);
     }
 
-    public async Task<bool> StartSimulation(SimulationParameters simulationParameters, Settings settings)
+    public async Task<bool> StartSimulation(Settings settings)
     {
         var simulationPlan = await simulationPlanBuilder.CreateSimulationPlan(simulationParameters);
 
         Dictionary<int, bool> tickResults = [];
         
-        foreach (var tick in Enumerable.Range(0, simulationParameters.Duration))
+        foreach (var tick in Enumerable.Range(1, simulationParameters.Duration))
         {
-            tickResults.Add(tick, await ProcessSimulationTick(simulationParameters, simulationPlan, tick));
+            tickResults.Add(tick, await ProcessSimulationTick(tick));
         }
 
         if (!tickResults.Values.ToList().TrueForAll(x => x))
         {
+            //TODO: Add Partial as a parameter, only remove if partial is false
             await RemoveSimulatedData(settings);
             return false;
         };
         
         settings.HasBeenSimulated = true;
-        db.Settings.Update(settings);
+        db.Settings.Update(settings);     
         
         return await db.SaveChangesAsync() > 0;
     }
@@ -85,13 +87,13 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher, ISimulati
         return await Task.FromResult(true);
     }
     
-    public async Task<bool> SimulateFromConfiguration(SimulationParameters simulationParameters)
+    public async Task<bool> SimulateFromConfiguration()
     {
         var settings = await db.ConfigureSettingsTable(simulationParameters.ShouldSimulate);
 
         return settings switch
         {
-            { HasBeenSimulated: false, ShouldSimulate: true } => await StartSimulation(simulationParameters, settings),
+            { HasBeenSimulated: false, ShouldSimulate: true } => await StartSimulation(settings),
             { HasBeenSimulated: true, ShouldSimulate: false } => await RemoveSimulatedData(settings),
             _ => false
         };

@@ -13,7 +13,7 @@ using FinanceManager.Data.Write.Accounts;
 using FinanceManager.Data.Write.Friendships;
 using FinanceManager.Data.Write.Transactions;
 using FinanceManager.Data.Write.Users;
-using FinanceManager.Simulation.Generation;
+using FinanceManager.Simulation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -86,9 +86,9 @@ public static class ConfigureServices
         services.AddScoped<IWriteFriendships, WriteFriendships>();
 
         services.AddScoped<IReadUserFriends, ReadUserFriends>();
-        
-        services.AddScoped<ISimulator, Simulator>();
+
         services.AddScoped<ISimulationPlanBuilder, SimulationPlanBuilder>();
+        services.AddScoped<ISimulatorFactory, SimulatorFactory>();
 
     }
     

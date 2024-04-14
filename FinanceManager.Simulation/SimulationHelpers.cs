@@ -1,6 +1,6 @@
 ﻿using FinanceManager.Common.Models;
 
-namespace FinanceManager.Simulation.Generation;
+namespace FinanceManager.Simulation;
 
 public static class SimulationHelpers
 {
