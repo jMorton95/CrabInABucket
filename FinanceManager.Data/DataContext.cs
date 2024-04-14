@@ -42,6 +42,11 @@ public class DataContext(DbContextOptions<DataContext> options, IUserContextServ
         {
             if (entry.Entity is not Entity entity) continue;
 
+            if (entity.WasSimulated)
+            {
+                continue;
+            }
+            
             if (userId != null) entity.EditedBy = userId;
             entity.UpdatedDate = DateTime.UtcNow;
 

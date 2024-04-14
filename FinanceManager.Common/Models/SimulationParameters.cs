@@ -4,7 +4,7 @@ public record ParameterRange(int Min, int Max);
 
 public record Users(ParameterRange Count, decimal StartingBalanceBias);
 
-public record Friendships(ParameterRange FriendsPerUserParameterRange);
+public record Friendships(ParameterRange FriendsPerUser);
 
 public record Accounts(ParameterRange Count, decimal MaxStartingBalance);
 

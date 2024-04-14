@@ -11,7 +11,7 @@ namespace FinanceManager.Simulation;
 
 public class Simulator(SimulationParameters simulationParameters, DataContext db, IPasswordHasher passwordHasher, ISimulationPlanBuilder simulationPlanBuilder) : ISimulator
 {
-    private readonly SimulationPlan _simulationPlan = await simulationPlanBuilder.CreateSimulationPlan(simulationParameters);
+    private readonly SimulationPlan _simulationPlan = simulationPlanBuilder.CreateSimulationPlan(simulationParameters);
     private async Task<List<User>> CreateUsers(int numberOfUsersPerTick, DateTime tickDate)
     {
         var dummyPassword = passwordHasher.HashPassword(TestConstants.Password);
@@ -25,7 +25,7 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
             return user;
         });
 
-        await db.AddRangeAsync(usersToSeed);
+        await db.AddRangeAsync(usersToSeed.ToList());
         await db.SaveChangesAsync();
 
         var seededUsers = await db.User
@@ -55,8 +55,6 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
 
     public async Task<bool> StartSimulation(Settings settings)
     {
-        var simulationPlan = await simulationPlanBuilder.CreateSimulationPlan(simulationParameters);
-
         Dictionary<int, bool> tickResults = [];
         
         foreach (var tick in Enumerable.Range(1, simulationParameters.Duration))
@@ -84,7 +82,7 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
         settings.HasBeenSimulated = false;
         db.Settings.Update(settings);
         
-        return await Task.FromResult(true);
+        return await db.SaveChangesAsync() > 0;
     }
     
     public async Task<bool> SimulateFromConfiguration()
