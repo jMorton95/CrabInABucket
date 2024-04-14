@@ -80,7 +80,7 @@ public static class Seeder
 
         if (settings != null)
         {
-            if (settings.ShouldSimulate == shouldSimulate && settings.ShouldOverwrite == shouldSimulate)
+            if (settings.ShouldSimulate == shouldSimulate && settings.ShouldOverwrite == shouldOverwrite)
             {
                 return settings;
             }
