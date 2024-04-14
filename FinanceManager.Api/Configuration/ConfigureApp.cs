@@ -5,6 +5,7 @@ using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Common.Settings;
 using FinanceManager.Data.Seeding;
+using FinanceManager.Simulation;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -65,8 +66,9 @@ public static class ConfigureApp
         }
 
         var simulationParameters = app.Services.GetRequiredService<IOptions<SimulationParameters>>().Value;
-        var simulator = scope.ServiceProvider.GetRequiredService<ISimulator>();
+        var simulatorFactory = scope.ServiceProvider.GetRequiredService<ISimulatorFactory>();
+        var simulator = simulatorFactory.CreateSimulator(simulationParameters);
         
-        var simulationResult = await simulator.SimulateFromConfiguration(simulationParameters);
+        var simulationResult = await simulator.SimulateFromConfiguration();
     }
 }

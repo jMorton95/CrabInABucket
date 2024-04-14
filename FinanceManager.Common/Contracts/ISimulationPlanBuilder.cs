@@ -4,5 +4,5 @@ namespace FinanceManager.Common.Contracts;
 
 public interface ISimulationPlanBuilder
 {
-    Task<SimulationPlan> CreateSimulationPlan(SimulationParameters simulationParameters);
+    SimulationPlan CreateSimulationPlan(SimulationParameters simulationParameters);
 }

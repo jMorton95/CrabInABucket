@@ -7,10 +7,10 @@ namespace FinanceManager.Simulation;
 
 public class SimulationPlanBuilder : ISimulationPlanBuilder
 {
-    public Task<SimulationPlan> CreateSimulationPlan(SimulationParameters simulationParameters)
+    public SimulationPlan CreateSimulationPlan(SimulationParameters simulationParameters)
     {
         var totalUsersToSimulate = SimulationHelpers.GetNumberFromRange(simulationParameters.Users.Count);
-        return Task.FromResult(new SimulationPlan(totalUsersToSimulate / simulationParameters.Duration));
+        return new SimulationPlan(totalUsersToSimulate / simulationParameters.Duration);
     }
 }
 
