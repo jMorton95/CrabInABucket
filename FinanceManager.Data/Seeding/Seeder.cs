@@ -74,18 +74,19 @@ public static class Seeder
         return await dataContext.Role.FirstOrDefaultAsync(x => x.Name == adminRole.Name);
     }
 
-    public static async Task<Settings> ConfigureSettingsTable(this DataContext dataContext, bool shouldSimulate)
+    public static async Task<Settings> ConfigureSettingsTable(this DataContext dataContext, bool shouldSimulate, bool shouldOverwrite)
     {
         var settings = await dataContext.Settings.OrderBy(x => x.Id).FirstOrDefaultAsync();
 
         if (settings != null)
         {
-            if (settings.ShouldSimulate == shouldSimulate)
+            if (settings.ShouldSimulate == shouldSimulate && settings.ShouldOverwrite == shouldSimulate)
             {
                 return settings;
             }
             
             settings.ShouldSimulate = shouldSimulate;
+            settings.ShouldOverwrite = shouldOverwrite;
             dataContext.Update(settings);
         }
         else

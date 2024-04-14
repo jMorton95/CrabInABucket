@@ -37,18 +37,43 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
         return seededUsers;
     }
 
-    // private async Task<bool> BuildUserAccounts(IEnumerable<User> users, DateTime tickDate)
-    // {
-    //     
-    // }
+    private async Task<List<Account>> CreateAccounts(IEnumerable<User> users, DateTime tickDate)
+    {
+        var accounts = users.ToList().SelectMany(user =>
+        {
+            return Enumerable.Range(1, SimulationHelpers.GetNumberFromRange(simulationParameters.Accounts.Count))
+                .Select(_ => new Account
+                    {
+                        Balance = SimulationHelpers.GetWeightedRandomNumber(1, simulationParameters.Accounts.MaxStartingBalance, simulationParameters.Accounts.StartingBalanceBias),
+                        User = user,
+                        Name = Faker.Company.Name(),
+                        CreatedDate = tickDate,
+                        UpdatedDate = tickDate,
+                        WasSimulated = true
+                    }
+                );
+        }).ToList();
+
+        await db.AddRangeAsync(accounts);
+        await db.SaveChangesAsync();
+
+        var seededAccounts = await db.Account
+            .OrderByDescending(x => x.Id)
+            .Where(y => y.WasSimulated)
+            .Take(accounts.Count)
+            .ToListAsync();
+
+        return seededAccounts;
+    }
 
     private async Task<bool> ProcessSimulationTick(int tickNumber)
     {
         var tickDate = DateTime.UtcNow.AddMonths(tickNumber);
         
         var simUsersResult = await CreateUsers(_simulationPlan.UsersPerTick, tickDate);
+        var simAccountsResults = await CreateAccounts(simUsersResult, tickDate);
         
-        List<int> results = [simUsersResult.Count];
+        List<int> results = [simUsersResult.Count, simAccountsResults.Count];
 
         return results.TrueForAll(x => x > 0);
     }
@@ -72,15 +97,14 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
             await RemoveSimulatedData(settings);
             return false;
         };
-
-
-
+        
         return true;
     }
 
     public async Task<bool> RemoveSimulatedData(Settings settings)
     {
         await db.User.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        await db.Account.Where(x => x.WasSimulated).ExecuteDeleteAsync();
         
         settings.HasBeenSimulated = false;
         db.Settings.Update(settings);
@@ -90,13 +114,20 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
     
     public async Task<bool> SimulateFromConfiguration()
     {
-        var settings = await db.ConfigureSettingsTable(simulationParameters.ShouldSimulate);
+        var settings = await db.ConfigureSettingsTable(simulationParameters.ShouldSimulate, simulationParameters.ShouldOverwrite);
 
         return settings switch
         {
             { HasBeenSimulated: false, ShouldSimulate: true } => await StartSimulation(settings),
-            { HasBeenSimulated: true, ShouldSimulate: false } => await RemoveSimulatedData(settings),
+            { ShouldSimulate: true, ShouldOverwrite: true} => await OverwriteAndSimulate(),
+            { ShouldSimulate: false } => await RemoveSimulatedData(settings),
             _ => false
         };
+        
+        async Task<bool> OverwriteAndSimulate()
+        {
+            await RemoveSimulatedData(settings);
+            return await StartSimulation(settings);
+        }
     }
 }
