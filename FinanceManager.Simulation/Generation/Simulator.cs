@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using FinanceManager.Common.Constants;
+﻿using FinanceManager.Common.Constants;
 using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Models;
@@ -7,21 +6,16 @@ using FinanceManager.Common.Services;
 using FinanceManager.Data;
 using FinanceManager.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
-using Range = FinanceManager.Common.Models.Range;
 
 namespace FinanceManager.Simulation.Generation;
 
-public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimulator
+public class Simulator(DataContext db, IPasswordHasher passwordHasher, ISimulationPlanBuilder simulationPlanBuilder) : ISimulator
 {
-    private static int GetNumberFromRange(Range range) 
-        => new Random().Next(range.Min, range.Max);
-    
-    private async Task<List<User>> CreateUsers(SimulationParameters simulationParameters)
+    private async Task<List<User>> CreateUsers(int numberOfUsersPerTick)
     {
-        var numberOfUsersToSimulate = GetNumberFromRange(simulationParameters.Users.Count);
         var dummyPassword = passwordHasher.HashPassword(TestConstants.Password);
 
-        for (var i = numberOfUsersToSimulate; i > 0; i--)
+        for (var i = numberOfUsersPerTick; i > 0; i--)
         {
             var userName = Faker.Internet.Email(Faker.Name.First());
 
@@ -35,7 +29,7 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
         var seededUsers = await db.User
             .OrderByDescending(x => x.Id)
             .Where(y => y.WasSimulated)
-            .Take(numberOfUsersToSimulate)
+            .Take(numberOfUsersPerTick)
             .ToListAsync();
         
         return seededUsers;
@@ -46,16 +40,34 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
     //     
     // }
 
-    public async Task<bool> RunSimulation(SimulationParameters simulationParameters, Settings settings)
+    private async Task<bool> ProcessSimulationTick(SimulationParameters simulationParameters, SimulationPlan simulationPlan, int tickNumber)
     {
-        var simUsersResult = await CreateUsers(simulationParameters);
-
+        var simUsersResult = await CreateUsers(simulationPlan.UsersPerTick);
+        
         List<int> results = [simUsersResult.Count];
 
         if (!results.TrueForAll(x => x > 0))
         {
             return false;
         }
+    }
+
+    public async Task<bool> StartSimulation(SimulationParameters simulationParameters, Settings settings)
+    {
+        var simulationPlan = await simulationPlanBuilder.CreateSimulationPlan(simulationParameters);
+
+        Dictionary<int, bool> tickResults = [];
+        
+        foreach (var tick in Enumerable.Range(0, simulationParameters.Duration))
+        {
+            tickResults.Add(tick, await ProcessSimulationTick(simulationParameters, simulationPlan, tick));
+        }
+
+        if (!tickResults.Values.ToList().TrueForAll(x => x))
+        {
+            await RemoveSimulatedData(settings);
+            return false;
+        };
         
         settings.HasBeenSimulated = true;
         db.Settings.Update(settings);
@@ -72,14 +84,14 @@ public class Simulator(DataContext db, IPasswordHasher passwordHasher) : ISimula
         
         return await Task.FromResult(true);
     }
-
+    
     public async Task<bool> SimulateFromConfiguration(SimulationParameters simulationParameters)
     {
         var settings = await db.ConfigureSettingsTable(simulationParameters.ShouldSimulate);
 
         return settings switch
         {
-            { HasBeenSimulated: false, ShouldSimulate: true } => await RunSimulation(simulationParameters, settings),
+            { HasBeenSimulated: false, ShouldSimulate: true } => await StartSimulation(simulationParameters, settings),
             { HasBeenSimulated: true, ShouldSimulate: false } => await RemoveSimulatedData(settings),
             _ => false
         };

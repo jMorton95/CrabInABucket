@@ -88,7 +88,8 @@ public static class ConfigureServices
         services.AddScoped<IReadUserFriends, ReadUserFriends>();
         
         services.AddScoped<ISimulator, Simulator>();
-        
+        services.AddScoped<ISimulationPlanBuilder, SimulationPlanBuilder>();
+
     }
     
     private static void AddDatabase(this WebApplicationBuilder builder)
