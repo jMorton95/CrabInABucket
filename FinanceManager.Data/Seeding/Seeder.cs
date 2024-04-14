@@ -91,7 +91,7 @@ public static class Seeder
         }
         else
         {
-            dataContext.Add(new Settings{ ShouldSimulate = shouldSimulate });
+            dataContext.Add(new Settings{ ShouldSimulate = shouldSimulate, ShouldOverwrite = shouldOverwrite});
         }
 
         if (dataContext.ChangeTracker.HasChanges())

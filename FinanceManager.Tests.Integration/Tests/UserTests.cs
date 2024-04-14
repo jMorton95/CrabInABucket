@@ -115,29 +115,29 @@ public class UserTests(IntegrationTestContext context)
         Assert.Contains(user.Roles, role => role?.Role?.Name == PolicyConstants.AdminRole);
     }
     
-    // [Fact]
-    // public async Task TestRemoveUserAdminRole()
-    // {
-    //     var userCount = await DataContext.User.CountAsync();
-    //     var index = new Random().Next(1, userCount - 1);
-    //     var userToRemoveAdmin = await DataContext.User.ElementAtAsync(index);
-    //
-    //     var response = await HttpClient.PostAsJsonAsync(
-    //         "/api/users/change-admin-role",
-    //         new ChangeAdminRole.Request(userToRemoveAdmin.Id, false)
-    //     );
-    //
-    //     var responseBody = await response.Content.ReadFromJsonAsync<ChangeAdminRole.Response>();
-    //     
-    //     var user = await DataContext.User
-    //         .Include(x => x.Roles)
-    //         .ThenInclude(y => y.Role)
-    //         .FirstAsync(x => x.Id == userToRemoveAdmin.Id);
-    //     
-    //     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    //     Assert.NotNull(responseBody);
-    //     Assert.True(responseBody.Success);
-    //     Assert.NotNull(user);
-    //     Assert.DoesNotContain(user.Roles, role => role?.Role?.Name == PolicyConstants.AdminRole);
-    // }
+    [Fact]
+    public async Task TestRemoveUserAdminRole()
+    {
+        var userCount = await context.Db.User.CountAsync();
+        var index = new Random().Next(1, userCount - 1);
+        var userToRemoveAdmin = await context.Db.User.ElementAtAsync(index);
+    
+        var response = await context.HttpClient.PostAsJsonAsync(
+            "/api/users/change-admin-role",
+            new ChangeAdminRole.Request(userToRemoveAdmin.Id, false)
+        );
+    
+        var responseBody = await response.Content.ReadFromJsonAsync<ChangeAdminRole.Response>();
+        
+        var user = await context.Db.User
+            .Include(x => x.Roles)
+            .ThenInclude(y => y.Role)
+            .FirstAsync(x => x.Id == userToRemoveAdmin.Id);
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(responseBody);
+        Assert.True(responseBody.Success);
+        Assert.NotNull(user);
+        Assert.DoesNotContain(user.Roles, role => role?.Role?.Name == PolicyConstants.AdminRole);
+    }
 }
