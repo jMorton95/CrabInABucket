@@ -16,9 +16,9 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
     {
         var dummyPassword = passwordHasher.HashPassword(TestConstants.Password);
 
-        var usersToSeed = Enumerable.Range(1, numberOfUsersPerTick).Select(x =>
+        var usersToSeed = Enumerable.Range(1, numberOfUsersPerTick).Select(index =>
         {
-            var userName = Faker.Internet.Email(Faker.Name.First());
+            var userName = Faker.Internet.Email($"{Faker.Name.First()}.{index}.{Faker.Name.Last()}.{index}");
 
             User user = new() { Username = userName, Password = dummyPassword, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
 
@@ -57,6 +57,10 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
     {
         Dictionary<int, bool> tickResults = [];
         
+        settings.HasBeenSimulated = true;
+        db.Settings.Update(settings);
+        await db.SaveChangesAsync();
+        
         foreach (var tick in Enumerable.Range(1, simulationParameters.Duration))
         {
             tickResults.Add(tick, await ProcessSimulationTick(tick));
@@ -68,11 +72,10 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
             await RemoveSimulatedData(settings);
             return false;
         };
-        
-        settings.HasBeenSimulated = true;
-        db.Settings.Update(settings);     
-        
-        return await db.SaveChangesAsync() > 0;
+
+
+
+        return true;
     }
 
     public async Task<bool> RemoveSimulatedData(Settings settings)

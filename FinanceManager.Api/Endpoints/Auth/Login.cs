@@ -24,7 +24,8 @@ public class Login : IEndpoint
         {
             RuleFor(x => x.Username)
                 .EmailAddress()
-                .NotEmpty();
+                .NotEmpty()
+                .MaximumLength(100);
             
             RuleFor(x => x.Password)
                 .MinimumLength(8)

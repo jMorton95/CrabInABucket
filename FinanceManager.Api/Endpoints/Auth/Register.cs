@@ -27,6 +27,7 @@ public class Register : IEndpoint
             RuleFor(x => x.Username)
                 .EmailAddress()
                 .NotEmpty()
+                .MaximumLength(100)
                 .MustAsync(async (x, _) => await readUsers.CheckUserExistsByEmail(x) == false)
                 .WithMessage("Account with that Email Address already exists.");
 
