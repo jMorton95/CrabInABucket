@@ -1,4 +1,5 @@
-﻿using FinanceManager.Common.Constants;
+﻿using EFCore.BulkExtensions;
+using FinanceManager.Common.Constants;
 using FinanceManager.Common.Contracts;
 using FinanceManager.Common.Entities;
 using FinanceManager.Common.Models;
@@ -33,9 +34,8 @@ public class Simulator(
             return user;
         });
 
-        await db.AddRangeAsync(usersToSeed.ToList());
-        await db.SaveChangesAsync();
-
+        await db.BulkInsertAsync(usersToSeed.ToList());
+        
         var seededUsers = await db.User
             .OrderByDescending(x => x.Id)
             .Where(y => y.WasSimulated)
@@ -62,8 +62,7 @@ public class Simulator(
                 );
         }).ToList();
 
-        await db.AddRangeAsync(accounts);
-        await db.SaveChangesAsync();
+        await db.BulkInsertAsync(accounts);
 
         var seededAccounts = await db.Account
             .OrderByDescending(x => x.Id)
@@ -78,7 +77,8 @@ public class Simulator(
     {
         var usersWithLessThanMaxFriends = await db.User
             .Include(user => user.UserFriendships)
-            .Where(x => x.UserFriendships.Count <= _simulationPlan.MaxFriendsPerUser)
+            .Where(x => x.WasSimulated && 
+                        x.UserFriendships.Count <= _simulationPlan.MaxFriendsPerUser)
             .ToListAsync();
         
         if (usersWithLessThanMaxFriends.Count <= 0)
@@ -86,7 +86,8 @@ public class Simulator(
             return 1;
         }
 
-        List<bool> results = [];
+        List<Friendship> newFriendShips = [];
+        List<UserFriendship> newUserFriendShips = [];
         
         foreach (var user in usersWithLessThanMaxFriends)
         {
@@ -106,8 +107,8 @@ public class Simulator(
                 IsPending = false
             }).ToList();
 
-            await db.AddRangeAsync(friendships);
-            results.Add(await db.SaveChangesAsync() > 0);
+            newFriendShips.AddRange(friendships);
+
 
             var userFriendships = friendships.SelectMany((friendship, index) =>
             {
@@ -116,12 +117,14 @@ public class Simulator(
 
                 return new List<UserFriendship> {userUf, newFriendUf};
             }).ToList();
-
-            await db.AddRangeAsync(userFriendships);
-            results.Add(await db.SaveChangesAsync() > 0);
+            
+            newUserFriendShips.AddRange(userFriendships);
         }
-        
-        return results.TrueForAll(x => x) ? 1 : 0;
+
+        await db.BulkInsertAsync(newFriendShips);
+        await db.BulkInsertAsync(newUserFriendShips);
+
+        return 1;
     }
 
     private async Task<bool> ProcessSimulationTick(int tickNumber)
@@ -159,10 +162,12 @@ public class Simulator(
         return true;
     }
 
-    public async Task<bool> RemoveSimulatedData(Settings settings)
+    private async Task<bool> RemoveSimulatedData(Settings settings)
     {
         await db.User.Where(x => x.WasSimulated).ExecuteDeleteAsync();
         await db.Account.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        await db.Friendship.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        await db.UserFriendship.Where(x => x.WasSimulated).ExecuteDeleteAsync();
         
         settings.HasBeenSimulated = false;
         db.Settings.Update(settings);
