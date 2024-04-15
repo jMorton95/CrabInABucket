@@ -8,7 +8,15 @@ public class SimulationPlanBuilder : ISimulationPlanBuilder
     public SimulationPlan CreateSimulationPlan(SimulationParameters simulationParameters)
     {
         var totalUsersToSimulate = SimulationHelpers.GetNumberFromRange(simulationParameters.Users.Count);
-        return new SimulationPlan(totalUsersToSimulate / simulationParameters.Duration);
+        var maxFriendsPerUser = SimulationHelpers.GetNumberFromRange(simulationParameters.Friendships.FriendsPerUser);
+        
+        return new SimulationPlan
+        (
+            TotalUsersToSimulate: totalUsersToSimulate,
+            MaxFriendsPerUser: maxFriendsPerUser,
+            UsersPerTick: totalUsersToSimulate / simulationParameters.Duration,
+            MaxFriendsPerTick: maxFriendsPerUser / simulationParameters.Duration
+        );
     }
 }
 

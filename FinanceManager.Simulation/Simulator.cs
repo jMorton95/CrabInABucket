@@ -4,19 +4,27 @@ using FinanceManager.Common.Entities;
 using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Data;
+using FinanceManager.Data.Read.Friends;
+using FinanceManager.Data.Read.Friendships;
 using FinanceManager.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Simulation;
 
-public class Simulator(SimulationParameters simulationParameters, DataContext db, IPasswordHasher passwordHasher, ISimulationPlanBuilder simulationPlanBuilder) : ISimulator
+public class Simulator(
+    SimulationParameters simulationParameters,
+    DataContext db,
+    IPasswordHasher passwordHasher,
+    ISimulationPlanBuilder simulationPlanBuilder,
+    IReadUserFriends readUserFriends
+    ) : ISimulator
 {
     private readonly SimulationPlan _simulationPlan = simulationPlanBuilder.CreateSimulationPlan(simulationParameters);
-    private async Task<List<User>> CreateUsers(int numberOfUsersPerTick, DateTime tickDate)
+    private async Task<List<User>> CreateUsers(DateTime tickDate)
     {
         var dummyPassword = passwordHasher.HashPassword(TestConstants.Password);
 
-        var usersToSeed = Enumerable.Range(1, numberOfUsersPerTick).Select(index =>
+        var usersToSeed = Enumerable.Range(1, _simulationPlan.UsersPerTick).Select(index =>
         {
             var userName = Faker.Internet.Email($"{Faker.Name.First()}.{index}.{Faker.Name.Last()}.{index}");
 
@@ -31,7 +39,7 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
         var seededUsers = await db.User
             .OrderByDescending(x => x.Id)
             .Where(y => y.WasSimulated)
-            .Take(numberOfUsersPerTick)
+            .Take(_simulationPlan.UsersPerTick)
             .ToListAsync();
         
         return seededUsers;
@@ -65,15 +73,66 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
 
         return seededAccounts;
     }
+    
+    private async Task<int> CreateFriendships(DateTime tickDate)
+    {
+        var usersWithLessThanMaxFriends = await db.User
+            .Include(user => user.UserFriendships)
+            .Where(x => x.UserFriendships.Count <= _simulationPlan.MaxFriendsPerUser)
+            .ToListAsync();
+        
+        if (usersWithLessThanMaxFriends.Count <= 0)
+        {
+            return 1;
+        }
+
+        List<bool> results = [];
+        
+        foreach (var user in usersWithLessThanMaxFriends)
+        {
+            var newFriends = await readUserFriends.GetRandomFriendSuggestions(user.Id, _simulationPlan.MaxFriendsPerTick);
+            
+            if (newFriends.Count <= 0)
+            {
+                return 1;
+            }
+            
+            var friendships = newFriends.Select(_ => new Friendship
+            {
+                CreatedDate = tickDate,
+                UpdatedDate = tickDate,
+                WasSimulated = true,
+                IsAccepted = true,
+                IsPending = false
+            }).ToList();
+
+            await db.AddRangeAsync(friendships);
+            results.Add(await db.SaveChangesAsync() > 0);
+
+            var userFriendships = friendships.SelectMany((friendship, index) =>
+            {
+                var userUf = new UserFriendship { UserId = user.Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
+                var newFriendUf = new UserFriendship { UserId = newFriends[index].Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
+
+                return new List<UserFriendship> {userUf, newFriendUf};
+            }).ToList();
+
+            await db.AddRangeAsync(userFriendships);
+            results.Add(await db.SaveChangesAsync() > 0);
+        }
+        
+        return results.TrueForAll(x => x) ? 1 : 0;
+    }
 
     private async Task<bool> ProcessSimulationTick(int tickNumber)
     {
         var tickDate = DateTime.UtcNow.AddMonths(tickNumber);
         
-        var simUsersResult = await CreateUsers(_simulationPlan.UsersPerTick, tickDate);
+        var simUsersResult = await CreateUsers(tickDate);
         var simAccountsResults = await CreateAccounts(simUsersResult, tickDate);
+        var simFriendsResults = await CreateFriendships(tickDate);
         
-        List<int> results = [simUsersResult.Count, simAccountsResults.Count];
+        List<int> results = [simUsersResult.Count, simAccountsResults.Count, simFriendsResults];
 
         return results.TrueForAll(x => x > 0);
     }
@@ -91,11 +150,10 @@ public class Simulator(SimulationParameters simulationParameters, DataContext db
             tickResults.Add(tick, await ProcessSimulationTick(tick));
         }
 
-        if (!tickResults.Values.ToList().TrueForAll(x => x))
+        if (simulationParameters.RemoveDataIfError && !tickResults.Values.ToList().TrueForAll(x => x))
         {
-            //TODO: Add Partial as a parameter, only remove if partial is false
-            await RemoveSimulatedData(settings);
-            return false;
+            var clearDownResult = await RemoveSimulatedData(settings);
+            return clearDownResult;
         };
         
         return true;

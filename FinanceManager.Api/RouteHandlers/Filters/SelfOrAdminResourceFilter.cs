@@ -34,7 +34,7 @@ public class SelfOrAdminResourceFilter<TRequest, TEntity>(Func<TRequest, Guid?> 
             );
         }
         
-        if (user.Id != currentUserId || currentUserService.IsUserAdmin())
+        if (user.Id != currentUserId && !currentUserService.IsUserAdmin())
         {
             return TypedResults.Problem
             (

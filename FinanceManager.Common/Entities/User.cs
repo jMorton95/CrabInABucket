@@ -12,9 +12,9 @@ public class User : Entity
 
     public DateTime LastOnline { get; set; }
     
-    public IEnumerable<Account> Accounts { get; set; }
+    public ICollection<Account> Accounts { get; set; }
     
-    public IEnumerable<UserRole> Roles { get; set; }
+    public ICollection<UserRole> Roles { get; set; }
     
-    public IEnumerable<UserFriendship> UserFriendships { get; set; }
+    public ICollection<UserFriendship> UserFriendships { get; set; }
 }

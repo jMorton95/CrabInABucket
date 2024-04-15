@@ -1,4 +1,5 @@
 ﻿using FinanceManager.Api.RouteHandlers;
+using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Data.Read.Friends;
 
@@ -10,8 +11,8 @@ public class FriendsList : IEndpoint
         .MapGet("friends-list/{UserId}/{NumberOfSuggestions}", Handler)
         .WithDescription("Provides a list of a users friends, pending requests, recommended friends and random suggestions")
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<Common.Entities.User>(x => x.UserId)
-        .SelfOrAdminResource<Common.Entities.User>(x => x.UserId);
+        .EnsureEntityExists<User>(x => x.UserId)
+        .SelfOrAdminResource<User>(x => x.UserId);
     
     public record Request(Guid UserId, int NumberOfSuggestions);
 

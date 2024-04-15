@@ -10,8 +10,9 @@ public record Accounts(ParameterRange Count, int MaxStartingBalance, double Star
 
 public class SimulationParameters
 {
-    public bool ShouldOverwrite { get; set; }
+    public bool ShouldOverwrite { get; init; }
     public bool ShouldSimulate { get; init; }
+    public bool RemoveDataIfError { get; init; }
     public int Duration { get; init; }
     public int MaxStartingBalance { get; init; }
     public Users Users { get; init; }
