@@ -6,7 +6,6 @@ using FinanceManager.Common.Models;
 using FinanceManager.Common.Services;
 using FinanceManager.Data;
 using FinanceManager.Data.Read.Friends;
-using FinanceManager.Data.Read.Friendships;
 using FinanceManager.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +14,7 @@ namespace FinanceManager.Simulation;
 public class Simulator(
     SimulationParameters simulationParameters,
     DataContext db,
+    IDbContextFactory<DataContext> dbContextFactory,
     IPasswordHasher passwordHasher,
     ISimulationPlanBuilder simulationPlanBuilder,
     IReadUserFriends readUserFriends
@@ -35,7 +35,7 @@ public class Simulator(
         });
 
         await db.AddRangeAsync(usersToSeed.ToList());
-        await db.SaveChangesAsync();
+        await db.BulkSaveChangesAsync();
         
         var seededUsers = await db.User
             .OrderByDescending(x => x.Id)
@@ -46,9 +46,9 @@ public class Simulator(
         return seededUsers;
     }
 
-    private async Task<List<Account>> CreateAccounts(IEnumerable<User> users, DateTime tickDate)
+    private async Task<int> CreateAccounts(IEnumerable<User> users, DateTime tickDate)
     {
-        var accounts = users.ToList().SelectMany(user =>
+        var accounts = users.SelectMany(user =>
         {
             return Enumerable.Range(1, SimulationHelpers.GetNumberFromRange(simulationParameters.Accounts.Count))
                 .Select(_ => new Account
@@ -66,13 +66,7 @@ public class Simulator(
         await db.AddRangeAsync(accounts);
         await db.BulkSaveChangesAsync();
 
-        var seededAccounts = await db.Account
-            .OrderByDescending(x => x.Id)
-            .Where(y => y.WasSimulated)
-            .Take(accounts.Count)
-            .ToListAsync();
-
-        return seededAccounts;
+        return 1;
     }
     
     private async Task<int> CreateFriendships(DateTime tickDate)
@@ -83,23 +77,24 @@ public class Simulator(
                         x.UserFriendships.Count <= _simulationPlan.MaxFriendsPerUser)
             .ToListAsync();
         
-        if (usersWithLessThanMaxFriends.Count <= 0)
+        if (usersWithLessThanMaxFriends is {Count: 0})
         {
             return 1;
         }
 
         List<Friendship> newFriendShips = [];
         List<UserFriendship> newUserFriendShips = [];
-        
-        foreach (var user in usersWithLessThanMaxFriends)
+
+        var tasks = usersWithLessThanMaxFriends.Select(async user =>
         {
-            var newFriends = await readUserFriends.GetRandomFriendSuggestions(user.Id, _simulationPlan.MaxFriendsPerTick);
-            
+            await using var taskDbContext = await dbContextFactory.CreateDbContextAsync();
+            var newFriends = await taskDbContext.StaticGetRandomSuggestions(user.Id, _simulationPlan.MaxFriendsPerTick);
+
             if (newFriends.Count <= 0)
             {
-                return 1;
+                return;
             }
-            
+
             var friendships = newFriends.Select(_ => new Friendship
             {
                 CreatedDate = tickDate,
@@ -108,21 +103,23 @@ public class Simulator(
                 IsAccepted = true,
                 IsPending = false
             }).ToList();
-
-            newFriendShips.AddRange(friendships);
-
-
+            
             var userFriendships = friendships.SelectMany((friendship, index) =>
             {
-                var userUf = new UserFriendship { UserId = user.Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
-                var newFriendUf = new UserFriendship { UserId = newFriends[index].Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
+                var userUf = new UserFriendship
+                    { UserId = user.Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
+                var newFriendUf = new UserFriendship
+                    { UserId = newFriends[index].Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
 
-                return new List<UserFriendship> {userUf, newFriendUf};
+                return new List<UserFriendship> { userUf, newFriendUf };
             }).ToList();
             
+            newFriendShips.AddRange(friendships);
             newUserFriendShips.AddRange(userFriendships);
-        }
+        }).ToList();
 
+        await Task.WhenAll(tasks);
+        
         await db.AddRangeAsync(newFriendShips);
         await db.AddRangeAsync(newUserFriendShips);
         
@@ -139,11 +136,24 @@ public class Simulator(
         var simAccountsResults = await CreateAccounts(simUsersResult, tickDate);
         var simFriendsResults = await CreateFriendships(tickDate);
         
-        List<int> results = [simUsersResult.Count, simAccountsResults.Count, simFriendsResults];
+        List<int> results = [simUsersResult.Count, simAccountsResults, simFriendsResults];
 
         return results.TrueForAll(x => x > 0);
     }
-
+    
+    private async Task<bool> RemoveSimulatedData(Settings settings)
+    {
+        await db.User.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        await db.Account.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        await db.Friendship.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        await db.UserFriendship.Where(x => x.WasSimulated).ExecuteDeleteAsync();
+        
+        settings.HasBeenSimulated = false;
+        db.Settings.Update(settings);
+        
+        return await db.SaveChangesAsync() > 0;
+    }
+    
     public async Task<bool> StartSimulation(Settings settings)
     {
         Dictionary<int, bool> tickResults = [];
@@ -164,19 +174,6 @@ public class Simulator(
         };
         
         return true;
-    }
-
-    private async Task<bool> RemoveSimulatedData(Settings settings)
-    {
-        await db.User.Where(x => x.WasSimulated).ExecuteDeleteAsync();
-        await db.Account.Where(x => x.WasSimulated).ExecuteDeleteAsync();
-        await db.Friendship.Where(x => x.WasSimulated).ExecuteDeleteAsync();
-        await db.UserFriendship.Where(x => x.WasSimulated).ExecuteDeleteAsync();
-        
-        settings.HasBeenSimulated = false;
-        db.Settings.Update(settings);
-        
-        return await db.SaveChangesAsync() > 0;
     }
     
     public async Task<bool> SimulateFromConfiguration()

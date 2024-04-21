@@ -96,6 +96,7 @@ public static class ConfigureServices
     {
         var connectionString = builder.Configuration.GetConnectionString(SettingsConstants.PostgresConnection);
         builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
+        builder.Services.AddDbContextFactory<DataContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Scoped);
     }
     
     private static void AddJwtAuthentication(this WebApplicationBuilder builder)

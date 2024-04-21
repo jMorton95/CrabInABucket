@@ -12,6 +12,32 @@ public interface IReadUserFriends
     Task<List<User>> GetPendingFriendRequests(Guid userId);
 }
 
+
+public static class StaticReadUserFriends
+{
+    public static async Task<List<User>> StaticGetRandomSuggestions(this DataContext db, Guid userId, int amountOfSuggestions)
+    {
+        var userFriendIds = await db.Friendship
+            .AsNoTracking()
+            .Where(x => x.UserFriendships
+                .Any(y => y.UserId == userId))
+            .SelectMany(f => f.UserFriendships)
+            .Where(x => x.UserId != userId)
+            .Select(uf => uf.UserId)
+            .Distinct()
+            .ToListAsync();
+        
+        var potentialSuggestions = await db.User
+            .AsNoTracking()
+            .Where(u => !userFriendIds.Contains(u.Id) && u.Id != userId)
+            .OrderBy(u => Guid.NewGuid())
+            .Take(amountOfSuggestions)
+            .Distinct()
+            .ToListAsync();
+
+        return potentialSuggestions;
+    }
+}
 public class ReadUserFriends(DataContext db) : IReadUserFriends
 {
     private async Task<List<Guid>> GetUserFriendIds(Guid userId)
