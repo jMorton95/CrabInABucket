@@ -34,7 +34,8 @@ public class Simulator(
             return user;
         });
 
-        await db.BulkInsertAsync(usersToSeed.ToList());
+        await db.AddRangeAsync(usersToSeed.ToList());
+        await db.SaveChangesAsync();
         
         var seededUsers = await db.User
             .OrderByDescending(x => x.Id)
@@ -62,7 +63,8 @@ public class Simulator(
                 );
         }).ToList();
 
-        await db.BulkInsertAsync(accounts);
+        await db.AddRangeAsync(accounts);
+        await db.BulkSaveChangesAsync();
 
         var seededAccounts = await db.Account
             .OrderByDescending(x => x.Id)
@@ -121,8 +123,10 @@ public class Simulator(
             newUserFriendShips.AddRange(userFriendships);
         }
 
-        await db.BulkInsertAsync(newFriendShips);
-        await db.BulkInsertAsync(newUserFriendShips);
+        await db.AddRangeAsync(newFriendShips);
+        await db.AddRangeAsync(newUserFriendShips);
+        
+        await db.BulkSaveChangesAsync();
 
         return 1;
     }
