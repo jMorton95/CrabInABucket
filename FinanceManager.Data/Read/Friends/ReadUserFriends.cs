@@ -1,4 +1,5 @@
-﻿using FinanceManager.Common.Entities;
+﻿using System.Collections;
+using FinanceManager.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceManager.Data.Read.Friends;
@@ -15,6 +16,21 @@ public interface IReadUserFriends
 
 public static class StaticReadUserFriends
 {
+    public static async Task<Dictionary<Guid, List<Guid>>> StatsicGetRandomSuggestions(this DataContext db, List<Guid> userIds, int amountOfSuggestions)
+    {
+        var result = db.UserFriendship
+            .Include(uf => uf.Friendship)
+            .ThenInclude(f => f.UserFriendships)
+            .AsEnumerable()
+            .Where(uf => userIds.Contains(uf.UserId))
+            .SelectMany(uf => uf.Friendship.UserFriendships, (uf, friend) => new { uf.UserId, FriendUserId = friend.UserId })
+            .Where(x => x.UserId != x.FriendUserId)
+            .Distinct();
+        
+            var tings = userIds.Select(id => new { UserId = id, FriendIds = result.Where(y => y.UserId == id).Select(y => y.FriendUserId) });
+      
+            return tings.ToDictionary(x => x.UserId, x => x.FriendIds.ToList());
+    }
     public static async Task<List<User>> StaticGetRandomSuggestions(this DataContext db, Guid userId, int amountOfSuggestions)
     {
         var userFriendIds = await db.Friendship
@@ -34,7 +50,7 @@ public static class StaticReadUserFriends
             .Take(amountOfSuggestions)
             .Distinct()
             .ToListAsync();
-
+    
         return potentialSuggestions;
     }
 }

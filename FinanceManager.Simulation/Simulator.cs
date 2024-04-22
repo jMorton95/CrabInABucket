@@ -85,16 +85,17 @@ public class Simulator(
         List<Friendship> newFriendShips = [];
         List<UserFriendship> newUserFriendShips = [];
 
+        
         var tasks = usersWithLessThanMaxFriends.Select(async user =>
         {
             await using var taskDbContext = await dbContextFactory.CreateDbContextAsync();
             var newFriends = await taskDbContext.StaticGetRandomSuggestions(user.Id, _simulationPlan.MaxFriendsPerTick);
-
+        
             if (newFriends.Count <= 0)
             {
                 return;
             }
-
+        
             var friendships = newFriends.Select(_ => new Friendship
             {
                 CreatedDate = tickDate,
@@ -110,20 +111,23 @@ public class Simulator(
                     { UserId = user.Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
                 var newFriendUf = new UserFriendship
                     { UserId = newFriends[index].Id, Friendship = friendship, WasSimulated = true, CreatedDate = tickDate, UpdatedDate = tickDate };
-
+        
                 return new List<UserFriendship> { userUf, newFriendUf };
             }).ToList();
             
             newFriendShips.AddRange(friendships);
             newUserFriendShips.AddRange(userFriendships);
         }).ToList();
-
+        
         await Task.WhenAll(tasks);
         
         await db.AddRangeAsync(newFriendShips);
         await db.AddRangeAsync(newUserFriendShips);
         
         await db.BulkSaveChangesAsync();
+        
+        var stuff = await db.StatsicGetRandomSuggestions(usersWithLessThanMaxFriends.Select(x => x.Id).ToList(), 10);
+        var thing = 1;
 
         return 1;
     }
