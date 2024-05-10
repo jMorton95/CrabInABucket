@@ -18,18 +18,40 @@ public static class StaticReadUserFriends
 {
     public static async Task<Dictionary<Guid, List<Guid>>> StatsicGetRandomSuggestions(this DataContext db, List<Guid> userIds, int amountOfSuggestions)
     {
+        // Fetch all potential suggestions directly
+        var allSuggestions = await db.UserFriendship
+            .Where(uf => userIds.Contains(uf.UserId))
+            .Include(uf => uf.Friendship)
+            .ThenInclude(f => f.UserFriendships)
+            .ToListAsync();
+
+        // Perform in-memory operations
+        var suggestions = allSuggestions
+            .SelectMany(uf => uf.Friendship.UserFriendships, (uf, friend) => new { uf.UserId, FriendUserId = friend.UserId })
+            .Where(x => x.UserId != x.FriendUserId && userIds.Contains(x.UserId))
+            .Distinct()
+            .ToList();
+
+        var groupedSuggestions = suggestions
+            .GroupBy(x => x.UserId)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(x => x.FriendUserId).Take(amountOfSuggestions).ToList()
+            );
+        
         var result = db.UserFriendship
+            .Where(uf => userIds.Contains(uf.UserId))
             .Include(uf => uf.Friendship)
             .ThenInclude(f => f.UserFriendships)
             .AsEnumerable()
-            .Where(uf => userIds.Contains(uf.UserId))
             .SelectMany(uf => uf.Friendship.UserFriendships, (uf, friend) => new { uf.UserId, FriendUserId = friend.UserId })
             .Where(x => x.UserId != x.FriendUserId)
-            .Distinct();
+            .Distinct()
+            .Take(amountOfSuggestions);
         
             var tings = userIds.Select(id => new { UserId = id, FriendIds = result.Where(y => y.UserId == id).Select(y => y.FriendUserId) });
       
-            return tings.ToDictionary(x => x.UserId, x => x.FriendIds.ToList());
+            return await Task.FromResult(tings.ToDictionary(x => x.UserId, x => x.FriendIds.ToList()));
     }
     public static async Task<List<User>> StaticGetRandomSuggestions(this DataContext db, Guid userId, int amountOfSuggestions)
     {
