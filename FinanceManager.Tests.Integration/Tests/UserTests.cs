@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using FinanceManager.Api.Endpoints.Users;
 using FinanceManager.Common.Constants;
-using FinanceManager.Common.Entities;
 using FinanceManager.Tests.Integration.Setup;
 using Microsoft.EntityFrameworkCore;
 

@@ -54,7 +54,8 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
                 .ThenInclude(y => y.Role)
             .FirstAsync(x => x.Id == userId);
         
-        var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole) ?? CreateAdministratorRole();
+        var adminRole = await db.Role.FirstOrDefaultAsync(x => x.Name == PolicyConstants.AdminRole)
+                        ?? CreateAdministratorRole();
 
         if (isAdmin)
         {
@@ -62,7 +63,7 @@ public sealed class WriteUsers(DataContext db) : IWriteUsers
         }
         else
         {
-            user.Roles = user.Roles.Where(x => x.Role.Id != adminRole.Id).ToList();
+            user.Roles = user.Roles.Where(x => x.Role?.Id != adminRole.Id).ToList();
         }
         
         var result = await db.SaveChangesAsync();

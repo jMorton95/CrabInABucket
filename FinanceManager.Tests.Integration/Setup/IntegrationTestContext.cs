@@ -14,7 +14,7 @@ public class IntegrationTestContext : IAsyncLifetime
     private IServiceScope Scope { get; }
     public DataContext Db { get; }
     public HttpClient HttpClient { get; }
-    public TestAuthContext AuthContext { get; }
+    private TestAuthContext AuthContext { get; }
     
     public IntegrationTestContext()
     {
@@ -25,11 +25,11 @@ public class IntegrationTestContext : IAsyncLifetime
         AuthContext = new TestAuthContext(HttpClient);
     }
     
-    public class TestAuthContext(HttpClient client)
+    private class TestAuthContext(HttpClient client)
     {
         private TokenWithExpiry? CurrentToken { get; set; }
     
-        public async Task ConfigureAuthenticationContext()
+        internal async Task ConfigureAuthenticationContext()
         {
             if (CurrentToken is not null && new DateTime(CurrentToken.ExpiryDate) <= DateTime.UtcNow)
             {

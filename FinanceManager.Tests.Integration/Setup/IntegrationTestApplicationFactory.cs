@@ -24,14 +24,7 @@ public class IntegrationTestApplicationFactory : WebApplicationFactory<Program>
             
             services.AddDbContext<DataContext>(options => 
                 options.UseNpgsql(SharedContainerFixture.DatabaseContainer?.GetConnectionString()));
-
-            var serviceProvider = services.BuildServiceProvider();
-
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var dbContextInstance = scope.ServiceProvider.GetRequiredService<DataContext>();
-                dbContextInstance.Database.Migrate();
-            }
+            
         });
 
         return base.CreateHost(builder);

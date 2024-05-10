@@ -4,7 +4,7 @@ namespace FinanceManager.Tests.Integration.Setup;
 
 public class SharedContainerFixture : IAsyncLifetime
 {
-    public static PostgreSqlContainer? DatabaseContainer { get; private set; }
+    public static PostgreSqlContainer DatabaseContainer { get; }
 
     static SharedContainerFixture()
     {
@@ -19,11 +19,6 @@ public class SharedContainerFixture : IAsyncLifetime
 
     public async Task DisposeAsync()
     {
-        if (DatabaseContainer == null)
-        {
-            return;
-        }
-        
         await DatabaseContainer.StopAsync();
     }
 }

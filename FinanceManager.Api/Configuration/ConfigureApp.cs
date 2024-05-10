@@ -65,6 +65,7 @@ public static class ConfigureApp
             await dbContext.InsertProductionData(settings.Value, passwordHasher);
         }
 
+        //TODO: Extract away
         var simulationParameters = app.Services.GetRequiredService<IOptions<SimulationParameters>>().Value;
         var simulatorFactory = scope.ServiceProvider.GetRequiredService<ISimulatorFactory>();
         var simulator = simulatorFactory.CreateSimulator(simulationParameters);

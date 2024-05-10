@@ -130,9 +130,9 @@ public class Simulator(
         
         var simUsersResult = await CreateUsers(tickDate);
         var simAccountsResults = await CreateAccounts(simUsersResult, tickDate);
-        var simFriendsResults = await CreateFriendships(tickDate);
+        //var simFriendsResults = await CreateFriendships(tickDate);
         
-        List<int> results = [simUsersResult.Count, simAccountsResults.Count, simFriendsResults];
+        List<int> results = [simUsersResult.Count, simAccountsResults.Count];
 
         return results.TrueForAll(x => x > 0);
     }

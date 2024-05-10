@@ -13,8 +13,8 @@ public class Deposit : IEndpoint
         .WithTags("Deposit an amount to an account")
         .WithRequestValidation<Request>()
         .EnsureEntityExists<Account>(x => x.RecipientAccountId)
-        .EnsureEntityExists<Common.Entities.User>(x => x.RequesterId)
-        .SelfOrAdminResource<Common.Entities.User>(x => x.RequesterId);
+        .EnsureEntityExists<User>(x => x.RequesterId)
+        .SelfOrAdminResource<User>(x => x.RequesterId);
 
     public record Request(Guid RequesterId, Guid RecipientAccountId, decimal Amount);
 

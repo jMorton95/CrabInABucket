@@ -1,5 +1,6 @@
 ﻿using FinanceManager.Api.RouteHandlers;
 using FinanceManager.Common.Contracts;
+using FinanceManager.Common.Entities;
 using FinanceManager.Common.Mappers;
 using FinanceManager.Data.Write.Transactions;
 
@@ -10,8 +11,8 @@ public class Recurring : IEndpoint
     public static void Map(IEndpointRouteBuilder app) => app
         .MapPost("/recurring", Handler)
         .WithRequestValidation<Request>()
-        .EnsureEntityExists<Common.Entities.User>(x => x.RecipientAccountId)
-        .SelfOrAdminResource<Common.Entities.User>(x => x.SenderAccountId);
+        .EnsureEntityExists<User>(x => x.RecipientAccountId)
+        .SelfOrAdminResource<User>(x => x.SenderAccountId);
 
     public record Request(
         decimal Amount,

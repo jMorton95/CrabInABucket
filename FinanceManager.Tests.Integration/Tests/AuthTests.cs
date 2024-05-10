@@ -38,10 +38,9 @@ public class AuthTests(IntegrationTestContext context)
     {
         var response = await context.HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        
         var problemResult = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
         
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(problemResult?.Errors);
         Assert.Contains(problemResult.Errors, (error) => error.Key == erroredValidationProperty);
     }
@@ -51,23 +50,21 @@ public class AuthTests(IntegrationTestContext context)
     {
         var response = await context.HttpClient.PostAsJsonAsync("/api/auth/register", request);
         
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        
         var problemResult = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
         
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(problemResult?.Errors);
         Assert.Contains(problemResult.Errors, (error) => error.Key == erroredValidationProperty);
     }
 
     [Theory, MemberData(nameof(InvalidLogins))]
-    public async Task TestLoginValidation(Login.Request request, string erroredValidationProperty)
+    public async Task TestInvalidLoginValidation(Login.Request request, string erroredValidationProperty)
     {
         var response = await context.HttpClient.PostAsJsonAsync("/api/auth/login", request);
         
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
         var problemResults = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>();
 
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(problemResults);
         Assert.Contains(problemResults.Errors, error => error.Key == erroredValidationProperty);
     }
@@ -79,15 +76,12 @@ public class AuthTests(IntegrationTestContext context)
         var request = new Register.Request(uniqueEmail, "ValidPass1", "ValidPass1");
         
         var response = await context.HttpClient.PostAsJsonAsync("/api/auth/register", request);
-        
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
         var userResult = await response.Content.ReadFromJsonAsync<Register.Response>();
-
-        Assert.NotNull(userResult);
-
+        
         var dbUser = await context.Db.User.SingleOrDefaultAsync(x => x.Username == userResult.UserResponse.Username);
         
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(userResult);
         Assert.NotNull(dbUser);
         Assert.NotEmpty(dbUser.Password);
         

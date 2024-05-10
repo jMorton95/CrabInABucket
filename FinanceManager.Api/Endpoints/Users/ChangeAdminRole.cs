@@ -32,7 +32,8 @@ public class ChangeAdminRole : IEndpoint
         }
     }
 
-    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler(
+    private static async Task<Results<Ok<Response>, ValidationError, BadRequest<Response>>> Handler
+    (
         Request request,
         IWriteUsers writeUsers
     )

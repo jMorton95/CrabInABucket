@@ -17,8 +17,7 @@ public class Register : IEndpoint
 
     public record Request(string Username, string Password, string PasswordConfirmation);
 
-    public record Response(NamedUser? UserResponse, bool Success, string Message)
-       : IPostResponse;
+    public record Response(NamedUser? UserResponse, bool Success, string Message) : IPostResponse;
 
     public class RequestValidator : AbstractValidator<Request>
     {

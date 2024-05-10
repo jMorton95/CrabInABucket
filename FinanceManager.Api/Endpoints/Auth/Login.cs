@@ -23,14 +23,14 @@ public class Login : IEndpoint
         public RequestValidator()
         {
             RuleFor(x => x.Username)
-                .EmailAddress()
                 .NotEmpty()
+                .EmailAddress()
                 .MaximumLength(100);
             
             RuleFor(x => x.Password)
+                .NotEmpty()
                 .MinimumLength(8)
-                .MaximumLength(20)
-                .NotEmpty();
+                .MaximumLength(20);
         }
     }
 

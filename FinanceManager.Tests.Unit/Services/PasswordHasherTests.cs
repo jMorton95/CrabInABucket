@@ -5,14 +5,11 @@ namespace Tests.Services;
 
 public class PasswordHasherTests
 {
-    private readonly PasswordUtilities _passwordUtilities;
+    private readonly PasswordUtilities _passwordUtilities = new();
     private readonly PasswordHasher _passwordHasher;
     
-    public PasswordHasherTests()
-    {
-        _passwordUtilities = new PasswordUtilities();
-        _passwordHasher = new PasswordHasher(_passwordUtilities);
-    }
+    public PasswordHasherTests() => _passwordHasher = new PasswordHasher(_passwordUtilities);
+    
 
     public static List<object[]> PasswordsToHash =
     [

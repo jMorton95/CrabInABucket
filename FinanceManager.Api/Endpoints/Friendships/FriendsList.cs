@@ -48,7 +48,7 @@ public class FriendsList : IEndpoint
         var suggestedFriendIds = new HashSet<Guid>(suggestedFriends.Select(x => x.Id));
         var filteredRandomFriends = randomFriends.Where(x => !suggestedFriendIds.Contains(x.Id));
         
-        List<List<Common.Entities.User>> allRefs = [userFriends, pendingRequests, suggestedFriends, randomFriends];
+        List<List<User>> allRefs = [userFriends, pendingRequests, suggestedFriends, randomFriends];
 
         if (allRefs.TrueForAll(x => x.Count == 0))
         {
